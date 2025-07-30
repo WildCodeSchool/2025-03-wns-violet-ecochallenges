@@ -6,7 +6,14 @@ services:
     volumes:
       - ./frontend/src/:/app/src
       - ./frontend/codegen.ts/:/app/codegen.ts
+      - ./frontend/tailwind.config.ts/:/app/tailwind.config.ts
       - ./frontend/.env:/app/.env
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail --request GET --url 'http://frontend:5173' || exit 1",
+        ]
     depends_on:
       backend:
         condition: service_healthy
