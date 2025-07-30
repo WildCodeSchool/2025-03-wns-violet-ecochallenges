@@ -24,6 +24,8 @@ services:
       - "3001:3000"
     volumes:
       - ./backend/src/:/app/src
+      - ./backend/.env:/app/.env
+
     healthcheck:
       test:
         [

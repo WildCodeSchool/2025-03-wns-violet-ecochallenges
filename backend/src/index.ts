@@ -8,7 +8,8 @@ import UserResolver from "./resolvers/UserResolver";
 import dotenv from "dotenv";
 dotenv.config();
 
-const port = 3000;
+const port = Number(process.env.API_PORT);
+
 
 async function startServer() {
   await dataSource.initialize();
