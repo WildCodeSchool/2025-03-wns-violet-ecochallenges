@@ -10,7 +10,6 @@ dotenv.config();
 
 const port = Number(process.env.API_PORT);
 
-
 async function startServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
