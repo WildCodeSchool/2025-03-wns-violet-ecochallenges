@@ -5,8 +5,7 @@ function App() {
     <div>
       {/* <Button className="bg-background">COUCOU les loulous</Button> */}
       <div className="bg-background">COUCOU les zerzer</div>
-      dfbsdhb
-      jhdgfs
+      dfbsdhb CAPTAIN PLANET YOUHOUUUU
     </div>
   );
 }

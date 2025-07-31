@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const config: CodegenConfig = {
-  schema: `${process.env.API_URL_FROM_DOCKER}/`,
+  schema: `${process.env.VITE_API_URL_FROM_CLIENT}/`,
   documents: ["src/graphql/operations.ts"],
   overwrite: true,
   generates: {

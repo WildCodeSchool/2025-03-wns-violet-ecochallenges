@@ -2,10 +2,9 @@ services:
   frontend:
     build: ./frontend
     volumes:
-      - ./frontend/src/:/app/src
-      - ./frontend/codegen.ts/:/app/codegen.ts
-      - ./frontend/tailwind.config.ts/:/app/tailwind.config.ts
-      - ./frontend/.env:/app/.env
+      - ./frontend/src/:/app/src/
+      - ./frontend/codegen.ts:/app/codegen.ts
+      - ./frontend/tailwind.config.ts:/app/tailwind.config.ts
     healthcheck:
       test:
         [
@@ -19,9 +18,7 @@ services:
   backend:
     build: ./backend
     volumes:
-      - ./backend/src/:/app/src
-      - ./backend/.env:/app/.env
-
+      - ./backend/src/:/app/src/
     healthcheck:
       test:
         [
@@ -45,7 +42,7 @@ services:
       POSTGRES_HOST: ${DB_HOST}
     volumes:
       - ./database:/var/lib/postgresql/data
-  
+
   gateway:
     image: nginx
     volumes:
@@ -63,4 +60,3 @@ services:
     depends_on:
       database:
         condition: service_healthy
-
