@@ -54,7 +54,8 @@ export default class UserResolver {
   @Mutation(() => String)
   async signup(@Arg("data") data: NewUserInput, @Ctx() ctx: Context) {
     const hashedPassword = await argon2.hash(data.password);
-    const user = User.create({ ...data, hashedPassword });
+    const username = data.email.split("@")[0];
+    const user = User.create({ ...data, hashedPassword, username });
     await user.save();
     const payload = createUserToken(user);
     const token = createJwt(payload);
@@ -65,6 +66,7 @@ export default class UserResolver {
       //avatar: user.avatar,
       //name: user.name,
       roles: user.roles,
+      username
     };
 
     return JSON.stringify(publicProfile);
