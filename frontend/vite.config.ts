@@ -8,7 +8,7 @@ export default defineConfig({
     host: true,
     allowedHosts: true,
     hmr: {
-      port: 7000,
+      port: 7001,
       path: "/hmr",
     },
   },
