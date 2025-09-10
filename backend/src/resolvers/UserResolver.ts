@@ -35,7 +35,7 @@ function createJwt(payload: UserToken) {
   return token;
 }
 
-function createUserToken(user: User): UserToken {
+export function createUserToken(user: User): UserToken {
   const profile: UserToken = {
     id: user.id,
     roles: user.roles,

@@ -1,0 +1,12 @@
+name: unit-backend-tests
+
+on: pull_request
+
+jobs:
+  unit-backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Run tests
+        run: npm i && npm test
