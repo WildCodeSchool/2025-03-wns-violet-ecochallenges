@@ -1,8 +1,6 @@
 import { Role, User } from "../entities/User";
 import { createUserToken } from "../resolvers/UserResolver";
 
-
-
 describe('createUserToken', () => {
     it('should create a valid user token from user entity', () => {
       // Arrange
@@ -16,8 +14,7 @@ describe('createUserToken', () => {
 
       // Act
       const result = createUserToken(mockUser);
-
-      // Assert
+      // Asserts
       expect(result).toEqual({
         id: 1,
         roles: [Role.USER]
