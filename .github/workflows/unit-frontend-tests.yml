@@ -1,0 +1,12 @@
+name: unit-frontend-tests
+
+on: pull_request
+
+jobs:
+  unit-frontend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Go to Frontend and Run tests
+        run: cd frontend && npm i && npm test
