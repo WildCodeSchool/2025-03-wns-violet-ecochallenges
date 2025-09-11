@@ -5,6 +5,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { buildSchema } from "type-graphql";
 import UserResolver from "./resolvers/UserResolver";
 import * as jwt from "jsonwebtoken";
+import { authChecker } from "./lib/helpers/authChecker";
 
 import dotenv from "dotenv";
 import { UserProfile } from "./types/Context";
@@ -16,6 +17,7 @@ async function startServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
     resolvers: [UserResolver],
+    authChecker,
   });
   const apolloServer = new ApolloServer({ schema });
   const { url } = await startStandaloneServer(apolloServer, {
