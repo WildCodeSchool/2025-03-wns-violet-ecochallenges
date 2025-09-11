@@ -7,7 +7,7 @@ import UserResolver from "./resolvers/UserResolver";
 import * as jwt from "jsonwebtoken";
 
 import dotenv from "dotenv";
-import { UserToken } from "./types/Context";
+import { UserProfile } from "./types/Context";
 dotenv.config();
 
 const port = Number(process.env.API_PORT);
@@ -30,7 +30,7 @@ async function startServer() {
         if (typeof user === "string") user = null;
       }
 
-      return { req, res, user: user as UserToken };
+      return { req, res, user: user as UserProfile };
     },
   });
   console.info("Server started on " + url);
