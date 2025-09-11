@@ -12,4 +12,9 @@ export default defineConfig({
       path: "/hmr",
     },
   },
+  test: {
+    globals: true,
+    setupFiles: ["./src/tests/setup.ts"],
+    environment: "jsdom",
+  },
 });
