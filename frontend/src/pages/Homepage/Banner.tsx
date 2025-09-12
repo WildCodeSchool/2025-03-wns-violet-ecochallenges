@@ -16,15 +16,14 @@ function Banner() {
         
         {/* Section boutons d'action */}
         <div className="flex flex-col space-y-3 lg:flex-row lg:space-y-0 lg:gap-5 lg:w-full">
+          {/* //TODO Définir la route "Signup" */}
           <Link to="#" className="lg:flex-1">
             <Button className="w-full">S'inscrire</Button>
           </Link>
-          
+
+          {/* //TODO Définir la route "Signin" */}
           <Link to="#" className="lg:flex-1">
-            <Button 
-              variant="secondary" 
-              className="w-full text-secondary-foreground"
-            >
+            <Button variant="secondary" className="w-full text-secondary-foreground">
               Se connecter
             </Button>
           </Link>
