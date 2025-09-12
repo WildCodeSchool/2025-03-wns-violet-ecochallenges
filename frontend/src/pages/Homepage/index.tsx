@@ -1,5 +1,9 @@
+import Explanations from "./Explanations";
+
 function Homepage() {
-  return <h1> Coucou</h1>;
+  return (
+    <Explanations />
+  )
 }
 
 export default Homepage;
