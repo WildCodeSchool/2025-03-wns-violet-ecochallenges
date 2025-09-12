@@ -1,6 +1,6 @@
 import { cn } from "../../lib/utils";
 
-export function TypographyP({
+export function TypographyH3({
   children,
   className,
 }: {
@@ -8,13 +8,13 @@ export function TypographyP({
   className?: string;
 }) {
   return (
-    <p
+    <h3
       className={cn(
-        "leading-7 [&:not(:first-child)]:mt-6 font-inter",
+        "scroll-m-20 text-2xl font-semibold font-urbanist tracking-tight",
         className
       )}
     >
       {children}
-    </p>
+    </h3>
   );
 }
