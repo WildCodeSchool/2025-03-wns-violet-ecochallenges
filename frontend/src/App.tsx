@@ -1,13 +1,12 @@
-import Banner from "../src/pages/Homepage/Banner";
-
 // import { Button } from "@/components/ui/button";
+
+import { Outlet } from "react-router";
 
 function App() {
   return (
-    <div>
-      <Banner />
-    </div>
-  );
+  <div className="bg-background">
+    <Outlet />; 
+  </div>)
 }
 
 export default App;
