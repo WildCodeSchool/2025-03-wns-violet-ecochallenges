@@ -62,11 +62,13 @@ const config: Config = {
       },
       fontFamily: {
         sansitaOne: ["SansitaOne"],
+        sansitaBoldItalic: ["SansitaBoldItalic"],
         urbanist: ["Urbanist"],
-        inter: ["Inter"]
+        inter: ["Inter"],
       },
     },
-  plugins: [require("tailwindcss-animate")],}
+    plugins: [require("tailwindcss-animate")],
+  },
 };
 
 export default config;
