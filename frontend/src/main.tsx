@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import App from "./App.tsx";
 import "./index.css";
+import "./styles/fonts.css"
 
 const client = new ApolloClient({
   uri: `${import.meta.env.VITE_API_URL_FROM_CLIENT}/`,
