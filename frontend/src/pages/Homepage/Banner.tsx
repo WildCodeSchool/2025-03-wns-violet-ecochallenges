@@ -23,7 +23,7 @@ function Banner() {
 
           {/* //TODO Définir la route "Signin" */}
           <Link to="#" className="lg:flex-1">
-            <Button variant="secondary" className="w-full text-secondary-foreground">
+            <Button variant="secondary" className="w-full text-secondary-foreground text-white">
               Se connecter
             </Button>
           </Link>
