@@ -1,53 +1,71 @@
-import { Link } from "react-router";
-import { TypographyH1 } from "../../ui/typographyH1";
 import { cn } from "../../../lib/utils";
 import { useScrolled } from "../../../hooks/useIsScrolled";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MobileMenuButton from "./MobileMenuButton";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
+import LogoLink from "./LogoLink";
 
 const Header = () => {
   const isScrolled = useScrolled();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  //TODO: scroll at top when clicking on logo link
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node | null;
+      if (
+        menuRef.current &&
+        closeButtonRef.current &&
+        target &&
+        !menuRef.current.contains(target) &&
+        !closeButtonRef.current.contains(target)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [isMenuOpen]);
 
   return (
-    <header className={cn("max-w-7xl mx-auto", "sticky top-0 z-50")}>
+    <header
+      className={cn(
+        "sticky top-0 z-10",
+        "transition-shadow duration-300",
+        isScrolled || isMenuOpen ? "shadow-md" : "shadow-none"
+      )}
+    >
       <div
         className={cn(
           "flex items-center justify-between",
           "bg-background text-white",
-          "px-4 py-3",
-          "transition-shadow duration-300",
-          isScrolled ? "shadow-md" : "shadow-none"
+          "max-w-7xl px-4 py-3 m-auto"
         )}
       >
-        <Link className="flex items-center gap-2" to="/">
-          <img
-            src="/blue-cap-logo.svg"
-            alt="Captain Planet logo"
-            className="h-8 md:h-12"
-          />
-          <TypographyH1
-            className={cn(
-              "font-sansitaBoldItalic font-medium",
-              "text-xl md:text-3xl text-left leading-none",
-              "w-20 md:w-28"
-            )}
-          >
-            Captain Planet
-          </TypographyH1>
-        </Link>
+        <LogoLink />
 
         <MobileMenuButton
           isMenuOpen={isMenuOpen}
           setIsMenuOpen={setIsMenuOpen}
+          buttonRef={closeButtonRef}
         />
 
         <DesktopMenu />
-
-        {isMenuOpen && <MobileMenu isMenuOpen={isMenuOpen} />}
       </div>
+      <MobileMenu isMenuOpen={isMenuOpen} menuRef={menuRef} />
     </header>
   );
 };

@@ -11,12 +11,12 @@ const DesktopMenu = () => {
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuLink>
+          <NavigationMenuLink asChild>
             <Link to="/signup">S'inscrire</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink>
+          <NavigationMenuLink asChild>
             <Link to="/signin">Se connecter</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>

@@ -1,17 +1,26 @@
+import type { RefObject } from "react";
+import { Button } from "../../../components/ui/button";
 import { cn } from "../../../lib/utils";
 
 const MobileMenuButton = ({
   isMenuOpen,
   setIsMenuOpen,
+  buttonRef,
 }: {
   isMenuOpen: boolean;
   setIsMenuOpen: (isOpen: boolean) => void;
+  buttonRef: RefObject<HTMLButtonElement | null>;
 }) => {
   return (
-    <button
-      className="md:hidden flex flex-col gap-1 p-2"
+    <Button
+      className={cn(
+        "md:hidden",
+        "bg-inherit hover:bg-inherit",
+        "flex flex-col gap-1 p-2"
+      )}
       onClick={() => setIsMenuOpen(!isMenuOpen)}
       aria-label="Toggle menu"
+      ref={buttonRef}
     >
       <span
         className={cn(
@@ -31,7 +40,7 @@ const MobileMenuButton = ({
           isMenuOpen && "-rotate-45 -translate-y-1.5"
         )}
       />
-    </button>
+    </Button>
   );
 };
 
