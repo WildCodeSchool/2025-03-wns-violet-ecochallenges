@@ -12,8 +12,6 @@ const Header = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  //TODO: scroll at top when clicking on logo link
-
   // Close mobile menu when clicking outside
   useEffect(() => {
     if (!isMenuOpen) return;
