@@ -11,14 +11,14 @@ import type { RefObject } from "react";
 
 const MobileMenu = ({
   isMenuOpen,
-  menuRef,
+  ref,
 }: {
   isMenuOpen: boolean;
-  menuRef: RefObject<HTMLDivElement | null>;
+  ref: RefObject<HTMLDivElement | null>;
 }) => {
   return (
     <Card
-      ref={menuRef}
+      ref={ref}
       className={cn(
         "md:hidden",
         "absolute top-full right-0 py-2",

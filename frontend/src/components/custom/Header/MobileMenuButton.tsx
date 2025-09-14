@@ -5,11 +5,11 @@ import { cn } from "../../../lib/utils";
 const MobileMenuButton = ({
   isMenuOpen,
   setIsMenuOpen,
-  buttonRef,
+  ref,
 }: {
   isMenuOpen: boolean;
   setIsMenuOpen: (isOpen: boolean) => void;
-  buttonRef: RefObject<HTMLButtonElement | null>;
+  ref: RefObject<HTMLButtonElement | null>;
 }) => {
   return (
     <Button
@@ -20,7 +20,7 @@ const MobileMenuButton = ({
       )}
       onClick={() => setIsMenuOpen(!isMenuOpen)}
       aria-label="Toggle menu"
-      ref={buttonRef}
+      ref={ref}
     >
       <span
         className={cn(

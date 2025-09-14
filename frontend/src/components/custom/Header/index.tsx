@@ -1,42 +1,21 @@
 import { cn } from "../../../lib/utils";
 import { useScrolled } from "../../../hooks/useIsScrolled";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, type RefObject } from "react";
 import MobileMenuButton from "./MobileMenuButton";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 import LogoLink from "./LogoLink";
+import { useOnClickOutside } from "usehooks-ts";
 
 const Header = () => {
   const isScrolled = useScrolled();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    if (!isMenuOpen) return;
-
-    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as Node | null;
-      if (
-        menuRef.current &&
-        closeButtonRef.current &&
-        target &&
-        !menuRef.current.contains(target) &&
-        !closeButtonRef.current.contains(target)
-      ) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("touchstart", handlePointerDown);
-
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("touchstart", handlePointerDown);
-    };
-  }, [isMenuOpen]);
+  useOnClickOutside([menuRef, closeButtonRef] as RefObject<HTMLElement>[], () =>
+    setIsMenuOpen(false)
+  );
 
   return (
     <header
@@ -58,12 +37,12 @@ const Header = () => {
         <MobileMenuButton
           isMenuOpen={isMenuOpen}
           setIsMenuOpen={setIsMenuOpen}
-          buttonRef={closeButtonRef}
+          ref={closeButtonRef}
         />
 
         <DesktopMenu />
       </div>
-      <MobileMenu isMenuOpen={isMenuOpen} menuRef={menuRef} />
+      <MobileMenu isMenuOpen={isMenuOpen} ref={menuRef} />
     </header>
   );
 };
