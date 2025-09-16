@@ -13,7 +13,7 @@ const LogoLink = () => {
       <TypographyH1
         className={cn(
           "font-sansitaBoldItalic font-medium",
-          "text-xl md:text-3xl text-left leading-none",
+          "text-xl md:text-3xl text-left leading-none md:leading-none",
           "w-20 md:w-28"
         )}
       >
