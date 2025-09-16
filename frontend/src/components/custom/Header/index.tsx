@@ -21,6 +21,7 @@ const Header = () => {
     <header
       className={cn(
         "sticky top-0 z-10",
+        "bg-background text-white",
         "transition-shadow duration-300",
         isScrolled || isMenuOpen ? "shadow-md" : "shadow-none"
       )}
@@ -28,7 +29,6 @@ const Header = () => {
       <div
         className={cn(
           "flex items-center justify-between",
-          "bg-background text-white",
           "max-w-7xl px-4 py-3 m-auto"
         )}
       >
