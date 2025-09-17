@@ -8,18 +8,12 @@ function Banner() {
   return (
     <div 
       className={cn(
-        "flex flex-col",
-        "lg:flex-row",
-        "lg:items-center",
-        "lg:justify-between",
-        "p-4",
-        "lg:p-8"
+        "flex flex-col lg:flex-row lg:items-center lg:justify-between",
+        "p-4 lg:p-8",
         )}
       >
-      <div className={cn("flex",
-        "flex-col",
-        "space-y-4",
-        "lg:flex-1"
+      <div className={cn(
+        "flex flex-col lg:flex-1 space-y-4"
         )}
         >
         <TypographyH2>Lance ton challenge écolo !</TypographyH2>
@@ -29,28 +23,21 @@ function Banner() {
         </TypographyP>
         
         <div className={cn(
-          "flex",
-          "flex-col",
-          "items-center",
-          "space-y-3",
-          "sm:flex-row",
-          "sm:justify-center",
-          "sm:space-y-0",
-          "sm:gap-5",
-          "lg:justify-start"
+          "flex flex-col items-center space-y-3 sm:flex-row sm:justify-center sm:space-y-0 lg:justify-start",
+          "sm:gap-5"
         )}
         >
           <Button asChild className={(
             "w-[200px]"
             )}
             >
-            <Link to="/signin">S'inscrire</Link>
+            <Link to="/Signin">S'inscrire</Link>
           </Button>
 
           <Button asChild variant="secondary" className={cn(
             "w-[200px]"
             )}>
-            <Link to="/signup">Se connecter</Link>
+            <Link to="/Signup">Se connecter</Link>
           </Button>
         </div>
       </div>
@@ -60,10 +47,8 @@ function Banner() {
         alt="Crew Planet - Illustration challenge écologique" 
         className={cn(
           "hidden",
-          "lg:block",
-          "lg:flex-1",
-          "lg:max-w-md",
-          "lg:ml-8"
+          "lg:block lg:flex-1",
+          "lg:max-w-md lg:ml-8"
         )}
       />
     </div>
