@@ -1,5 +1,9 @@
+import Banner from "./Banner";
+
 function Homepage() {
-  return <h1> Coucou</h1>;
+  return (
+  < Banner />
+  );
 }
 
 export default Homepage;
