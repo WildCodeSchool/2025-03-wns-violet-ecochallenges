@@ -20,8 +20,8 @@ const MobileMenu = ({
     <Card
       ref={ref}
       className={cn(
-        "md:hidden",
-        "absolute top-full right-0 py-2",
+        "md:hidden overflow-hidden",
+        "absolute top-full right-0 py-0",
         "bg-popover-foreground shadow-2xl",
         "rounded-t-none border-accent border-b-2",
         "transition-all duration-300 ease-in-out",
