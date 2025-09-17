@@ -59,11 +59,11 @@ function Banner() {
         src="/crew-planet.png" 
         alt="Crew Planet - Illustration challenge écologique" 
         className={cn(
-          "hidden", 
-          "lg:block", 
-          "w-[150px]",
-          "h-auto", 
-          "ml-8"
+          "hidden",
+          "lg:block",
+          "lg:flex-1",
+          "lg:max-w-md",
+          "lg:ml-8"
         )}
       />
     </div>
