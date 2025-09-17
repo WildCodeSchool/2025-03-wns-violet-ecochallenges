@@ -16,9 +16,9 @@ function Banner() {
         "flex flex-col lg:flex-1 space-y-4"
         )}
         >
-        <TypographyH2>Lance ton challenge écolo !</TypographyH2>
+        <TypographyH2 className="text-white">Lance ton challenge écolo !</TypographyH2>
         
-        <TypographyP>
+        <TypographyP className="text-white">
           Crée un challenge, invite ton groupe et passe à l'action, un éco-geste à la fois.
         </TypographyP>
         

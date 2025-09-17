@@ -7,7 +7,7 @@ interface TypographyPProps {
 
 export function TypographyP({ children, className }: TypographyPProps) {
   return (
-    <p className={cn("leading-7 [&:not(:first-child)]:mt-6 text-white font-urbanist",
+    <p className={cn("leading-7 [&:not(:first-child)]:mt-6 font-urbanist",
      className
      )}>
       {children}
