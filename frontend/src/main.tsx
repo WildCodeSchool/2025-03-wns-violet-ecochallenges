@@ -4,7 +4,7 @@ import { StrictMode } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import App from "./App.tsx";
 import Homepage from "./pages/Homepage/index.tsx";
-import Signinpage from "./pages/Signuppage/index.tsx";
+import Signuppage from "./pages/Signuppage/index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
 
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/Signin",
-        element: <Signinpage />,
+        element: <Signuppage />,
       },
     ],
   },
