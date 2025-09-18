@@ -1,0 +1,54 @@
+services:
+  frontend-prod:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail --request GET --url 'http://frontend-prod:5173' || exit 1",
+        ]
+    depends_on:
+      backend-prod:
+        condition: service_healthy
+
+  backend-prod:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'curl --fail --request POST --header ''Content-Type: application/json'' --url ''http://backend-prod:3000'' --data ''{"query":"query { __typename }"}'' || exit 1',
+        ]
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+
+  database-prod:
+    image: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${DB_DATABASE} -U ${DB_USER}"]
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_HOST: ${DB_HOST}
+    volumes:
+      - ./database:/var/lib/postgresql/data
+
+  gateway-prod:
+    image: nginx
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+    ports:
+      - ${GATEWAY_PORT}:80
+    depends_on:
+      backend-prod:
+        condition: service_healthy
+      frontend-prod:
+        condition: service_healthy
