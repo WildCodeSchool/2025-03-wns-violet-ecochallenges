@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev ./src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "start": "node ./build/index.js",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

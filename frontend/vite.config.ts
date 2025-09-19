@@ -13,6 +13,7 @@ export default defineConfig({
       path: "/hmr",
     },
   },
+  //TODO ? déplacer dans vitest.config.ts
   test: {
     globals: true,
     setupFiles: ["./src/tests/setup.ts"],
