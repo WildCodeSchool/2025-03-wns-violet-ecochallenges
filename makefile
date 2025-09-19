@@ -6,4 +6,4 @@ clean:
 
 clean-ultra:
 	docker system prune -af --volumes
-	sudo rm -rf /database
+	sudo rm -r database

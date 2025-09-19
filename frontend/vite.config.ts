@@ -13,11 +13,11 @@ export default defineConfig({
       path: "/hmr",
     },
   },
-  test: {
-    globals: true,
-    setupFiles: ["./src/tests/setup.ts"],
-    environment: "jsdom",
-  },
+  // test: {
+  //   globals: true,
+  //   setupFiles: ["./src/tests/setup.ts"],
+  //   environment: "jsdom",
+  // },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
