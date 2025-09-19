@@ -29,6 +29,10 @@ services:
           "CMD-SHELL",
           'curl --fail --request POST --header ''Content-Type: application/json'' --url ''http://backend-dev:3000'' --data ''{"query":"query { __typename }"}'' || exit 1',
         ]
+    depends_on:
+      database-dev:
+        condition: service_healthy
+        
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: ${DB_DATABASE}
