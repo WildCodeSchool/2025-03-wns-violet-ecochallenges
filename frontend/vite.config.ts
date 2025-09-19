@@ -13,11 +13,12 @@ export default defineConfig({
       path: "/hmr",
     },
   },
-  // test: {
-  //   globals: true,
-  //   setupFiles: ["./src/tests/setup.ts"],
-  //   environment: "jsdom",
-  // },
+  //TODO ? déplacer dans vitest.config.ts
+  test: {
+    globals: true,
+    setupFiles: ["./src/tests/setup.ts"],
+    environment: "jsdom",
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
