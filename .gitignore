@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 /database
 
-.env.dev
-.env.prod
-.env
+# .env.dev
+# .env.prod
+.env*
