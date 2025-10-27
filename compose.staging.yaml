@@ -44,7 +44,7 @@ services:
       POSTGRES_USER: ${{secrets.DB_USER}}
       POSTGRES_HOST: ${{secrets.DB_HOST}}
     volumes:
-      - ./database:/var/lib/postgresql/data
+      - ./database:/var/lib/postgresql
 
   gateway-staging:
     image: nginx
