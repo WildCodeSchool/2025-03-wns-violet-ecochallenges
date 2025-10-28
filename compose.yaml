@@ -25,6 +25,9 @@ services:
           "CMD-SHELL",
           'curl --fail --request POST --header ''Content-Type: application/json'' --url ''http://backend:3000'' --data ''{"query":"query { __typename }"}'' || exit 1',
         ]
+    depends_on:
+      database:
+        condition: service_healthy
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: ${DB_DATABASE}
@@ -41,7 +44,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_HOST: ${DB_HOST}
     volumes:
-      - ./database:/var/lib/postgresql/data
+      - ./database:/var/lib/postgresql
 
   gateway:
     image: nginx
