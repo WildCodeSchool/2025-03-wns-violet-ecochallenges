@@ -1,0 +1,22 @@
+FROM node:lts-alpine AS builder
+WORKDIR /app
+COPY *.json .
+COPY index.html .
+RUN npm i
+COPY .env .env 
+COPY codegen.ts .
+COPY vite.config.ts .
+COPY tailwind.config.ts .
+COPY src src
+COPY public public 
+COPY postcss.config.js .
+RUN ["npm", "run", "build"]
+
+FROM node:lts-alpine
+WORKDIR /app
+RUN apk --no-cache add curl
+COPY --from=builder /app/dist ./build
+COPY package*.json .
+RUN npm i --production
+
+CMD ["npm", "run", "start"]

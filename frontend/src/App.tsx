@@ -1,11 +1,11 @@
-// import { Button } from "@/components/ui/button";
+import { Outlet } from "react-router";
+import Header from "./components/custom/Header/index.tsx";
 
 function App() {
   return (
-    <div>
-      {/* <Button className="bg-background">COUCOU les loulous</Button> */}
-      <div className="bg-background">COUCOU les zerzer</div>
-      dfbsdhb CAPTAIN PLANET YOUHOUUUU
+    <div className="bg-background">
+      <Header />
+      <Outlet />;
     </div>
   );
 }
