@@ -3,7 +3,6 @@ WORKDIR /app
 COPY *.json .
 COPY index.html .
 RUN npm i
-COPY .env .env 
 COPY codegen.ts .
 COPY vite.config.ts .
 COPY tailwind.config.ts .
