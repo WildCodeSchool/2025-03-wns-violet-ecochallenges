@@ -1,20 +1,27 @@
 @font-face {
-  font-family: 'SansitaOne';
-  src: url('/src/assets/fonts/SansitaOne.ttf') format('truetype');
+  font-family: "SansitaOne";
+  src: url("/src/assets/fonts/SansitaOne.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Urbanist';
-  src: url('/src/assets/fonts/Urbanist.ttf') format('truetype');
+  font-family: "SansitaBoldItalic";
+  src: url("/src/assets/fonts/Sansita-BoldItalic.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/src/assets/fonts/Inter.ttf') format('truetype');
+  font-family: "Urbanist";
+  src: url("/src/assets/fonts/Urbanist.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/src/assets/fonts/Inter.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }

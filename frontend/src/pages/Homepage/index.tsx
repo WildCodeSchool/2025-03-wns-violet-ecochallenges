@@ -1,9 +1,11 @@
+import Banner from "./Banner";
 import Explanations from "./Explanations";
 
 function Homepage() {
   return (
-    <Explanations />
-  )
+  < Banner />
+  <Explanations />
+  );
 }
 
 export default Homepage;
