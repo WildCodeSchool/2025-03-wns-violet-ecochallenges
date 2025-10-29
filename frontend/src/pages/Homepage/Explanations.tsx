@@ -19,7 +19,7 @@ function Explanations() {
   });
 
   return (
-    <main className="font-urbanist md:bg-secondary max-h-xl">
+    <section className="font-urbanist md:bg-secondary max-h-xl">
       <TypographyH2 className="text-white p-4">
         Comment ça marche ?
       </TypographyH2>
@@ -104,7 +104,7 @@ function Explanations() {
           </svg>
         )}
 
-        <div className="mt-8">
+        <div className="mt-8 pb-5">
           <Card className="bg-secondary-foreground text-black flex items-center gap-4 p-4 max-w-xs mx-auto">
             <CardDescription className="rounded-full text-black bg-white w-10 h-10 flex items-center justify-center text-lg font-bold">
               3
@@ -113,7 +113,7 @@ function Explanations() {
           </Card>
         </div>
       </div>
-    </main>
+    </section>
   );
 }
 
