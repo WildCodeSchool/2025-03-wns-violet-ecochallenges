@@ -16,7 +16,7 @@ function Arrow({ type, className, direction }: ArrowProps) {
         strokeWidth="1.5"
         stroke="currentColor"
         className={cn(
-          "w-[5rem] h-[4rem] text-white my-auto hidden lg:block",
+          "w-[5rem] h-[4rem] text-white my-auto",
           className
         )}
       >
