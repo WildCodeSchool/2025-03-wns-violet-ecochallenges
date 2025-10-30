@@ -1,6 +1,8 @@
 services:
-  frontend:
-    build: ./frontend
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     volumes:
       - ./frontend/src/:/app/src/
       - ./frontend/codegen.ts:/app/codegen.ts
@@ -9,29 +11,36 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl --fail --request GET --url 'http://frontend:5173' || exit 1",
+          "curl --fail --request GET --url 'http://frontend-dev:5173' || exit 1",
         ]
     depends_on:
-      backend:
+      backend-dev:
         condition: service_healthy
 
-  backend:
-    build: ./backend
+  backend-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
     volumes:
       - ./backend/src/:/app/src/
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          'curl --fail --request POST --header ''Content-Type: application/json'' --url ''http://backend:3000'' --data ''{"query":"query { __typename }"}'' || exit 1',
+          'curl --fail --request POST --header ''Content-Type: application/json'' --url ''http://backend-dev:3000'' --data ''{"query":"query { __typename }"}'' || exit 1',
         ]
+    depends_on:
+      database-dev:
+        condition: service_healthy
+        
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: ${DB_DATABASE}
       DB_USER: ${DB_USER}
       DB_HOST: ${DB_HOST}
+      API_PORT: ${API_PORT}
 
-  database:
+  database-dev:
     image: postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${DB_DATABASE} -U ${DB_USER}"]
@@ -41,22 +50,22 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_HOST: ${DB_HOST}
     volumes:
-      - ./database:/var/lib/postgresql/data
+      - ./database:/var/lib/postgresql
 
-  gateway:
+  gateway-dev:
     image: nginx
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf
     ports:
       - ${GATEWAY_PORT}:80
     depends_on:
-      backend:
+      backend-dev:
         condition: service_healthy
-      frontend:
+      frontend-dev:
         condition: service_healthy
 
-  adminer:
+  adminer-dev:
     image: adminer
     depends_on:
-      database:
+      database-dev:
         condition: service_healthy
