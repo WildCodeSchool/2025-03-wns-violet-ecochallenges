@@ -1,117 +1,149 @@
-import { useEffect, useState } from "react";
 import { TypographyH2 } from "../../components/ui/typographyH2.tsx";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-} from "../../components/ui/card.tsx";
+import ExplanationItem from "@/components/custom/ExplanationItem.tsx";
 
 function Explanations() {
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    const handleScreenType = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
-    handleScreenType();
-    window.addEventListener("resize", handleScreenType);
-    return () => window.removeEventListener("resize", handleScreenType);
-  });
-
   return (
-    <section className="font-urbanist md:bg-secondary max-h-xl">
-      <TypographyH2 className="text-white p-4">
+    <section className="font-urbanist md:bg-secondary py-8">
+      <TypographyH2 className="text-white p-4 mb-8">
         Comment ça marche ?
       </TypographyH2>
 
-      <div className="md:flex flex-row justify-center">
-        <div className="mt-8">
-          <Card className="bg-secondary-foreground text-black flex items-center gap-4 p-4 max-w-xs mx-auto">
-            <CardDescription className="rounded-full text-black bg-white w-10 h-10 flex items-center justify-center text-lg font-bold">
-              1
-            </CardDescription>
-            <CardContent className="p-0">Je crée un challenge</CardContent>
-          </Card>
-        </div>
+      <div className="flex flex-col md:flex-row items-center  gap-4 md:gap-8 px-4">
+        <ExplanationItem
+          number={1}
+          content={"Je crée un challenge"}
+          display="left"
+        />
 
-        {isDesktop ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-[5rem] h-[4rem] text-white mt-auto"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-            />
-          </svg>
-        ) : (
-          <svg
-            width="45"
-            height="45"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-primary flex justify-self-end items-center m-4"
-          >
-            <path
-              d="M5 15H4L0 11L4 7H5V10H11C12.6569 10 14 8.65685 14 7C14 5.34315 12.6569 4 11 4H4V2H11C13.7614 2 16 4.23858 16 7C16 9.76142 13.7614 12 11 12H5V15Z"
-              fill="currentColor"
-            />
-          </svg>
-        )}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-[5rem] h-[4rem] text-white mt-auto hidden md:block "
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
+          />
+        </svg>
 
-        <div className="mt-8">
-          <Card className="bg-secondary-foreground text-black flex items-center gap-4 p-4 max-w-xs mx-auto">
-            <CardContent className="p-0">J'ajoute des éco-gestes</CardContent>
-            <CardDescription className="rounded-full text-black bg-white w-10 h-10 flex items-center justify-center text-lg font-bold">
-              2
-            </CardDescription>
-          </Card>
-        </div>
-        {isDesktop ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:svgjs="http://svgjs.dev/svgjs"
+          viewBox="0 0 800 800"
+          className="h-[8rem] text-white mt-auto font-bold self-end absolute -right-2 top-[30rem] md:hidden"
+        >
+          <g
+            stroke-width="9"
+            stroke="hsl(174, 42%, 65%)"
             fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-[5rem] h-[4rem] text-white mt-auto"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            transform="matrix(0.766044443118978,0.6427876096865393,-0.6427876096865393,0.766044443118978,324.6972666270245,-163.532821122207)"
           >
             <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-            />
-          </svg>
-        ) : (
-          <svg
-            width="45"
-            height="45"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-primary flex justify-end items-center m-4"
-          >
-            <path
-              d="M11 15H12L16 11L12 7H11V10H5C3.34315 10 2 8.65685 2 7C2 5.34315 3.34315 4 5 4H12V2H5C2.23858 2 0 4.23858 0 7C0 9.76142 2.23858 12 5 12H11V15Z"
-              fill="currentColor"
-            />
-          </svg>
-        )}
+              d="M181.3744659423828 273.27195739746094Q818.3744659423828 -20.728042602539062 527.3744659423828 619.2719573974609 "
+              marker-end="url(#SvgjsMarker2729)"
+            ></path>
+          </g>
+          <defs>
+            <marker
+              markerWidth="7"
+              markerHeight="7"
+              refX="3.5"
+              refY="3.5"
+              viewBox="0 0 7 7"
+              orient="auto"
+              id="SvgjsMarker2729"
+            >
+              <polyline
+                points="0,3.5 3.5,1.75 0,0"
+                fill="none"
+                stroke-width="1.1666666666666667"
+                stroke="hsl(174, 42%, 65%)"
+                stroke-linecap="round"
+                transform="matrix(1,0,0,1,1.1666666666666667,1.75)"
+                stroke-linejoin="round"
+              ></polyline>
+            </marker>
+          </defs>
+        </svg>
 
-        <div className="mt-8 pb-5">
-          <Card className="bg-secondary-foreground text-black flex items-center gap-4 p-4 max-w-xs mx-auto">
-            <CardDescription className="rounded-full text-black bg-white w-10 h-10 flex items-center justify-center text-lg font-bold">
-              3
-            </CardDescription>
-            <CardContent className="p-0">J'invite des amis</CardContent>
-          </Card>
-        </div>
+        <ExplanationItem
+          number={2}
+          content={"J'ajoute des éco-gestes"}
+          display="left"
+        />
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-[5rem] h-[4rem] text-white mt-auto hidden md:block "
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
+          />
+        </svg>
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:svgjs="http://svgjs.dev/svgjs"
+          viewBox="0 0 800 800"
+          className="h-[8rem] text-white mt-auto font-bold transform scale-x-[-1] origin-center self-start absolute -left-2 bottom-[15rem] md:hidden"
+        >
+          <g
+            stroke-width="9"
+            stroke="hsl(174, 42%, 65%)"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            transform="matrix(0.766044443118978,0.6427876096865393,-0.6427876096865393,0.766044443118978,324.6972666270245,-163.532821122207)"
+          >
+            <path
+              d="M181.3744659423828 273.27195739746094Q818.3744659423828 -20.728042602539062 527.3744659423828 619.2719573974609 "
+              marker-end="url(#SvgjsMarker2729)"
+            ></path>
+          </g>
+          <defs>
+            <marker
+              markerWidth="7"
+              markerHeight="7"
+              refX="3.5"
+              refY="3.5"
+              viewBox="0 0 7 7"
+              orient="auto"
+              id="SvgjsMarker2729"
+            >
+              <polyline
+                points="0,3.5 3.5,1.75 0,0"
+                fill="none"
+                stroke-width="1.1666666666666667"
+                stroke="hsl(174, 42%, 65%)"
+                stroke-linecap="round"
+                transform="matrix(1,0,0,1,1.1666666666666667,1.75)"
+                stroke-linejoin="round"
+              ></polyline>
+            </marker>
+          </defs>
+        </svg>
+
+        <ExplanationItem
+          number={3}
+          content={"J'invite mes amis"}
+          display="left"
+        />
       </div>
     </section>
   );

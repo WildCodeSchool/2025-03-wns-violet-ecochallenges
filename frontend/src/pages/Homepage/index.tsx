@@ -3,8 +3,10 @@ import Explanations from "./Explanations";
 
 function Homepage() {
   return (
-  < Banner />
-  <Explanations />
+    <>
+      <Banner />
+      <Explanations />
+    </>
   );
 }
 
