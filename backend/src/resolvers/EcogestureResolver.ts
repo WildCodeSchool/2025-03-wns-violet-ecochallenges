@@ -1,12 +1,46 @@
-import { Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Field,
+  InputType,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from "type-graphql";
+@ObjectType()
+class EcogestureListResponse {
+  @Field(() => Number)
+  totalCount: number;
+
+  @Field(() => [Ecogesture])
+  ecogestures: Ecogesture[];
+}
 import { Ecogesture } from "../entities/Ecogesture";
+
+@InputType()
+class GetEcogestureInput {
+  @Field(() => Number, { nullable: true })
+  page?: number;
+
+  @Field(() => Number, { nullable: true })
+  limit?: number;
+}
 
 @Resolver(Ecogesture)
 export default class EcogestureResolver {
-  @Query(() => [Ecogesture])
-  async getAllEcogestures() {
-    const ecogestures = await Ecogesture.find();
-    return ecogestures;
+  @Query(() => EcogestureListResponse)
+  async getEcogestures(
+    @Arg("input", () => GetEcogestureInput)
+    { page = 1, limit = 5 }: GetEcogestureInput
+  ): Promise<EcogestureListResponse> {
+    const skip = (page - 1) * limit;
+
+    const [ecogestures, totalCount] = await Ecogesture.findAndCount({
+      skip,
+      take: limit,
+    });
+
+    return { totalCount, ecogestures };
   }
 
   @Mutation(() => [Ecogesture])
