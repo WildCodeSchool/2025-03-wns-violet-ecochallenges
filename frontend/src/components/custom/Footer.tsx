@@ -47,7 +47,7 @@ const Footer = () => {
 
           <div className="col-span-1 lg:col-span-4 grid grid-cols-2 gap-8 ">
             {menuItems.map((section, sectionIdx) => (
-              <div key={sectionIdx} className="text-center lg:text-left">
+              <div key={sectionIdx} className="text-left">
                 <TypographyH3 className="mb-4 font-bold text-background">
                   {section.title}
                 </TypographyH3>
