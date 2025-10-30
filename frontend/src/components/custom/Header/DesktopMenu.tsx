@@ -17,7 +17,7 @@ const DesktopMenu = () => {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link to="/signin">Se connecter</Link>
+            <Link to="/login">Se connecter</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>

@@ -6,6 +6,7 @@ import App from "./App.tsx";
 import Homepage from "./pages/Homepage/index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
+import { Login } from "./components/custom/Login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,11 @@ const router = createBrowserRouter([
         path: "/",
         element: <Homepage />,
       },
+      {
+        path: "/login",
+        element: <Login />,
+
+      }
     ],
   },
 ]);
