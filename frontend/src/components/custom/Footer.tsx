@@ -36,11 +36,11 @@ const Footer = () => {
             )}
           >
             <img
-              src={"/grey-cap-logo.svg"}
+              src="/grey-cap-logo.svg"
               className="h-12 w-12"
               alt="grey captain planet logo"
             />
-            <TypographyP className="font-sansitaBoldItalic font-medium text-xl md:text-3xl text-background leading-none [&:not(:first-child)]:mt-0 w-20 md:w-28">
+            <TypographyP className="font-sansitaBoldItalic font-medium text-xl md:text-3xl text-background leading-none w-20 md:w-28">
               Captain Planet
             </TypographyP>
           </Link>

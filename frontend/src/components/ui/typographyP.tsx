@@ -7,14 +7,5 @@ export function TypographyP({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <p
-      className={cn(
-        "leading-7 [&:not(:first-child)]:mt-6 font-inter",
-        className
-      )}
-    >
-      {children}
-    </p>
-  );
+  return <p className={cn("leading-7 font-inter", className)}>{children}</p>;
 }
