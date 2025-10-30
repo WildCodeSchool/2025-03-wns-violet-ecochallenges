@@ -24,7 +24,7 @@ class NewUserInput {
 function setCookie(ctx: Context, token: string) {
   ctx.res.setHeader(
     "Set-Cookie",
-    `tgc-auth=${token};secure;httpOnly;SameSite=Strict;`
+    `eco-auth=${token};secure;httpOnly;SameSite=Strict;`
   );
 }
 
