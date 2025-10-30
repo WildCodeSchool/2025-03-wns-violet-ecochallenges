@@ -1,10 +1,10 @@
 import { TypographyH2 } from "../../components/ui/typographyH2.tsx";
-import ExplanationItem from "@/components/custom/Explanations/ExplanationItem.tsx";
-import Arrow from "@/components/custom/Explanations/Arrow.tsx";
+import ExplanationItem from "@/pages/Explanations/ExplanationItem.tsx";
+import Arrow from "@/pages/Explanations/Arrow.tsx";
 
 function Explanations() {
   return (
-    <section className="font-urbanist md:bg-secondary py-8">
+    <section className="font-urbanist md:bg-secondary py-8 max-w-8xl m-auto ">
       <TypographyH2 className="text-white p-4 mb-8">
         Comment ça marche ?
       </TypographyH2>
@@ -14,7 +14,7 @@ function Explanations() {
           <ExplanationItem
             number={1}
             content={"Je crée un challenge"}
-            display="left"
+            displayDirection="left"
           />
 
           <Arrow
@@ -23,13 +23,13 @@ function Explanations() {
             direction="right"
           />
         </div>
-        <Arrow type="straight" />
+        <Arrow type="straight" className="hidden lg:block" />
 
         <div className="relative">
           <ExplanationItem
             number={2}
             content={"J'ajoute des éco-gestes"}
-            display="left"
+            displayDirection="left"
           />
 
           <Arrow
@@ -39,12 +39,12 @@ function Explanations() {
           />
         </div>
 
-        <Arrow type="straight" />
+        <Arrow type="straight" className="hidden lg:block" />
 
         <ExplanationItem
           number={3}
           content={"J'invite mes amis"}
-          display="left"
+          displayDirection="left"
         />
       </div>
     </section>

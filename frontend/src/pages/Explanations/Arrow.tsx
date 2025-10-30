@@ -15,7 +15,10 @@ function Arrow({ type, className, direction }: ArrowProps) {
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className="w-[5rem] h-[4rem] text-white my-auto hidden lg:block"
+        className={cn(
+          "w-[5rem] h-[4rem] text-white my-auto hidden lg:block",
+          className
+        )}
       >
         <path
           strokeLinecap="round"

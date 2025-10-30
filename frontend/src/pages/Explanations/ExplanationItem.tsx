@@ -4,14 +4,14 @@ import { cn } from "@/lib/utils";
 interface ExplanationItemProps {
   number: number;
   content: string;
-  display: "left" | "right";
+  displayDirection: "left" | "right";
 }
 
-function ExplanationItem({ number, content, display }: ExplanationItemProps) {
+function ExplanationItem({ number, content, displayDirection }: ExplanationItemProps) {
   return (
     <Card
       className={`bg-secondary-foreground text-black flex items-center gap-4 p-4 w-64 ${
-        display === "right" ? "flex-row-reverse" : "flex-row"
+        displayDirection === "right" ? "flex-row-reverse" : "flex-row"
       }`}
     >
       <CardDescription

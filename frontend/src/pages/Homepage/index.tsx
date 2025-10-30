@@ -1,5 +1,5 @@
 import Banner from "./Banner";
-import Explanations from "./Explanations";
+import Explanations from "../Explanations";
 
 function Homepage() {
   return (
