@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
 interface LoginProps {
   heading?: string;
   logo: {
@@ -17,10 +16,10 @@ interface LoginProps {
   bg?: string;
 }
 
-const Login = ({
+export const Login = ({
   heading = "CREER UN COMPTE",
   buttonText = "S'inscrire",
-  signupUrl = "https://shadcnblocks.com",
+  signupUrl = "/Signup",
   bg = "bg-white"
 }: LoginProps) => {
   return (
@@ -66,5 +65,3 @@ const Login = ({
     </section>
   );
 };
-
-export { Login };
