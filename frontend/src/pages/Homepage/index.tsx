@@ -1,8 +1,12 @@
 import Banner from "./Banner";
+import Explanations from "../Explanations";
 
 function Homepage() {
   return (
-  < Banner />
+    <>
+      <Banner />
+      <Explanations />
+    </>
   );
 }
 
