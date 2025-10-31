@@ -1,29 +1,71 @@
 import { TypographyH2 } from "@/components/ui/typographyH2";
-import { useGetEcogesturesQuery } from "@/generated/graphql-types";
+import {
+  useGetEcogesturesQuery,
+  type Ecogesture,
+} from "@/generated/graphql-types";
 import EcogestureCard from "./EcogestureCard";
+import { Button } from "@/components/ui/button";
+import { TypographyP } from "@/components/ui/typographyP";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+
+const ITEM_PER_PAGE = 3;
 
 const Ecogestures = () => {
-  const { data, loading, error } = useGetEcogesturesQuery({
+  const [lastLoadedPage, setLastLoadedPage] = useState(1);
+  const [allEcogestures, setAllEcogestures] = useState<
+    Array<Pick<Ecogesture, "id" | "label" | "pictureUrl">>
+  >([]);
+
+  const { data, loading } = useGetEcogesturesQuery({
     variables: {
       input: {
-        page: 1,
-        limit: 3,
+        page: lastLoadedPage,
+        limit: ITEM_PER_PAGE,
       },
     },
   });
 
-  const ecogestures = data?.getEcogestures.ecogestures ?? [];
+  useEffect(() => {
+    if (data?.getEcogestures.ecogestures) {
+      setAllEcogestures((prev) => [
+        ...prev,
 
-  console.log(data);
+        // Filter to avoid duplicates when useEffect is triggered
+        // (for exemple by navigating back)
+        ...data.getEcogestures.ecogestures.filter(
+          (ecogesture) => !prev.some((e) => e.id === ecogesture.id)
+        ),
+      ]);
+    }
+  }, [data]);
+
+  const handleSeeMore = () => {
+    setLastLoadedPage((prev) => prev + 1);
+  };
 
   return (
-    <div className="max-w-7xl m-auto flex p-4 flex-col items-center gap-6">
+    <div className="max-w-7xl m-auto flex pt-4 pb-12 flex-col items-center gap-6">
       <TypographyH2 className="text-white">Les écogestes</TypographyH2>
-      <div className="flex justify-center gap-12">
-        {ecogestures.map((ecogesture) => (
+
+      <div className="flex justify-center gap-12 flex-wrap">
+        {allEcogestures.map((ecogesture) => (
           <EcogestureCard key={ecogesture.id} ecogesture={ecogesture} />
         ))}
       </div>
+
+      {allEcogestures.length < (data?.getEcogestures.totalCount ?? 0) && (
+        <Button
+          variant="secondary"
+          className={cn(
+            "w-[200px]",
+            loading && "opacity-50 pointer-events-none"
+          )}
+          onClick={handleSeeMore}
+        >
+          <TypographyP className="text-white">Voir plus</TypographyP>
+        </Button>
+      )}
     </div>
   );
 };

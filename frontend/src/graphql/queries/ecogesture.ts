@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_ECOGESTURES = gql`
-  query GetEcogestures($input: GetEcogestureInput) {
+  query GetEcogestures($input: GetEcogesturesInput) {
     getEcogestures(input: $input) {
       totalCount
       ecogestures {

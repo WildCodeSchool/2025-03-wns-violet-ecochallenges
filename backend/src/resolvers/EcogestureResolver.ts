@@ -19,7 +19,7 @@ class EcogestureListResponse {
 }
 
 @InputType()
-class GetEcogestureInput {
+class GetEcogesturesInput {
   @Field(() => Number, { nullable: true })
   page?: number;
 
@@ -31,8 +31,8 @@ class GetEcogestureInput {
 export default class EcogestureResolver {
   @Query(() => EcogestureListResponse)
   async getEcogestures(
-    @Arg("input", () => GetEcogestureInput, { nullable: true })
-    input?: GetEcogestureInput
+    @Arg("input", () => GetEcogesturesInput, { nullable: true })
+    input?: GetEcogesturesInput
   ): Promise<EcogestureListResponse> {
     const page = input?.page ?? 1;
     const limit = input?.limit ?? 5;
