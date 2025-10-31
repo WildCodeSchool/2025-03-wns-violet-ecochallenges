@@ -8,6 +8,7 @@ function Banner() {
   return (
     <div 
       className={cn(
+        "w-full max-w-7xl mx-auto",
         "flex flex-col lg:flex-row lg:items-center lg:justify-between",
         "p-4 lg:p-8",
         )}
