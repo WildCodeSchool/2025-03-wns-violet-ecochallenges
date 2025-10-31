@@ -33,7 +33,7 @@ export function useSignup() {
       const json = await res.json();
 
       if (json.errors?.length) {
-        setError(json.errors[0].message || "GraphQL error");
+        setError(json.errors[0].message || "Erreur GraphQL");
         setLoading(false);
         return false;
       }
@@ -53,7 +53,7 @@ export function useSignup() {
         profile = payload ? JSON.parse(payload) : null;
 
       } catch {
-        setError("Format Invalide");
+        setError("Format de réponse invalide");
         setLoading(false);
         return false;
       }
