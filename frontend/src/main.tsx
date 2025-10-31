@@ -1,9 +1,9 @@
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import { createRoot } from "react-dom/client";
+import { StrictMode } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import App from "./App.tsx";
 import Homepage from "./pages/Homepage/index.tsx";
-import React from "react";
-import ReactDOM from "react-dom/client";
 import Signuppage from "./pages/Registerpage/Index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
@@ -30,10 +30,10 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
     <ApolloProvider client={client}>
       <RouterProvider router={router} />
     </ApolloProvider>
-  </React.StrictMode>
+  </StrictMode>
 );
