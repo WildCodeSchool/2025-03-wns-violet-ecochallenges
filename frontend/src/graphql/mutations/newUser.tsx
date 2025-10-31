@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
 
 const SIGNUP_MUTATION = `
   mutation Signup($data: NewUserInput!) {
@@ -13,7 +12,6 @@ export function useSignup() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setUser } = useAuth();
 
   const signup = async (email: string, password: string) => {
 
@@ -43,7 +41,7 @@ export function useSignup() {
       const payload = json.data?.signup;
 
       if (typeof payload !== "string") {
-        setError("Unexpected signup response");
+        setError("Format de réponse inattendu");
         setLoading(false);
         return false;
       }
@@ -55,7 +53,7 @@ export function useSignup() {
         profile = payload ? JSON.parse(payload) : null;
 
       } catch {
-        setError("Invalid signup response format");
+        setError("Format Invalide");
         setLoading(false);
         return false;
       }
@@ -66,13 +64,12 @@ export function useSignup() {
         return false;
       }
 
-      setUser({ id: String(profile.username || profile.email), email: profile.email });
       setLoading(false);
       return true;
 
     } catch {
 
-      setError("Network error");
+      setError("Erreur réseau");
       setLoading(false);
       return false;
 
