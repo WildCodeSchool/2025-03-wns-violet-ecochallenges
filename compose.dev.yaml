@@ -32,7 +32,7 @@ services:
     depends_on:
       database-dev:
         condition: service_healthy
-        
+
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: ${DB_DATABASE}
