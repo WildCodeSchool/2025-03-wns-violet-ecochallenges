@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface RegisterProps {
@@ -58,7 +57,7 @@ export const Register = ({
   );
 
   return (
-    <section className="flex items-center justify-center">
+   <section className="flex items-center justify-center">
       <div className="w-full px-4">
         <form
           onSubmit={handleSubmit}
@@ -68,7 +67,7 @@ export const Register = ({
           )}
         >
           <h1 className="text-2xl font-semibold w-full text-center">CRÉER UN COMPTE</h1>
-          
+
           <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
             <a href="/Signin" className="text-primary font-medium hover:underline">
               J'ai déjà un compte
@@ -76,32 +75,44 @@ export const Register = ({
           </div>
 
           <div className="w-full">
-            <label className="text-sm block mb-1">Email</label>
-            <Input
+            <label htmlFor="register-email" className="text-sm block mb-1">
+              Email
+            </label>
+            <input
+              id="register-email"
               name="email"
               type="email"
               placeholder="captain@planet.fr"
               value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-              className={cn(bg, "text-sm")}
+              onChange={(e) => setEmail(e.target.value)}
+              className={cn(
+                "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
+              )}
               required
+              aria-invalid={email.length > 0 ? !emailValid : undefined}
             />
           </div>
 
           <div className="w-full">
-            <label className="text-sm block mb-1">Mot de passe</label>
-            <Input
+            <label htmlFor="register-password" className="text-sm block mb-1">
+              Mot de passe
+            </label>
+            <input
+              id="register-password"
               name="password"
               type="password"
               placeholder="Mot de passe"
               value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-              className={cn(bg, "text-sm")}
+              onChange={(e) => setPassword(e.target.value)}
+              className={cn(
+                "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
+              )}
               required
               aria-describedby="password-hint"
+              aria-invalid={password.length > 0 ? !passwordValid : undefined}
             />
 
-            <div id="password-hint" className="mt-3 w-full text-sm" aria-live="polite">
+            <div id="password-hint" className="mt-3 w-full text-sm" aria-live="polite" role="status">
               <p className="mb-2 font-medium text-gray-700">Votre mot de passe doit contenir :</p>
               <ul className="list-inside space-y-1">
                 {ruleItem(minLength, "Au moins 8 caractères")}
@@ -114,13 +125,14 @@ export const Register = ({
           </div>
 
           {(localError || error) && (
-            <p className="text-destructive text-sm w-full">{localError ?? error}</p>
+            <p className="text-destructive text-sm w-full" role="alert" aria-live="assertive">
+              {localError ?? error}
+            </p>
           )}
 
-          <Button type="submit" className="w-full" disabled={!formValid}>
+          <Button type="submit" className="w-full" disabled={!formValid} aria-disabled={!formValid}>
             S'inscrire
           </Button>
-
         </form>
       </div>
     </section>
