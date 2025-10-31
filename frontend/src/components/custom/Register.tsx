@@ -24,28 +24,32 @@ export const Register = ({
   const hasUpper = useMemo(() => /[A-Z]/.test(password), [password]);
   const hasLower = useMemo(() => /[a-z]/.test(password), [password]);
   const hasNumber = useMemo(() => /[0-9]/.test(password), [password]);
-
   const passwordValid = minLength && hasSpecial && hasUpper && hasLower && hasNumber;
   const formValid = emailValid && passwordValid;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
     e.preventDefault();
     setLocalError(null);
     if (!onSubmit) return;
+
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
+
     if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
       setLocalError("Adresse email invalide.");
       return;
     }
+
     if (!passwordValid) {
       setLocalError("Mot de passe invalide.");
       return;
     }
+
     await onSubmit({ email: trimmedEmail, password: trimmedPassword });
+
   };
 
-  // helper d'affichage d'état
   const ruleItem = (ok: boolean, text: string) => (
     <li className={cn("flex items-center gap-2 text-sm", ok ? "text-green-600" : "text-gray-500")}>
       <span aria-hidden>{ok ? "✓" : "○"}</span>
@@ -116,6 +120,7 @@ export const Register = ({
           <Button type="submit" className="w-full" disabled={!formValid}>
             S'inscrire
           </Button>
+
         </form>
       </div>
     </section>
