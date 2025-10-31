@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 
 interface LoginProps {
   signupText?: string;
-  signupUrl?: string;
+  // signupUrl?: string;
   bg?: string;
   onSubmit?: (data: {
     email: string;
@@ -16,28 +16,31 @@ interface LoginProps {
 }
 
 export const Login = ({
-  signupUrl = "/Signup",
+  // signupUrl = "/Signup",
   bg = "bg-white",
   onSubmit,
   loading = false,
   error = null,
 }: LoginProps) => {
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     if (!onSubmit) return;
 
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    const email = (fd.get("email") as string) || "";
-    const password = (fd.get("password") as string) || "";
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const email = (formData.get("email") as string) || "";
+    const password = (formData.get("password") as string) || "";
 
     await onSubmit({ email, password });
   };
 
+  const [login] = useLoginMutation();
+
   return (
     <section>
-      <div className="flex items-center justify-center pb-8">
+      <div className="flex items-center justify-center p-8">
         <div className="flex flex-col items-center gap-6 lg:justify-start">
           <form
             onSubmit={handleSubmit}
@@ -50,7 +53,7 @@ export const Login = ({
 
             <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
               <a
-                href={signupUrl}
+                href="/Signup"
                 className="text-primary font-medium hover:underline"
               >
                 Je n'ai pas encore de compte

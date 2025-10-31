@@ -4,7 +4,7 @@ dotenv.config();
 
 const config: CodegenConfig = {
   schema: `${process.env.VITE_API_URL_FROM_CLIENT}/`,
-  documents: ["src/graphql/operations.ts"],
+  documents: ["src/graphql/mutations/**/*.ts", "src/graphql/queries/**/*.ts"],
   overwrite: true,
   generates: {
     "./src/generated/graphql-types.ts": {
