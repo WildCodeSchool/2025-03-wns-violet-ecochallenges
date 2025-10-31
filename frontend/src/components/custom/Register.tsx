@@ -20,11 +20,11 @@ export const Register = ({
 
   const emailValid = useMemo(() => /^\S+@\S+\.\S+$/.test(email), [email]);
   const minLength = useMemo(() => password.length >= 8, [password]);
-  const hasSpecial = useMemo(() => /[!@#$%^&*()\-_=+[\]{};:'",.<>/?\\|`~]/.test(password),[password]);
+  const hasSpecialChar = useMemo(() => /[!@#$%^&*()\-_=+[\]{};:'",.<>/?\\|`~]/.test(password),[password]);
   const hasUpper = useMemo(() => /[A-Z]/.test(password), [password]);
   const hasLower = useMemo(() => /[a-z]/.test(password), [password]);
   const hasNumber = useMemo(() => /[0-9]/.test(password), [password]);
-  const passwordValid = minLength && hasSpecial && hasUpper && hasLower && hasNumber;
+  const passwordValid = minLength && hasSpecialChar && hasUpper && hasLower && hasNumber;
   const formValid = emailValid && passwordValid;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,7 +105,7 @@ export const Register = ({
               <p className="mb-2 font-medium text-gray-700">Votre mot de passe doit contenir :</p>
               <ul className="list-inside space-y-1">
                 {ruleItem(minLength, "Au moins 8 caractères")}
-                {ruleItem(hasSpecial, "Au moins 1 caractère spécial (ex : ! @ # $ %)")}
+                {ruleItem(hasSpecialChar, "Au moins 1 caractère spécial (ex : ! @ # $ %)")}
                 {ruleItem(hasUpper, "Au moins 1 lettre majuscule")}
                 {ruleItem(hasLower, "Au moins 1 lettre minuscule")}
                 {ruleItem(hasNumber, "Au moins 1 chiffre")}
