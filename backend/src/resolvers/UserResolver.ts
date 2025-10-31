@@ -11,13 +11,32 @@ import argon2 from "argon2";
 import { Context, UserProfile } from "../types/Context";
 import * as jwt from "jsonwebtoken";
 import { User } from "../entities/User";
+import { IsEmail, Matches, MinLength } from "class-validator";
 
 @InputType()
 class NewUserInput {
   @Field()
+  //TODO vérif email
+  @IsEmail({}, { message: "Format de l'email invalide" })
   email: string;
 
   @Field()
+  @MinLength(8, { message: "Le mot de passe doit faire au moins 8 caractères" })
+  @Matches(/^\S*$/, {
+    message: "Le mot de passe ne doit pas contenir d'espaces",
+  })
+  @Matches(/[a-z]/, {
+    message: "Le mot de passe doit contenir au moins une minuscule",
+  })
+  @Matches(/[A-Z]/, {
+    message: "Le mot de passe doit contenir au moins une majuscule",
+  })
+  @Matches(/[\d]/, {
+    message: "Le mot de passe doit contenir au moins un chiffre",
+  })
+  @Matches(/[!@#$%^&*(),.?":{}|<>]/, {
+    message: "Le mot de passe doit contenir au moins un caractère spécial",
+  })
   password: string;
 }
 

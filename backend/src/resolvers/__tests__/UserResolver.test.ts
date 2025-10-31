@@ -341,19 +341,6 @@ describe("UserResolver - Integration Tests with Real PostgreSQL", () => {
       const parsedResult = JSON.parse(result);
       expect(parsedResult.username).toBe("test");
     });
-
-    it("should handle email with only domain part", async () => {
-      const signupData = {
-        email: "@domain.com",
-        password: "pass123",
-      };
-
-      const result = await resolver.signup(signupData, mockContext);
-
-      const parsedResult = JSON.parse(result);
-      expect(parsedResult.username).toBe(""); // Empty username from split
-      expect(parsedResult.email).toBe("@domain.com");
-    });
   });
 
   describe("login", () => {
