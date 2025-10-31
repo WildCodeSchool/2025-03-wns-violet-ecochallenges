@@ -11,7 +11,7 @@ export default function SignupPage() {
     const ok = await signup(data.email, data.password);
 
     if (ok) {
-      navigate("/", { replace: true }); // Redirection si await signup est true
+      navigate("/dashboard", { replace: true }); // TODO Redirection to set after creating a new account
     }
 
   };
