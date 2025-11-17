@@ -1,13 +1,18 @@
 import Banner from "./Banner";
-import Ecogestures from "./Ecogestures";
+import EcogesturesDesktop from "./Ecogestures/EcogesturesDesktop";
 import Explanations from "../Explanations";
+import EcogesturesTabletMobile from "./Ecogestures/EcogesturesTabletMobile";
+import { useMediaQuery } from "usehooks-ts";
 
 function Homepage() {
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+
   return (
     <>
       <Banner />
-      <Ecogestures />
       <Explanations />
+
+      {isDesktop ? <EcogesturesDesktop /> : <EcogesturesTabletMobile />}
     </>
   );
 }

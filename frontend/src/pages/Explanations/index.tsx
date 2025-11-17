@@ -4,7 +4,7 @@ import Arrow from "@/pages/Explanations/Arrow.tsx";
 
 function Explanations() {
   return (
-    <section className="font-urbanist md:bg-secondary py-8 max-w-8xl m-auto ">
+    <section className="font-urbanist md:bg-secondary py-8 max-w-8xl m-auto">
       <TypographyH2 className="text-white p-4 mb-8">
         Comment ça marche ?
       </TypographyH2>

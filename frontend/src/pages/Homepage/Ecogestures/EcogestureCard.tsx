@@ -15,7 +15,7 @@ const EcogestureCard = ({ ecogesture }: EcogestureProps) => {
         className={cn(
           "flex justify-around gap-4",
           "bg-secondary-foreground w-80 py-3",
-          "transition-transform duration-200 hover:scale-105 hover:shadow-lg"
+          "transition-transform duration-200 lg:hover:scale-105"
         )}
       >
         <CardHeader className="flex flex-col items-center">

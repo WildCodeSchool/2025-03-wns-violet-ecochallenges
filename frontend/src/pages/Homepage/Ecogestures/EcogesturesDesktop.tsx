@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 
 const ITEM_PER_PAGE = 3;
 
-const Ecogestures = () => {
-  const [lastLoadedPage, setLastLoadedPage] = useState(1);
+const EcogesturesDesktop = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [allEcogestures, setAllEcogestures] = useState<
     Array<Pick<Ecogesture, "id" | "label" | "pictureUrl">>
   >([]);
@@ -20,7 +20,7 @@ const Ecogestures = () => {
   const { data, loading } = useGetEcogesturesQuery({
     variables: {
       input: {
-        page: lastLoadedPage,
+        page: currentPage,
         limit: ITEM_PER_PAGE,
       },
     },
@@ -41,14 +41,14 @@ const Ecogestures = () => {
   }, [data]);
 
   const handleSeeMore = () => {
-    setLastLoadedPage((prev) => prev + 1);
+    setCurrentPage((prev) => prev + 1);
   };
 
   return (
     <div className="max-w-7xl m-auto flex pt-4 pb-12 flex-col items-center gap-6">
       <TypographyH2 className="text-white">Les écogestes</TypographyH2>
 
-      <div className="flex justify-center gap-12 flex-wrap">
+      <div className="flex justify-center gap-4 xl:gap-14 flex-wrap">
         {allEcogestures.map((ecogesture) => (
           <EcogestureCard key={ecogesture.id} ecogesture={ecogesture} />
         ))}
@@ -70,4 +70,4 @@ const Ecogestures = () => {
   );
 };
 
-export default Ecogestures;
+export default EcogesturesDesktop;
