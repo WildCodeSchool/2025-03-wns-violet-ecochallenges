@@ -14,8 +14,7 @@ interface Login {
   error?: string | null;
 }
 
-// TODO : Vérifier que le token est bien stocké dans les cookies
-// vérifier la bonne gestion des erreurs. Supprimer les console.log lorsque dashboard sera créée.
+// TODO : Supprimer les console.log lorsque dashboard sera créée, ils ne sont là que pour tester la connexion pour le moment.
 
 export const Login = ({ bg = "bg-white", onSubmit }: Login) => {
   const [login] = useLoginMutation();
@@ -41,7 +40,6 @@ export const Login = ({ bg = "bg-white", onSubmit }: Login) => {
 
       console.log(" ✅ Login successful:", data);
       console.log("Email : ", email);
-      console.log("Token: ", data.login);
       navigate("/dashboard");
     } catch (err) {
       if (err instanceof Error) {
