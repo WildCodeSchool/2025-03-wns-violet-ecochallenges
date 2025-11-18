@@ -1,36 +1,98 @@
 import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { SIGNUP_MUTATION } from "@/graphql/mutations/newUser";
 
 interface RegisterProps {
   bg?: string;
-  onSubmit?: (data: { email: string; password: string }) => void | Promise<void>;
   error?: string | null;
+  onSuccess?: () => void;
 }
+
+type Profile = { email: string; roles: string[]; username: string } | null;
 
 export const Register = ({
   bg = "bg-white",
-  onSubmit,
   error = null,
+  onSuccess,
 }: RegisterProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const emailValid = useMemo(() => /^\S+@\S+\.\S+$/.test(email), [email]);
   const minLength = useMemo(() => password.length >= 8, [password]);
-  const hasSpecialChar = useMemo(() => /[!@#$%^&*()\-_=+[\]{};:'",.<>/?\\|`~]/.test(password),[password]);
+  const hasSpecialChar = useMemo(
+    () => /[!@#$%^&*()\-_=+[\]{};:'",.<>/?\\|`~]/.test(password),
+    [password]
+  );
   const hasUpper = useMemo(() => /[A-Z]/.test(password), [password]);
   const hasLower = useMemo(() => /[a-z]/.test(password), [password]);
   const hasNumber = useMemo(() => /[0-9]/.test(password), [password]);
-  const passwordValid = minLength && hasSpecialChar && hasUpper && hasLower && hasNumber;
-  const formValid = emailValid && passwordValid;
+  const passwordValid =
+    minLength && hasSpecialChar && hasUpper && hasLower && hasNumber;
+  const formValid = emailValid && passwordValid && !loading;
+
+  const signup = async (email: string, password: string) => {
+    setLoading(true);
+    setLocalError(null);
+
+    try {
+      const res = await fetch(import.meta.env.VITE_API_URL_FROM_CLIENT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          query: SIGNUP_MUTATION,
+          variables: { data: { email, password } },
+        }),
+      });
+
+      const json = await res.json();
+
+      if (json.errors?.length) {
+        setLocalError(json.errors[0].message || "Erreur GraphQL");
+        setLoading(false);
+        return false;
+      }
+
+      const payload = json.data?.signup;
+
+      if (typeof payload !== "string") {
+        setLocalError("Format de réponse inattendu");
+        setLoading(false);
+        return false;
+      }
+
+      let profile: Profile | null = null;
+      try {
+        profile = payload ? JSON.parse(payload) : null;
+      } catch {
+        setLocalError("Format de réponse invalide");
+        setLoading(false);
+        return false;
+      }
+
+      if (!profile) {
+        setLocalError("Impossible de créer le compte pour le moment");
+        setLoading(false);
+        return false;
+      }
+
+      setLoading(false);
+      if (onSuccess) onSuccess();
+      return true;
+    } catch {
+      setLocalError("Erreur réseau");
+      setLoading(false);
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-
     e.preventDefault();
     setLocalError(null);
-    if (!onSubmit) return;
 
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
@@ -45,19 +107,23 @@ export const Register = ({
       return;
     }
 
-    await onSubmit({ email: trimmedEmail, password: trimmedPassword });
-
+    await signup(trimmedEmail, trimmedPassword);
   };
 
   const ruleItem = (ok: boolean, text: string) => (
-    <li className={cn("flex items-center gap-2 text-sm", ok ? "text-green-600" : "text-gray-500")}>
+    <li
+      className={cn(
+        "flex items-center gap-2 text-sm",
+        ok ? "text-green-600" : "text-gray-500"
+      )}
+    >
       <span aria-hidden>{ok ? "✓" : "○"}</span>
       <span>{text}</span>
     </li>
   );
 
   return (
-   <section className="flex items-center justify-center">
+    <section className="flex items-center justify-center">
       <div className="w-full px-4">
         <form
           onSubmit={handleSubmit}
@@ -66,10 +132,15 @@ export const Register = ({
             "w-full max-w-2xl mx-auto flex flex-col items-start gap-y-6 rounded-lg border px-10 py-12 shadow-md"
           )}
         >
-          <h1 className="text-2xl font-semibold w-full text-center">CRÉER UN COMPTE</h1>
+          <h1 className="text-2xl font-semibold w-full text-center">
+            CRÉER UN COMPTE
+          </h1>
 
           <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
-            <a href="/Signin" className="text-primary font-medium hover:underline">
+            <a
+              href="/Signin"
+              className="text-primary font-medium hover:underline"
+            >
               J'ai déjà un compte
             </a>
           </div>
@@ -112,11 +183,21 @@ export const Register = ({
               aria-invalid={password.length > 0 ? !passwordValid : undefined}
             />
 
-            <div id="password-hint" className="mt-3 w-full text-sm" aria-live="polite" role="status">
-              <p className="mb-2 font-medium text-gray-700">Votre mot de passe doit contenir :</p>
+            <div
+              id="password-hint"
+              className="mt-3 w-full text-sm"
+              aria-live="polite"
+              role="status"
+            >
+              <p className="mb-2 font-medium text-gray-700">
+                Votre mot de passe doit contenir :
+              </p>
               <ul className="list-inside space-y-1">
                 {ruleItem(minLength, "Au moins 8 caractères")}
-                {ruleItem(hasSpecialChar, "Au moins 1 caractère spécial (ex : ! @ # $ %)")}
+                {ruleItem(
+                  hasSpecialChar,
+                  "Au moins 1 caractère spécial (ex : ! @ # $ %)"
+                )}
                 {ruleItem(hasUpper, "Au moins 1 lettre majuscule")}
                 {ruleItem(hasLower, "Au moins 1 lettre minuscule")}
                 {ruleItem(hasNumber, "Au moins 1 chiffre")}
@@ -125,13 +206,22 @@ export const Register = ({
           </div>
 
           {(localError || error) && (
-            <p className="text-destructive text-sm w-full" role="alert" aria-live="assertive">
+            <p
+              className="text-destructive text-sm w-full"
+              role="alert"
+              aria-live="assertive"
+            >
               {localError ?? error}
             </p>
           )}
 
-          <Button type="submit" className="w-full" disabled={!formValid} aria-disabled={!formValid}>
-            S'inscrire
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!formValid || loading}
+            aria-disabled={!formValid || loading}
+          >
+            {loading ? "Chargement..." : "S'inscrire"}
           </Button>
         </form>
       </div>

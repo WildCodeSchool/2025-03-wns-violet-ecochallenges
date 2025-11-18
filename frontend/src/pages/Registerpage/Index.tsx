@@ -1,27 +1,17 @@
-import { Register } from "@/components/custom/Register";
-import { useSignup } from "@/graphql/mutations/newUser";
+import { Register } from "@/pages/Registerpage/Register";
 import { useNavigate } from "react-router";
 
 export default function SignupPage() {
-
-  const { signup, error } = useSignup();
   const navigate = useNavigate();
-  const handleSubmit = async (data: { email: string; password: string }) => {
 
-    const ok = await signup(data.email, data.password);
-
-    if (ok) {
-      navigate("/dashboard", { replace: true }); // TODO Redirection to set after creating a new account
-    }
-
+  // Cette fonction sera appelée par Register quand le compte est créé
+  const handleSuccess = () => {
+    navigate("/dashboard", { replace: true });
   };
 
   return (
-
     <div className="flex items-center justify-center mt-10 mb-10">
-      <Register onSubmit={handleSubmit} error={error ?? undefined} />
+      <Register onSuccess={handleSuccess} />
     </div>
-
   );
-
 }
