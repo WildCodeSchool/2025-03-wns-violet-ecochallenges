@@ -106,6 +106,75 @@ export default class EcogestureResolver {
         level2Expectation: "Composter 50% de ses déchets organiques",
         level3Expectation: "Composter 75% ou plus de ses déchets organiques",
       },
+      {
+        label: "Éteindre les appareils en veille",
+        description:
+          "Débrancher ou éteindre les appareils électriques pour économiser de l'énergie.",
+        pictureUrl:
+          "https://www.svgrepo.com/show/268556/off-button-power-button.svg",
+        level1Expectation: "Éteindre les appareils en veille le soir",
+        level2Expectation: "Éteindre les appareils en veille toute la journée",
+        level3Expectation: "Ne pas laisser d'appareils en veille du tout",
+      },
+      {
+        label: "Consommer local et de saison",
+        description:
+          "Acheter des produits locaux et de saison pour réduire l'empreinte carbone liée au transport.",
+        pictureUrl: "https://www.svgrepo.com/show/530216/carrot.svg",
+        level1Expectation: "Acheter 30% de produits locaux et de saison",
+        level2Expectation: "Acheter 60% de produits locaux et de saison",
+        level3Expectation:
+          "Acheter 90% ou plus de produits locaux et de saison",
+      },
+      {
+        label: "Tendre vers le zéro déchet",
+        description:
+          "Adopter des pratiques pour réduire au maximum la production de déchets.",
+        pictureUrl: "https://www.svgrepo.com/show/356796/empty-trash.svg",
+        level1Expectation: "Réduire ses déchets de 25%",
+        level2Expectation: "Réduire ses déchets de 50%",
+        level3Expectation: "Réduire ses déchets de 75% ou plus",
+      },
+      {
+        label: "Influencer son entourage",
+        description:
+          "Sensibiliser et encourager son entourage à adopter des gestes écologiques.",
+        pictureUrl:
+          "https://www.svgrepo.com/show/289552/presentation-financial.svg",
+        level1Expectation: "Parler d'écologie autour de soi",
+        level2Expectation:
+          "Devenir animateur/trice d'un groupe de discussion sur l'écologie",
+        level3Expectation: "Animer des ateliers ou événements écologiques",
+      },
+      {
+        label: "Planter des arbres ou un jardin",
+        description:
+          "Contribuer à la reforestation ou cultiver un jardin pour améliorer la biodiversité.",
+        pictureUrl:
+          "https://www.svgrepo.com/show/206104/sprout-growing-seed.svg",
+        level1Expectation: "Planter 1 arbre ou créer un petit jardin",
+        level2Expectation: "Planter 3 arbres ou agrandir son jardin",
+        level3Expectation: "Planter 5 arbres ou créer un grand jardin",
+      },
+      {
+        label: "Utiliser des produits ménagers écologiques",
+        description:
+          "Opter pour des produits de nettoyage respectueux de l'environnement.",
+        pictureUrl: "https://www.svgrepo.com/show/469607/recycle-bin-3.svg",
+        level1Expectation: "Utiliser des produits écologiques pour 1 pièce",
+        level2Expectation: "Utiliser des produits écologiques pour 3 pièces",
+        level3Expectation:
+          "Utiliser des produits écologiques pour toute la maison",
+      },
+      {
+        label: "Réparer au lieu de jeter",
+        description:
+          "Favoriser la réparation des objets pour prolonger leur durée de vie.",
+        pictureUrl: "https://www.svgrepo.com/show/426195/fixing-repair.svg",
+        level1Expectation: "Réparer 1 objet au lieu de le jeter",
+        level2Expectation: "Réparer 3 objets au lieu de les jeter",
+        level3Expectation: "Réparer 5 objets ou plus au lieu de les jeter",
+      },
     ];
 
     const createdEcogestures = await Ecogesture.insert(ecogesturesData);

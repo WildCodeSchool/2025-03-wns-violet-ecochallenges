@@ -13,7 +13,7 @@ const EcogestureCard = ({ ecogesture }: EcogestureProps) => {
     <Link to={`/ecogestures/${ecogesture.id}`} className="flex">
       <Card
         className={cn(
-          "flex justify-around gap-4",
+          "flex justify-around gap-4 min-h-[165px]",
           "bg-secondary-foreground w-80 py-3",
           "transition-transform duration-200 lg:hover:scale-105"
         )}

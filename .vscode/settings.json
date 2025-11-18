@@ -1,4 +1,10 @@
 {
   "git.ignoreLimitWarning": true,
   "telemetry.telemetryLevel": "off",
+  "eslint.useFlatConfig": true,
+  "eslint.workingDirectories": [
+    {
+      "pattern": "frontend"
+    }
+  ]
 }
