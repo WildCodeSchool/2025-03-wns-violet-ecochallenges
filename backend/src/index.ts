@@ -17,6 +17,7 @@ async function startServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
     resolvers: [UserResolver],
+    validate: true,
     authChecker,
   });
   const apolloServer = new ApolloServer({ schema });

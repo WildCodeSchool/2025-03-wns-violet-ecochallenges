@@ -32,13 +32,13 @@ function Banner() {
             "w-[200px]"
             )}
             >
-            <Link to="/Signin">S'inscrire</Link>
+            <Link to="/Signup">S'inscrire</Link>
           </Button>
 
           <Button asChild variant="secondary" className={cn(
             "w-[200px]"
             )}>
-            <Link to="/Signup">Se connecter</Link>
+            <Link to="/Signin">Se connecter</Link>
           </Button>
         </div>
       </div>
