@@ -3,12 +3,12 @@ import dataSource from "./config/db";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { buildSchema } from "type-graphql";
+import ChallengeResolver from "./resolvers/ChallengeResolver";
 import UserResolver from "./resolvers/UserResolver";
 import * as jwt from "jsonwebtoken";
 import { authChecker } from "./lib/helpers/authChecker";
 import dotenv from "dotenv";
 import { UserProfile } from "./types/Context";
-import ChallengeResolver from "./resolvers/ChallengeResolver";
 dotenv.config();
 
 const port = Number(process.env.API_PORT);

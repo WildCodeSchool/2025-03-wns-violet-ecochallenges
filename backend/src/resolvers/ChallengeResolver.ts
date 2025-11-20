@@ -24,17 +24,18 @@ export class NewChallengeInput {
 export default class ChallengeResolver {
 
   @Query(() => [Challenge])
+
   async getAllChallenges() {
       const challenges = await Challenge.find();
       return challenges;
   }
 
   @Mutation(() => Challenge)
-  async createChallenge(@Arg("data") data: NewChallengeInput) {
-    // Validation manuelle
-    const input = plainToClass(NewChallengeInput, data);
-    const errors = await validate(input);
 
+  async createChallenge(@Arg("data") data: NewChallengeInput) {
+    const input = plainToClass(NewChallengeInput, data);
+    
+    const errors = await validate(input);
     if (errors.length > 0) {
       const messages = errors
         .map((error) => Object.values(error.constraints || {}))
@@ -64,5 +65,6 @@ export default class ChallengeResolver {
 
     await challenge.save();
     return challenge;
+
   }
 }
