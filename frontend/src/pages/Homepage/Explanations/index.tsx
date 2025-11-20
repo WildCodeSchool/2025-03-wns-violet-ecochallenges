@@ -1,6 +1,6 @@
-import { TypographyH2 } from "../../components/ui/typographyH2.tsx";
-import ExplanationItem from "@/pages/Explanations/ExplanationItem.tsx";
-import Arrow from "@/pages/Explanations/Arrow.tsx";
+import { TypographyH2 } from "@/components/ui/typographyH2";
+import ExplanationItem from "./ExplanationItem";
+import Arrow from "./Arrow";
 
 function Explanations() {
   return (
