@@ -17,10 +17,33 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Ecogesture = {
+  __typename?: 'Ecogesture';
+  description: Scalars['String']['output'];
+  id: Scalars['Float']['output'];
+  label: Scalars['String']['output'];
+  level1Expectation: Scalars['String']['output'];
+  level2Expectation: Scalars['String']['output'];
+  level3Expectation: Scalars['String']['output'];
+  pictureUrl: Scalars['String']['output'];
+};
+
+export type EcogestureListResponse = {
+  __typename?: 'EcogestureListResponse';
+  ecogestures: Array<Ecogesture>;
+  totalCount: Scalars['Float']['output'];
+};
+
+export type GetEcogesturesInput = {
+  limit?: InputMaybe<Scalars['Float']['input']>;
+  page?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   login: Scalars['String']['output'];
   logout: Scalars['String']['output'];
+  seedEcogestures: Array<Ecogesture>;
   signup: Scalars['String']['output'];
 };
 
@@ -42,6 +65,12 @@ export type NewUserInput = {
 export type Query = {
   __typename?: 'Query';
   getAllUsers: Array<User>;
+  getEcogestures: EcogestureListResponse;
+};
+
+
+export type QueryGetEcogesturesArgs = {
+  input?: InputMaybe<GetEcogesturesInput>;
 };
 
 /** Roles for users in this app */
@@ -63,6 +92,13 @@ export type LoginMutationVariables = Exact<{
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: string };
+
+export type GetEcogesturesQueryVariables = Exact<{
+  input?: InputMaybe<GetEcogesturesInput>;
+}>;
+
+
+export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> } };
 
 
 export const LoginDocument = gql`
@@ -96,3 +132,48 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const GetEcogesturesDocument = gql`
+    query GetEcogestures($input: GetEcogesturesInput) {
+  getEcogestures(input: $input) {
+    totalCount
+    ecogestures {
+      id
+      label
+      pictureUrl
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetEcogesturesQuery__
+ *
+ * To run a query within a React component, call `useGetEcogesturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEcogesturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEcogesturesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetEcogesturesQuery(baseOptions?: Apollo.QueryHookOptions<GetEcogesturesQuery, GetEcogesturesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEcogesturesQuery, GetEcogesturesQueryVariables>(GetEcogesturesDocument, options);
+      }
+export function useGetEcogesturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEcogesturesQuery, GetEcogesturesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEcogesturesQuery, GetEcogesturesQueryVariables>(GetEcogesturesDocument, options);
+        }
+export function useGetEcogesturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetEcogesturesQuery, GetEcogesturesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEcogesturesQuery, GetEcogesturesQueryVariables>(GetEcogesturesDocument, options);
+        }
+export type GetEcogesturesQueryHookResult = ReturnType<typeof useGetEcogesturesQuery>;
+export type GetEcogesturesLazyQueryHookResult = ReturnType<typeof useGetEcogesturesLazyQuery>;
+export type GetEcogesturesSuspenseQueryHookResult = ReturnType<typeof useGetEcogesturesSuspenseQuery>;
+export type GetEcogesturesQueryResult = Apollo.QueryResult<GetEcogesturesQuery, GetEcogesturesQueryVariables>;
