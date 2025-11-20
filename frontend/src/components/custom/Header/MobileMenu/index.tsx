@@ -4,10 +4,9 @@ import {
   NavigationMenuList,
 } from "../../../ui/navigation-menu";
 import { Card } from "../../../ui/card";
-import { HiOutlinePencilSquare } from "react-icons/hi2";
-import { GoSignIn } from "react-icons/go";
 import MobileMenuLink from "./MobileMenuLink";
 import type { RefObject } from "react";
+import { LogInIcon, SquarePenIcon } from "lucide-react";
 
 const MobileMenu = ({
   isMenuOpen,
@@ -33,11 +32,11 @@ const MobileMenu = ({
     >
       <NavigationMenu className="text-background">
         <NavigationMenuList className="flex flex-col gap-0">
-          <MobileMenuLink to="/signup" Icon={HiOutlinePencilSquare}>
+          <MobileMenuLink to="/signup" Icon={SquarePenIcon}>
             S'inscrire
           </MobileMenuLink>
 
-          <MobileMenuLink to="/signin" Icon={GoSignIn} withDivider={false}>
+          <MobileMenuLink to="/signin" Icon={LogInIcon} withDivider={false}>
             Se connecter
           </MobileMenuLink>
         </NavigationMenuList>
