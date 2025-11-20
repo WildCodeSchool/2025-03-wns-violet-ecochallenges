@@ -7,7 +7,7 @@ import Homepage from "./pages/Homepage/index.tsx";
 import Signuppage from "./pages/Registerpage/Index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
-import LoginPage from "./pages/Login/index.tsx";
+import { Login } from "./pages/Login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/signin",
-        element: <LoginPage />,
+        element: <Login />,
 
       }
     ],

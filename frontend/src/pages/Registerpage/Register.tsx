@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SIGNUP_MUTATION } from "@/graphql/mutations/newUser";
+import { Link } from "react-router";
 
 interface RegisterProps {
   bg?: string;
@@ -137,12 +138,12 @@ export const Register = ({
           </h1>
 
           <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
-            <a
-              href="/Signin"
+            <Link
+              to="/Signin"
               className="text-primary font-medium hover:underline"
             >
               J'ai déjà un compte
-            </a>ƒ
+            </Link>
           </div>
 
           <div className="w-full">
