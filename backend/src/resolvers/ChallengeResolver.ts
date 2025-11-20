@@ -43,20 +43,16 @@ export default class ChallengeResolver {
     }
 
     const parseDate = (date: string | Date) => {
-    if (typeof date === "string") {
-        // Format "YYYY-MM-DD"
-        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        return new Date(date + "T00:00:00.00Z");
-        }
-        // Format "YYYY-MM-DD hh:mm:ss"
-        if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(date)) {
-        return new Date(date.replace(" ", "T") + ".00Z");
-        }
-        // Autre format, tente la conversion
-        return new Date(date);
-    }
-    // Si déjà un objet Date, force le format ISO
-    return new Date(date.toISOString());
+      if (typeof date === "string") {
+          if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          return new Date(date + "T00:00:00.00Z");
+          }
+          if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(date)) {
+          return new Date(date.replace(" ", "T") + ".00Z");
+          }
+          return new Date(date);
+      }
+      return new Date(date.toISOString());
     };
 
     const challenge = Challenge.create({
