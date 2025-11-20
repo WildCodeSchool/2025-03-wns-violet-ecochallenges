@@ -50,7 +50,7 @@ export const Login = () => {
         <form
           onSubmit={handleSubmit}
           className={cn(
-            "w-full max-w-2xl bg-white rounded-lg border shadow-md",
+            "max-w-2xl w-full bg-white rounded-lg border shadow-md",
             "mx-auto flex flex-col items-start",
             "gap-y-6 px-10 py-12"
           )}
@@ -69,7 +69,7 @@ export const Login = () => {
           </div>
 
           <div className="w-full">
-            <label className="text-sm block mb-1">Email:</label>
+            <label className="text-sm block mb-1">Email</label>
             <Input
               name="email"
               type="email"
@@ -85,7 +85,7 @@ export const Login = () => {
             />
           </div>
           <div className="w-full">
-            <label className="text-sm block mb-1">Mot de passe:</label>
+            <label className="text-sm block mb-1">Mot de passe</label>
             <Input
               name="password"
               type="password"
