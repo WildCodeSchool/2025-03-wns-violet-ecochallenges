@@ -73,7 +73,7 @@ const EcogesturesTabletMobile = () => {
         setApi={setCarouselApi}
         plugins={[
           Autoplay({
-            delay: 4000,
+            delay: 1000,
           }),
         ]}
         className="w-full"
@@ -96,12 +96,6 @@ const EcogesturesTabletMobile = () => {
           ))}
         </CarouselContent>
       </Carousel>
-
-      {loading && (
-        <div className="text-white text-sm opacity-70">
-          Chargement d'autres écogestes...
-        </div>
-      )}
     </div>
   );
 };

@@ -10,7 +10,7 @@ type EcogestureProps = {
 
 const EcogestureCard = ({ ecogesture }: EcogestureProps) => {
   return (
-    <Link to={`/ecogestures/${ecogesture.id}`} className="flex">
+    <Link to={`#`} className="flex">
       <Card
         className={cn(
           "flex justify-around gap-4 min-h-[165px]",

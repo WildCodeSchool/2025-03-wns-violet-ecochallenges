@@ -177,7 +177,8 @@ export default class EcogestureResolver {
       },
     ];
 
-    const createdEcogestures = await Ecogesture.insert(ecogesturesData);
-    return createdEcogestures.raw;
+    await Ecogesture.insert(ecogesturesData);
+    const allEcogestures = await Ecogesture.find();
+    return allEcogestures;
   }
 }
