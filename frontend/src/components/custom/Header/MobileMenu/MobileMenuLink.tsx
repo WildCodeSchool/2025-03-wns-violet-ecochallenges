@@ -32,7 +32,7 @@ const MobileMenuLink = ({
         >
           <Link to={to}>
             <Icon className="text-background group-hover/icon:text-white" />
-            <TypographyP className="!mt-0">{children}</TypographyP>
+            <TypographyP>{children}</TypographyP>
           </Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
