@@ -142,7 +142,7 @@ export const Register = ({
               className="text-primary font-medium hover:underline"
             >
               J'ai déjà un compte
-            </a>
+            </a>ƒ
           </div>
 
           <div className="w-full">

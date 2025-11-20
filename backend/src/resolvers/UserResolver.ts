@@ -117,7 +117,7 @@ export default class UserResolver {
     if (!user) throw new Error("Email ou mot de passe invalide.");
 
     const isValid = await argon2.verify(user.hashedPassword, data.password);
-    if (!isValid) throw new Error("Invalid user or password");
+    if (!isValid) throw new Error("Email ou mot de passe invalide.");
 
     const payload = createUserProfile(user);
     const token = createJwt(payload);

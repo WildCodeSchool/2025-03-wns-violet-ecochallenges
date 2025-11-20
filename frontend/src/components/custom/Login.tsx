@@ -2,25 +2,18 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useLoginMutation } from "@/generated/graphql-types";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useState } from "react";
-
-interface Login {
-  bg?: string;
-  onSubmit?: (data: {
-    email: string;
-    password: string;
-  }) => void | Promise<void>;
-  error?: string | null;
-}
 
 // TODO : Supprimer les console.log lorsque dashboard sera créée, ils ne sont là que pour tester la connexion pour le moment.
 
-export const Login = ({ bg = "bg-white", onSubmit }: Login) => {
+export const Login = () => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,61 +42,77 @@ export const Login = ({ bg = "bg-white", onSubmit }: Login) => {
       }
       console.error("Login error:", err);
     }
-
-    if (onSubmit) {
-      await onSubmit({ email, password });
-    }
   };
 
   return (
-    <section>
-      <div className="flex items-center justify-center p-8">
-        <div className="flex flex-col items-center gap-6 lg:justify-start">
-          <form
-            onSubmit={handleSubmit}
-            className={cn(
-              bg,
-              "min-w-sm border-muted flex w-full max-w-sm flex-col items-start gap-y-4 rounded-md border px-6 py-8 shadow-md"
-            )}
-          >
-            <h1 className="text-xl font-semibold self-center">Se connecter</h1>
+    <section className="flex items-center justify-center">
+      <div className="w-full px-4">
+        <form
+          onSubmit={handleSubmit}
+          className={cn(
+            "w-full max-w-2xl bg-white rounded-lg border shadow-md",
+            "mx-auto flex flex-col items-start",
+            "gap-y-6 px-10 py-12"
+          )}
+        >
+          <h1 className="text-2xl font-semibold w-full text-center">
+            SE CONNECTER
+          </h1>
 
-            <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
-              <a
-                href="/Signup"
-                className="text-primary font-medium hover:underline"
-              >
-                Je n'ai pas encore de compte
-              </a>
-            </div>
+          <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
+            <Link
+              to="/Signup"
+              className="text-primary font-medium hover:underline"
+            >
+              Je n'ai pas encore de compte
+            </Link>
+          </div>
 
-            <label className="text-sm self-start">Email:</label>
+          <div className="w-full">
+            <label className="text-sm block mb-1">Email:</label>
             <Input
               name="email"
               type="email"
-              placeholder="Email"
-              className={cn(bg, "text-sm")}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="captain@planet.fr"
+              className={cn(
+                "block w-full rounded-md border bg-transparent border-gray-300",
+                "px-3 py-2 text-sm",
+                "focus:outline-none focus:ring-2 focus:ring-primary"
+              )}
               required
             />
-
-            <label className="text-sm self-start">Mot de passe:</label>
+          </div>
+          <div className="w-full">
+            <label className="text-sm block mb-1">Mot de passe:</label>
             <Input
               name="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Mot de passe"
-              className={cn(bg, "text-sm")}
+              className={cn(
+                "block w-full rounded-md border bg-transparent border-gray-300",
+                "px-3 py-2 text-sm",
+                "focus:outline-none focus:ring-2 focus:ring-primary"
+              )}
               required
             />
+          </div>
 
-            {errorMessage && (
-              <p className="text-destructive text-sm">{errorMessage}</p>
-            )}
+          {errorMessage && (
+            <p className="text-destructive text-sm">{errorMessage}</p>
+          )}
 
-            <Button type="submit" className="w-full">
-              Se connecter
-            </Button>
-          </form>
-        </div>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!email || !password}
+          >
+            Se connecter
+          </Button>
+        </form>
       </div>
     </section>
   );
