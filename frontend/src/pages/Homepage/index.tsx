@@ -1,6 +1,6 @@
 import Banner from "./Banner";
 import EcogesturesDesktop from "./Ecogestures/EcogesturesDesktop";
-import Explanations from "../Explanations";
+import Explanations from "./Explanations";
 import EcogesturesTabletMobile from "./Ecogestures/EcogesturesTabletMobile";
 import { useMediaQuery } from "usehooks-ts";
 

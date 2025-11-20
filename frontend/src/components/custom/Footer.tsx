@@ -25,9 +25,9 @@ const Footer = () => {
   ];
 
   return (
-    <section className="bg-primary p-8">
-      <footer className="container mx-auto">
-        <div className="grid gap-8 grid-cols-1 lg:grid-cols-6">
+    <footer className="bg-primary p-4">
+      <div className="container mx-auto">
+        <div className="grid gap-8 grid-cols-1 lg:grid-cols-6 mb-3">
           <Link
             to={"/"}
             className={cn(
@@ -68,15 +68,14 @@ const Footer = () => {
 
         <TypographyP
           className={cn(
-            "text-muted text-center text-sm ",
-            "mt-24 pt-8",
+            "text-muted text-center text-sm pt-3",
             "border-t border-background"
           )}
         >
-          © 2025 CaptainPlanet.com. All rights reserved.
+          Copyright © 2025 Captain Planet | Tout droit réservé
         </TypographyP>
-      </footer>
-    </section>
+      </div>
+    </footer>
   );
 };
 
