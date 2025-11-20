@@ -62,7 +62,7 @@ export const Login = () => {
 
             <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
               <Link
-                to="/Signup"
+                to="/signup"
                 className="text-primary font-medium hover:underline"
               >
                 Je n'ai pas encore de compte
