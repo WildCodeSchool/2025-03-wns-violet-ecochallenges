@@ -114,10 +114,10 @@ export default class UserResolver {
   @Mutation(() => String)
   async login(@Arg("data") data: NewUserInput, @Ctx() ctx: Context) {
     const user = await User.findOne({ where: { email: data.email } });
-    if (!user) throw new Error("Invalid user or password");
+    if (!user) throw new Error("Email ou mot de passe invalide.");
 
     const isValid = await argon2.verify(user.hashedPassword, data.password);
-    if (!isValid) throw new Error("Invalid user or password");
+    if (!isValid) throw new Error("Email ou mot de passe invalide.");
 
     const payload = createUserProfile(user);
     const token = createJwt(payload);

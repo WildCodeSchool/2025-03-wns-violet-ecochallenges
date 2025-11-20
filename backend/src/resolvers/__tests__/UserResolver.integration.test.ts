@@ -283,7 +283,7 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
       };
 
       await expect(resolver.login(loginData, mockContext)).rejects.toThrow(
-        "Invalid user or password"
+        "Email ou mot de passe invalide."
       );
 
       expect(mockContext.res.setHeader).not.toHaveBeenCalled();
@@ -296,7 +296,7 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
       };
 
       await expect(resolver.login(loginData, mockContext)).rejects.toThrow(
-        "Invalid user or password"
+        "Email ou mot de passe invalide."
       );
 
       expect(mockContext.res.setHeader).not.toHaveBeenCalled();

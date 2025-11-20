@@ -5,10 +5,12 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { buildSchema } from "type-graphql";
 import ChallengeResolver from "./resolvers/ChallengeResolver";
 import UserResolver from "./resolvers/UserResolver";
+import EcogestureResolver from "./resolvers/EcogestureResolver";
 import * as jwt from "jsonwebtoken";
 import { authChecker } from "./lib/helpers/authChecker";
-import dotenv from "dotenv";
 import { UserProfile } from "./types/Context";
+
+import dotenv from "dotenv";
 dotenv.config();
 
 const port = Number(process.env.API_PORT);
@@ -16,7 +18,7 @@ const port = Number(process.env.API_PORT);
 async function startServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
-    resolvers: [UserResolver,ChallengeResolver],
+    resolvers: [UserResolver, EcogestureResolver, ChallengeResolver],
     validate: true,
     authChecker,
   });
