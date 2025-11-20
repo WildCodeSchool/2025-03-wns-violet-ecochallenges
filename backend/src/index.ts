@@ -6,9 +6,9 @@ import { buildSchema } from "type-graphql";
 import UserResolver from "./resolvers/UserResolver";
 import * as jwt from "jsonwebtoken";
 import { authChecker } from "./lib/helpers/authChecker";
-
 import dotenv from "dotenv";
 import { UserProfile } from "./types/Context";
+import ChallengeResolver from "./resolvers/ChallengeResolver";
 dotenv.config();
 
 const port = Number(process.env.API_PORT);
@@ -16,7 +16,7 @@ const port = Number(process.env.API_PORT);
 async function startServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver,ChallengeResolver],
     validate: true,
     authChecker,
   });
