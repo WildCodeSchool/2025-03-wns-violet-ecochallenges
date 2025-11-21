@@ -4,10 +4,10 @@ import { StrictMode } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import App from "./App.tsx";
 import Homepage from "./pages/Homepage/index.tsx";
-import Signuppage from "./pages/Registerpage/Index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
 import { Login } from "./pages/Login.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,13 +20,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/signup",
-        element: <Signuppage />,
+        element: <RegisterPage />,
       },
       {
         path: "/signin",
         element: <Login />,
-
-      }
+      },
     ],
   },
 ]);
