@@ -25,7 +25,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-primary p-4">
+    <footer className="bg-primary p-4 mt-auto">
       <div className="container mx-auto">
         <div className="grid gap-8 grid-cols-1 lg:grid-cols-6 mb-3">
           <Link
