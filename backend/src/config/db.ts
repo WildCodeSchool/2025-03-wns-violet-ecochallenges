@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import { User } from "../entities/User";
+import { Challenge } from "../entities/Challenge";
 import { Ecogesture } from "../entities/Ecogesture";
 
 dotenv.config();
@@ -12,8 +13,7 @@ const dataSource = new DataSource({
   username: DB_USER,
   password: DB_PASSWORD,
   database: DB_DATABASE,
-
-  entities: [User, Ecogesture],
+  entities: [User, Ecogesture, Challenge],
   synchronize: true,
   logging: ["error", "query"],
 });
