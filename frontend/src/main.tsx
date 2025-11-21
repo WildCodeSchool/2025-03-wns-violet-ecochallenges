@@ -4,6 +4,7 @@ import { StrictMode } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import App from "./App.tsx";
 import Homepage from "./pages/Homepage/index.tsx";
+import NewChallenge from "@/pages/CreateChallengepage/Index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
 import { Login } from "./pages/Login.tsx";
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/signin",
         element: <Login />,
+      },
+      {
+        path: "/newchallenge",
+        element: <NewChallenge />,
       },
     ],
   },

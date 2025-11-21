@@ -20,7 +20,7 @@ export class Challenge extends BaseEntity {
   @Field()
   endingDate: Date;
 
-  @Column()
-  @Field()
-  picture: string;
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  picture?: string;
 }
