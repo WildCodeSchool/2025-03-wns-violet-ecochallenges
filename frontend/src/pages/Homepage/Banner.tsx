@@ -30,11 +30,11 @@ function Banner() {
           )}
         >
           <Button asChild className="w-[200px]">
-            <Link to="/signin">S'inscrire</Link>
+            <Link to="/signup">S'inscrire</Link>
           </Button>
 
           <Button asChild variant="secondary" className="w-[200px]">
-            <Link to="/signup">Se connecter</Link>
+            <Link to="/signin">Se connecter</Link>
           </Button>
         </div>
       </div>
