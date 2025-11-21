@@ -8,6 +8,7 @@ import "./index.css";
 import "./styles/fonts.css";
 import { Login } from "./pages/Login.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
+import Dashboard from "./pages/Dashboard/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
         path: "/signin",
         element: <Login />,
       },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      }
     ],
   },
 ]);
