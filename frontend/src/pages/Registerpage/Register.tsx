@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, HEADER_FOOTER_HEIGHT } from "@/lib/utils";
 import { SIGNUP_MUTATION } from "@/graphql/mutations/newUser";
 import { Link } from "react-router";
 
@@ -124,7 +124,12 @@ export const Register = ({
   );
 
   return (
-    <section className="flex items-center justify-center">
+    <section
+      className={cn(
+        `flex items-center justify-center`,
+        `min-h-[calc(100vh-${HEADER_FOOTER_HEIGHT}px)]`
+      )}
+    >
       <div className="w-full px-4">
         <form
           onSubmit={handleSubmit}
