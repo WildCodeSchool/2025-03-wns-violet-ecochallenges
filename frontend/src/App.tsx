@@ -4,7 +4,7 @@ import { Footer } from "./components/custom/Footer";
 
 function App() {
   return (
-    <div className="bg-background">
+    <div className="bg-background flex flex-col min-h-screen">
       <Header />
       <Outlet />
       <Footer />
