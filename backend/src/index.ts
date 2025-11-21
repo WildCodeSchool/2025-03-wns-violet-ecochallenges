@@ -3,6 +3,7 @@ import dataSource from "./config/db";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { buildSchema } from "type-graphql";
+import ChallengeResolver from "./resolvers/ChallengeResolver";
 import UserResolver from "./resolvers/UserResolver";
 import EcogestureResolver from "./resolvers/EcogestureResolver";
 import * as jwt from "jsonwebtoken";
@@ -17,7 +18,7 @@ const port = Number(process.env.API_PORT);
 async function startServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
-    resolvers: [UserResolver, EcogestureResolver],
+    resolvers: [UserResolver, EcogestureResolver, ChallengeResolver],
     validate: true,
     authChecker,
   });
