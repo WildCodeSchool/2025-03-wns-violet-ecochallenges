@@ -1,7 +1,7 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
 import { SIGNUP_MUTATION } from "@/graphql/mutations/signup";
-import { cn, HEADER_FOOTER_HEIGHT } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
 
@@ -76,12 +76,7 @@ export default function RegisterPage() {
   );
 
   return (
-    <div
-      className={cn(
-        `flex items-center justify-center mt-10 mb-10`,
-        `min-h-[calc(100vh-${HEADER_FOOTER_HEIGHT}px)]`
-      )}
-    >
+    <div className={`flex items-center justify-center mt-10 mb-10`}>
       <section className="flex items-center justify-center">
         <div className="w-full px-4">
           <form

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { cn, HEADER_FOOTER_HEIGHT } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useLoginMutation } from "@/generated/graphql-types";
 import { Link, useNavigate } from "react-router";
@@ -45,12 +45,7 @@ export const Login = () => {
   };
 
   return (
-    <section
-      className={cn(
-        `flex items-center justify-center`,
-        `min-h-[calc(100vh-${HEADER_FOOTER_HEIGHT}px)]`
-      )}
-    >
+    <section className={`flex items-center justify-center`}>
       <div className="flex items-center justify-center">
         <div className="w-full px-4">
           <form
