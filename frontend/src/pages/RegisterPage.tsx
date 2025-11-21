@@ -164,9 +164,7 @@ export default function RegisterPage() {
                 className="text-destructive text-sm w-full"
                 role="alert"
                 aria-live="assertive"
-              >
-                {localError}
-              </p>
+              ></p>
             )}
 
             <Button
