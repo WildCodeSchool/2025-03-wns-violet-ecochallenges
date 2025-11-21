@@ -12,11 +12,11 @@ export class Challenge extends BaseEntity {
   @Field()
   label: string;
 
-  @Column({ type: "timestamp", nullable: false })
+  @Column({ type: "timestamp" })
   @Field()
   startingDate: Date;
 
-  @Column({ type: "timestamp", nullable: false })
+  @Column({ type: "timestamp" })
   @Field()
   endingDate: Date;
 
