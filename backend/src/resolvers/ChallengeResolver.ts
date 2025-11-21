@@ -55,4 +55,12 @@ export default class ChallengeResolver {
     await challenge.save();
     return challenge;
   }
+
+  @Mutation(() => Challenge)
+  async deleteChallenge(@Arg("id") id: number) {
+    const challenge = await Challenge.findOneByOrFail({ id });
+    //TODO handle db errors
+    await Challenge.delete(id);
+    return challenge;
+  }
 }
