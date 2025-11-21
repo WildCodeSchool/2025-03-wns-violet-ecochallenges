@@ -1,6 +1,6 @@
 import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
-import { IsNotEmpty, MinLength, validate } from "class-validator";
-import { plainToClass } from "class-transformer";
+import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
+import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
 
 @InputType()
@@ -11,9 +11,14 @@ export class NewChallengeInput {
   label: string;
 
   @Field()
+  // Converts GraphQL ISO string → JavaScript Date → PostgreSQL TIMESTAMP
+  @Type(() => Date)
+  @IsDate({ message: "La date de début doit être une date valide" })
   startingDate: Date;
 
   @Field()
+  @Type(() => Date)
+  @IsDate({ message: "La date de fin doit être une date valide" })
   endingDate: Date;
 
   @Field()
@@ -22,19 +27,16 @@ export class NewChallengeInput {
 
 @Resolver(Challenge)
 export default class ChallengeResolver {
-
   @Query(() => [Challenge])
-
   async getAllChallenges() {
-      const challenges = await Challenge.find();
-      return challenges;
+    const challenges = await Challenge.find();
+    return challenges;
   }
 
   @Mutation(() => Challenge)
-
   async createChallenge(@Arg("data") data: NewChallengeInput) {
     const input = plainToClass(NewChallengeInput, data);
-    
+
     const errors = await validate(input);
     if (errors.length > 0) {
       const messages = errors
@@ -43,28 +45,14 @@ export default class ChallengeResolver {
       throw new Error(messages.join(", "));
     }
 
-    const parseDate = (date: string | Date) => {
-      if (typeof date === "string") {
-          if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-          return new Date(date + "T00:00:00.00Z");
-          }
-          if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(date)) {
-          return new Date(date.replace(" ", "T") + ".00Z");
-          }
-          return new Date(date);
-      }
-      return new Date(date.toISOString());
-    };
-
     const challenge = Challenge.create({
-        label: data.label,
-        startingDate: parseDate(data.startingDate),
-        endingDate: parseDate(data.endingDate),
-        picture: data.picture,
+      label: data.label,
+      startingDate: data.startingDate,
+      endingDate: data.endingDate,
+      picture: data.picture,
     });
 
     await challenge.save();
     return challenge;
-
   }
 }
