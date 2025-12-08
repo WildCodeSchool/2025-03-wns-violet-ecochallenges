@@ -8,7 +8,7 @@ import { TypographyH1 } from "@/components/ui/typographyH1";
 
 // TODO : Supprimer les console.log lorsque dashboard sera créée, ils ne sont là que pour tester la connexion pour le moment.
 
-export const Login = () => {
+export const LoginPage = () => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
 
