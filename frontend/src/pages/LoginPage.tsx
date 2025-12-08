@@ -4,10 +4,11 @@ import { Input } from "@/components/ui/input";
 import { useLoginMutation } from "@/generated/graphql-types";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
+import { TypographyH1 } from "@/components/ui/typographyH1";
 
 // TODO : Supprimer les console.log lorsque dashboard sera créée, ils ne sont là que pour tester la connexion pour le moment.
 
-export const Login = () => {
+export const LoginPage = () => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
 
@@ -56,14 +57,14 @@ export const Login = () => {
               "gap-y-6 px-10 py-12"
             )}
           >
-            <h1 className="text-2xl font-semibold w-full text-center">
+            <TypographyH1 className="text-2xl font-semibold w-full text-center">
               SE CONNECTER
-            </h1>
+            </TypographyH1>
 
             <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
               <Link
                 to="/signup"
-                className="text-primary font-medium hover:underline"
+                className="text-secondary font-medium hover:underline"
               >
                 Je n'ai pas encore de compte
               </Link>

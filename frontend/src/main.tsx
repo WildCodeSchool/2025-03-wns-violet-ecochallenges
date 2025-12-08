@@ -3,12 +3,13 @@ import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import App from "./App.tsx";
-import Homepage from "./pages/Homepage/index.tsx";
+import HomePage from "./pages/HomePage/index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
-import { Login } from "./pages/Login.tsx";
+import { LoginPage } from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import Error404 from "./pages/Error404.tsx";
+import DashboardPage from "./pages/DashboardPage/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Homepage />,
+        element: <HomePage />,
       },
       {
         path: "/signup",
@@ -25,7 +26,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/signin",
-        element: <Login />,
+        element: <LoginPage />,
+      },
+      {
+        path: "/dashboard",
+        element: <DashboardPage />,
       },
       {
         path: "*",

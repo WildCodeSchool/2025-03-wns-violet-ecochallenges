@@ -4,6 +4,7 @@ import { SIGNUP_MUTATION } from "@/graphql/mutations/signup";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
+import { TypographyH1 } from "@/components/ui/typographyH1";
 
 type Profile = { email: string; roles: string[]; username: string } | null;
 
@@ -86,14 +87,14 @@ export default function RegisterPage() {
               "w-full max-w-2xl mx-auto flex flex-col items-start gap-y-6 rounded-lg border px-10 py-12 shadow-md"
             )}
           >
-            <h1 className="text-2xl font-semibold w-full text-center">
+            <TypographyH1 className="text-2xl font-semibold w-full text-center">
               CRÉER UN COMPTE
-            </h1>
+            </TypographyH1>
 
             <div className="text-muted-foreground flex justify-center gap-1 text-sm w-full">
               <Link
                 to="/signin"
-                className="text-primary font-medium hover:underline"
+                className="text-secondary font-medium hover:underline"
               >
                 J'ai déjà un compte
               </Link>

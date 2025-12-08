@@ -5,17 +5,20 @@ import {
 } from "../../../ui/navigation-menu";
 import { TypographyP } from "../../../ui/typographyP";
 import { cn } from "../../../../lib/utils";
+import { Button } from "@/components/ui/button";
 
 const MobileMenuLink = ({
   to,
   children,
   Icon,
   withDivider = true,
+  setIsMenuOpen,
 }: {
   to: string;
   children: string;
   Icon: React.ElementType;
   withDivider?: boolean;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
     <>
@@ -30,10 +33,16 @@ const MobileMenuLink = ({
             withDivider ? "border-b" : "border-b-0"
           )}
         >
-          <Link to={to}>
-            <Icon className="text-background group-hover/icon:text-white" />
-            <TypographyP>{children}</TypographyP>
-          </Link>
+          <Button
+            asChild
+            className="bg-transparent"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <Link to={to}>
+              <Icon className="text-background group-hover/icon:text-white" />
+              <TypographyP>{children}</TypographyP>
+            </Link>
+          </Button>
         </NavigationMenuLink>
       </NavigationMenuItem>
     </>
