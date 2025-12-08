@@ -42,7 +42,11 @@ const Header = () => {
 
         <DesktopMenu />
       </div>
-      <MobileMenu isMenuOpen={isMenuOpen} ref={menuRef} />
+      <MobileMenu
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        ref={menuRef}
+      />
     </header>
   );
 };
