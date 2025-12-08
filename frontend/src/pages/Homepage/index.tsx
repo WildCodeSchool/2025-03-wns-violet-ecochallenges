@@ -4,7 +4,7 @@ import Explanations from "./Explanations";
 import EcogesturesTabletMobile from "./Ecogestures/EcogesturesTabletMobile";
 import { useMediaQuery } from "usehooks-ts";
 
-function Homepage() {
+function HomePage() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   return (
@@ -17,4 +17,4 @@ function Homepage() {
   );
 }
 
-export default Homepage;
+export default HomePage;

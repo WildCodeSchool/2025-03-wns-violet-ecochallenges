@@ -8,7 +8,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-import { useEcogesturesPagination } from "@/pages/Homepage/Ecogestures/useEcogesturesPagination";
+import { useEcogesturesPagination } from "@/pages/HomePage/Ecogestures/useEcogesturesPagination";
 import Autoplay from "embla-carousel-autoplay";
 
 const ITEM_PER_PAGE = 6;
@@ -66,7 +66,7 @@ const EcogesturesTabletMobile = () => {
   }
 
   return (
-    <div className="max-w-7xl m-auto flex pt-4 pb-12 flex-col items-center gap-6">
+    <div className="max-w-[100vw] m-auto flex pt-4 pb-12 flex-col items-center gap-6">
       <TypographyH2 className="text-white">Les écogestes</TypographyH2>
 
       <Carousel
