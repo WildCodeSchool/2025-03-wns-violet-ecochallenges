@@ -1,5 +1,15 @@
 import { Field, ObjectType, registerEnumType } from "type-graphql";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+  Relation,
+} from "typeorm";
+import { User } from "./User";
+import { UserChallenge } from "./UserChallenge";
 
 export enum ChallengeStatus {
   CREATED = "CREATED",
@@ -42,4 +52,10 @@ export class Challenge extends BaseEntity {
   })
   @Field(() => ChallengeStatus)
   status: ChallengeStatus;
+
+  @ManyToOne(() => User, (user) => user.challengesCreated)
+  createdBy: User;
+
+  @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.challenge)
+  participants: Relation<UserChallenge[]>;
 }
