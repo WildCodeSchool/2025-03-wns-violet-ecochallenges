@@ -1,11 +1,13 @@
 import DashboardBanner from "./DashboardBanner";
+import ValidatedEcogestures from "./ValidatedEcogestures";
 
-function DashboardPage() {
+function Dashboard() {
   return (
     <>
       <DashboardBanner />
+      <ValidatedEcogestures />
     </>
   );
 }
 
-export default DashboardPage;
+export default Dashboard;

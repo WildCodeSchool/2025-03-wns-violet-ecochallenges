@@ -15,14 +15,7 @@ function ValidatedEcogestures() {
           "transition-transform duration-200 lg:hover:scale-105"
         )}
       ></Card>
-      {/* TODO Pour avoir "les écogestes validés par un user", il faudrait
-      normalement une table qui track la validation individuelle d'un écogesture
-      par un user (genre UserEcogestureProgress ou ValidatedEcogesture avec
-      id_user, id_ecogesture, level_validated, validated_at...). Ma question
-      pour toi : Est-ce qu'il existe une autre table que je ne vois pas sur ce
-      schéma ? Ou est-ce que la logique métier considère qu'un user a "validé"
-      tous les écogestures des challenges auxquels il participe (via is_invited
-      avec is_accepted = true) ? */}
+
     </section>
   );
 }

@@ -1,5 +1,12 @@
 import { Field, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { UserEcogesture } from "./UserEcogesture";
 
 @Entity()
 @ObjectType()
@@ -31,4 +38,10 @@ export class Ecogesture extends BaseEntity {
   @Column()
   @Field()
   level3Expectation: string;
+
+  @OneToMany(
+    () => UserEcogesture,
+    (userEcogesture) => userEcogesture.ecogesture
+  )
+  public UserEcogesture: UserEcogesture[];
 }
