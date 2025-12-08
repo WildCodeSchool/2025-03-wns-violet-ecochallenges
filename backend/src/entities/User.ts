@@ -1,5 +1,14 @@
 import { Field, ObjectType, registerEnumType } from "type-graphql";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  Relation,
+} from "typeorm";
+import { Challenge } from "./Challenge";
+import { UserChallenge } from "./UserChallenge";
 
 export enum Role {
   USER = "USER",
@@ -18,7 +27,7 @@ export class User extends BaseEntity {
   id: number;
 
   @Column()
-  @Field() 
+  @Field()
   username: string;
 
   @Column({ unique: true })
@@ -31,4 +40,10 @@ export class User extends BaseEntity {
   @Column({ type: "enum", enum: Role, array: true, default: [Role.USER] })
   @Field(() => [Role])
   roles: Role[];
+
+  @OneToMany(() => Challenge, (challenge) => challenge.createdBy)
+  challengesCreated: Relation<Challenge[]>;
+
+  @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.user)
+  participations: Relation<UserChallenge[]>;
 }
