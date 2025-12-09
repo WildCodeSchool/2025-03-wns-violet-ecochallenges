@@ -11,6 +11,6 @@ WORKDIR /app
 COPY --from=backend-builder /app/package*.json ./
 RUN npm ci --only=production
 COPY --from=backend-builder /app/dist ./dist
-RUN apk --no-cache add curl
+RUN apk --no-cache add --no-scripts curl
 
 CMD ["node", "dist/index.js"]
