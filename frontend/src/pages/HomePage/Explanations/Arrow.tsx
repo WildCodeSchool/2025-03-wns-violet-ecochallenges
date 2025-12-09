@@ -15,10 +15,7 @@ function Arrow({ type, className, direction }: ArrowProps) {
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className={cn(
-          "w-[5rem] h-[4rem] text-white my-auto",
-          className
-        )}
+        className={cn("w-[5rem] h-[4rem] text-white my-auto", className)}
       >
         <path
           strokeLinecap="round"
@@ -32,8 +29,7 @@ function Arrow({ type, className, direction }: ArrowProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:svgjs="http://svgjs.dev/svgjs"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 800 800"
       className={cn(
         "h-[6rem] text-white font-bold",
