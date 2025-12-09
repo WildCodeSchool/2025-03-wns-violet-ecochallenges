@@ -45,7 +45,7 @@ export const Login = () => {
   };
 
   return (
-    <section className={`flex items-center justify-center`}>
+    <section className={`flex items-center justify-center my-6`}>
       <div className="flex items-center justify-center">
         <div className="w-full px-4">
           <form
