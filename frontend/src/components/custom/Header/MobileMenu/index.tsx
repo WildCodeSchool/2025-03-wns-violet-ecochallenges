@@ -4,16 +4,17 @@ import {
   NavigationMenuList,
 } from "../../../ui/navigation-menu";
 import { Card } from "../../../ui/card";
-import { HiOutlinePencilSquare } from "react-icons/hi2";
-import { GoSignIn } from "react-icons/go";
 import MobileMenuLink from "./MobileMenuLink";
 import type { RefObject } from "react";
+import { LogInIcon, SquarePenIcon } from "lucide-react";
 
 const MobileMenu = ({
   isMenuOpen,
+  setIsMenuOpen,
   ref,
 }: {
   isMenuOpen: boolean;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   ref: RefObject<HTMLDivElement | null>;
 }) => {
   return (
@@ -33,11 +34,20 @@ const MobileMenu = ({
     >
       <NavigationMenu className="text-background">
         <NavigationMenuList className="flex flex-col gap-0">
-          <MobileMenuLink to="/signup" Icon={HiOutlinePencilSquare}>
+          <MobileMenuLink
+            to="/signup"
+            Icon={SquarePenIcon}
+            setIsMenuOpen={setIsMenuOpen}
+          >
             S'inscrire
           </MobileMenuLink>
 
-          <MobileMenuLink to="/signin" Icon={GoSignIn} withDivider={false}>
+          <MobileMenuLink
+            to="/signin"
+            Icon={LogInIcon}
+            withDivider={false}
+            setIsMenuOpen={setIsMenuOpen}
+          >
             Se connecter
           </MobileMenuLink>
         </NavigationMenuList>

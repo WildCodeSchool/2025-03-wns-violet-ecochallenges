@@ -3,9 +3,12 @@ import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import App from "./App.tsx";
-import Homepage from "./pages/Homepage/index.tsx";
+import HomePage from "./pages/HomePage/index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
+import { LoginPage } from "./pages/LoginPage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
+import DashboardPage from "./pages/DashboardPage/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +17,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Homepage />,
+        element: <HomePage />,
+      },
+      {
+        path: "/signup",
+        element: <RegisterPage />,
+      },
+      {
+        path: "/signin",
+        element: <LoginPage />,
+      },
+      {
+        path: "/dashboard",
+        element: <DashboardPage />,
       },
     ],
   },
