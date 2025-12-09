@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY tsconfig.json ./
-COPY src/ ./
+COPY src/ ./src
 RUN npm run build
 
 FROM node:lts-alpine
@@ -14,19 +14,3 @@ COPY --from=backend-builder /app/dist ./dist
 RUN apk --no-cache add curl
 
 CMD ["node", "dist/index.js"]
-
-
-# FROM node:20-alpine AS backend-builder
-# WORKDIR /app
-# COPY package*.json ./
-# RUN npm ci
-# COPY tsconfig.json ./
-# COPY src/ ./
-# RUN npm run build
-
-# FROM node:20-alpine
-# WORKDIR /app
-# COPY --from=backend-builder /package*.json ./
-# RUN npm ci --only=production
-# COPY --from=backend-builder /app/dist ./dist
-# CMD ["node","dist/index.js"]
