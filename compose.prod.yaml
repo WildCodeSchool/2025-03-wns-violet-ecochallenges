@@ -1,8 +1,8 @@
 services:
   gateway-prod:
     build:
-      context: ./gateway
-      dockerfile: Dockerfile.prod
+      context: .
+      dockerfile: ./gateway/Dockerfile.prod
     ports:
       - ${GATEWAY_PORT}:80
     depends_on:
