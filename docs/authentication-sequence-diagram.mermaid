@@ -1,0 +1,22 @@
+```mermaid
+sequenceDiagram
+  actor User as User
+  participant Client as ClientApp
+  participant Server as ApolloServer (userResolver)
+  participant JWT as JWT lib
+  participant Argon2 as Argon2 lib
+  participant DB as DB
+
+  Note over User, DB: Successful Login
+  User ->> Client: Write email and password
+  Client ->> Server: Mutation login(email, password)
+  Server ->> DB: Verify if user exists (using email)
+  DB -->> Server: Confirm user exists and sendback user data (password hash...)
+  Server ->> Argon2: Send password and hash
+  Argon2 -->> Server: Confirm password is valid
+  Server ->> JWT: Send user data
+  JWT -->> Server: Sendback token
+  Server ->> Client: Set cookie header containing token<br/>Sendback payload with user data
+  Client ->> User: Display success message
+  Note over User, DB:
+```
