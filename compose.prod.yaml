@@ -10,6 +10,8 @@ services:
     depends_on:
       backend-prod:
         condition: service_healthy
+    environment:
+      API_PORT: ${API_PORT}
 
   backend-prod:
     image: nicolaschambondev/ecochallenge_backend_prod
