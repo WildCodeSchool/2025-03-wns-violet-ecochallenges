@@ -1,4 +1,4 @@
-name: Compile and push frontend image
+name: Compile and push gateway image
 
 on:
   push:
@@ -25,9 +25,9 @@ jobs:
 
       - uses: docker/build-push-action@v5
         with:
-          context: ./frontend
+          context: ./gateway
           push: true
-          tags: nicolaschambondev/ecochallenge_frontend_staging:latest
+          tags: nicolaschambondev/ecochallenge_gateway_staging:latest
           platforms: linux/amd64,linux/arm64
-          file: ./frontend/Dockerfile.prod
+          file: ./gateway/Dockerfile.prod
         name: Build and push

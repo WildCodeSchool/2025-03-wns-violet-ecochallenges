@@ -3,7 +3,7 @@ import EcogestureCard from "./EcogestureCard";
 import { Button } from "@/components/ui/button";
 import { TypographyP } from "@/components/ui/typographyP";
 import { cn } from "@/lib/utils";
-import { useEcogesturesPagination } from "@/pages/Homepage/Ecogestures/useEcogesturesPagination";
+import { useEcogesturesPagination } from "@/pages/HomePage/Ecogestures/useEcogesturesPagination";
 
 const ITEM_PER_PAGE = 3;
 

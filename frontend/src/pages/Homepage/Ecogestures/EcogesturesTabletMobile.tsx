@@ -8,7 +8,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-import { useEcogesturesPagination } from "@/pages/Homepage/Ecogestures/useEcogesturesPagination";
+import { useEcogesturesPagination } from "@/pages/HomePage/Ecogestures/useEcogesturesPagination";
 import Autoplay from "embla-carousel-autoplay";
 
 const ITEM_PER_PAGE = 6;
