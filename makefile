@@ -9,4 +9,4 @@ clean-ultra:
 	sudo rm -r database
 
 prod:
-	GATEWAY_PORT=8000 docker compose -f compose.prod.yaml --env-file .env.prod up
+	GATEWAY_PORT=7772 docker compose -f compose.prod.yaml --env-file .env.prod up -d

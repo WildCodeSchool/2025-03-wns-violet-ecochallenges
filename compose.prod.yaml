@@ -3,6 +3,8 @@ services:
     build:
       context: .
     image: nicolaschambondev/ecochallenge_gateway_prod
+    ports:
+      - ${GATEWAY_PORT}:80
     healthcheck:
       test:
         [
