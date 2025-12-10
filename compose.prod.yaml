@@ -1,6 +1,7 @@
 services:
   gateway-prod:
-    build.context: .
+    build:
+      context: .
     image: nicolaschambondev/ecochallenge_gateway_prod
     healthcheck:
       test:
