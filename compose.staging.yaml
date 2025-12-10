@@ -1,11 +1,11 @@
 services:
-  frontend-staging:
-    image: nicolaschambondev/ecochallenge_frontend_staging
+  gateway-staging:
+    image: nicolaschambondev/ecochallenge_gateway_staging
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl --fail --request GET --url 'http://frontend-staging:5173' || exit 1",
+          "curl --fail --request GET --url 'http://gateway-staging:5173' || exit 1",
         ]
     depends_on:
       backend-staging:
@@ -28,6 +28,7 @@ services:
       DB_USER: ${DB_USER}
       DB_HOST: ${DB_HOST}
       API_PORT: ${API_PORT}
+      JWT_SECRET: ${JWT_SECRET}
 
   database-staging:
     image: postgres
@@ -40,15 +41,3 @@ services:
       POSTGRES_HOST: ${DB_HOST}
     volumes:
       - ./database:/var/lib/postgresql
-
-  gateway-staging:
-    image: nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - ${GATEWAY_PORT}:80
-    depends_on:
-      backend-staging:
-        condition: service_healthy
-      frontend-staging:
-        condition: service_healthy
