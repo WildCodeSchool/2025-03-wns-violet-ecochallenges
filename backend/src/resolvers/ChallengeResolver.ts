@@ -1,7 +1,18 @@
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  Field,
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
+} from "type-graphql";
 import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
 import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
+import { Context } from "../types/Context";
+import { User } from "../entities/User";
 
 @InputType()
 export class NewChallengeInput {
@@ -33,8 +44,29 @@ export default class ChallengeResolver {
     return challenges;
   }
 
+  @Authorized()
+  @Query(() => [Challenge])
+  async getMyChallenges(@Ctx() ctx: Context) {
+    if (!ctx.user) {
+      throw new Error("Utilisateur non authentifié");
+    }
+
+    return Challenge.find({
+      where: [{ createdBy: { id: ctx.user.id } }],
+      relations: ["participants", "createdBy"],
+    });
+  }
+
+  @Authorized()
   @Mutation(() => Challenge)
-  async createChallenge(@Arg("data") data: NewChallengeInput) {
+  async createChallenge(
+    @Arg("data") data: NewChallengeInput,
+    @Ctx() ctx: Context
+  ) {
+    if (!ctx.user) {
+      throw new Error("Utilisateur non authentifié");
+    }
+
     const input = plainToClass(NewChallengeInput, data);
 
     const errors = await validate(input);
@@ -45,15 +77,21 @@ export default class ChallengeResolver {
       throw new Error(messages.join(", "));
     }
 
+    const user = await User.findOneByOrFail({ id: ctx.user.id });
+
     const challenge = Challenge.create({
       label: data.label,
       startingDate: data.startingDate,
       endingDate: data.endingDate,
       picture: data.picture,
+      createdBy: user,
     });
 
     await challenge.save();
-    return challenge;
+    return Challenge.findOne({
+      where: { id: challenge.id },
+      relations: ["createdBy", "participants"],
+    });
   }
 
   @Mutation(() => Challenge)
