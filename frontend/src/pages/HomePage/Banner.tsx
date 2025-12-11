@@ -15,7 +15,7 @@ function Banner() {
     >
       <div className={cn("flex flex-col lg:flex-1 space-y-4")}>
         <TypographyH2 className="text-white">
-          Lance ton challenge écolo !
+          Lance ton challenge écolo ! We are on staging baby !
         </TypographyH2>
 
         <TypographyP className="text-white">
