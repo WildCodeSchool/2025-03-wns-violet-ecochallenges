@@ -2,13 +2,9 @@ services:
   gateway-prod:
     build:
       context: .
+    ports:
+      - 8000:80
     image: nicolaschambondev/ecochallenge_gateway_prod
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl --fail --request GET --url 'http://gateway-prod:5173' || exit 1",
-        ]
     depends_on:
       backend-prod:
         condition: service_healthy
