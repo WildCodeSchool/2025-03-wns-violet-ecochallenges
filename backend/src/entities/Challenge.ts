@@ -54,8 +54,10 @@ export class Challenge extends BaseEntity {
   status: ChallengeStatus;
 
   @ManyToOne(() => User, (user) => user.challengesCreated)
+  @Field(() => User)
   createdBy: User;
 
   @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.challenge)
+  @Field(() => [UserChallenge])
   participants: Relation<UserChallenge[]>;
 }
