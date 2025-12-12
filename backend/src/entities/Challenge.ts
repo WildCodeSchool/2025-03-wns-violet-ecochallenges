@@ -12,7 +12,6 @@ import { User } from "./User";
 import { UserChallenge } from "./UserChallenge";
 
 export enum ChallengeStatus {
-  CREATED = "CREATED",
   IN_PROGRESS = "IN_PROGRESS",
   TERMINATED = "TERMINATED",
 }
@@ -48,7 +47,7 @@ export class Challenge extends BaseEntity {
   @Column({
     type: "enum",
     enum: ChallengeStatus,
-    default: ChallengeStatus.CREATED,
+    default: ChallengeStatus.IN_PROGRESS,
   })
   @Field(() => ChallengeStatus)
   status: ChallengeStatus;
