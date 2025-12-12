@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   Ctx,
   Field,
   InputType,
@@ -72,7 +73,16 @@ export function createUserPayload(user: User): UserPayload {
 
 @Resolver(User)
 export default class UserResolver {
+  @Query(() => User)
+  @Authorized()
+  async getCurrentUser(@Ctx() ctx: Context) {
+    if (!ctx.user) throw new Error("Utilisateur non authentifié");
+    const user = await User.findOneBy({ id: ctx.user.id });
+    return user;
+  }
+
   @Query(() => [User])
+  @Authorized()
   async getAllUsers() {
     const users = await User.find();
     return users;

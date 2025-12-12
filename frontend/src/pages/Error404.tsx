@@ -7,10 +7,12 @@ const Error404 = () => (
     <TypographyH1>404</TypographyH1>
     <TypographyH2>Page non trouvée</TypographyH2>
     <TypographyP>La page que vous cherchez n'existe pas.</TypographyP>
-    <img
-      src="/404-image.png"
-      alt="Crew Planet - Illustration challenge écologique"
-    />
+    <div className="h-80 w-80">
+      <img
+        src="/404-image.png"
+        alt="Crew Planet - Illustration challenge écologique"
+      />
+    </div>
   </div>
 );
 
