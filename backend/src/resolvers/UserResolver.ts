@@ -8,7 +8,7 @@ import {
   Resolver,
 } from "type-graphql";
 import argon2 from "argon2";
-import { Context, UserProfile } from "../types/Context";
+import { Context, UserPayload } from "../types/Context";
 import * as jwt from "jsonwebtoken";
 import { User } from "../entities/User";
 import {
@@ -55,19 +55,19 @@ function setCookie(ctx: Context, token: string) {
   );
 }
 
-function createJwt(payload: UserProfile) {
+function createJwt(payload: UserPayload) {
   const JWT_SECRET = process.env.JWT_SECRET;
   if (!JWT_SECRET) throw new Error("Missing env variable : JWT_SECRET");
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
   return token;
 }
 
-export function createUserProfile(user: User): UserProfile {
-  const profile: UserProfile = {
+export function createUserPayload(user: User): UserPayload {
+  const userPayload: UserPayload = {
     id: user.id,
     roles: user.roles,
   };
-  return profile;
+  return userPayload;
 }
 
 @Resolver(User)
@@ -97,7 +97,7 @@ export default class UserResolver {
     const username = data.email.split("@")[0];
     const user = User.create({ ...data, hashedPassword, username });
     await user.save();
-    const payload = createUserProfile(user);
+    const payload = createUserPayload(user);
     const token = createJwt(payload);
     setCookie(ctx, token);
 
@@ -119,7 +119,7 @@ export default class UserResolver {
     const isValid = await argon2.verify(user.hashedPassword, data.password);
     if (!isValid) throw new Error("Email ou mot de passe invalide.");
 
-    const payload = createUserProfile(user);
+    const payload = createUserPayload(user);
     const token = createJwt(payload);
     setCookie(ctx, token);
 

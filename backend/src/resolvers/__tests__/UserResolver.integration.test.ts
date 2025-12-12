@@ -22,7 +22,7 @@ import {
  * with a real PostgreSQL database in a Docker container.
  *
  * Coverage:
- * - Helper functions (createUserProfile, createJwt, setCookie)
+ * - Helper functions (createUserPayload, createJwt, setCookie)
  * - Signup with validation and hashing
  * - Login with Argon2 verification
  * - Logout
