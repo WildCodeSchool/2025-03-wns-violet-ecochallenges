@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll, beforeEach } from "@jest/globals";
-import { createUserProfile } from "../UserResolver";
+import { createUserPayload } from "../UserResolver";
 import { User, Role } from "../../entities/User";
-import { Context, UserProfile } from "../../types/Context";
+import { Context, UserPayload } from "../../types/Context";
 
 import * as jwt from "jsonwebtoken";
 
@@ -16,8 +16,8 @@ describe("UserResolver - Unit Tests (Helper Functions)", () => {
     process.env = OLD_ENV;
   });
 
-  describe("createUserProfile", () => {
-    it("should create a valid user profile with id and roles", () => {
+  describe("createUserPayload", () => {
+    it("should create a valid user payload with id and roles", () => {
       const mockUser = {
         id: 1,
         email: "test@example.com",
@@ -26,7 +26,7 @@ describe("UserResolver - Unit Tests (Helper Functions)", () => {
         hashedPassword: "hashedPassword123",
       } as User;
 
-      const result = createUserProfile(mockUser);
+      const result = createUserPayload(mockUser);
 
       expect(result).toEqual({
         id: 1,
@@ -37,7 +37,7 @@ describe("UserResolver - Unit Tests (Helper Functions)", () => {
 
   describe("createJwt", () => {
     it("should create a valid JWT token with correct payload", () => {
-      const payload: UserProfile = {
+      const payload: UserPayload = {
         id: 1,
         roles: [Role.USER],
       };
