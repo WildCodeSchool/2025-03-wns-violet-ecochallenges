@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import {gql} from "@apollo/client";
 
 export const GET_ECOGESTURES = gql`
   query GetEcogestures($input: GetEcogesturesInput) {
@@ -7,7 +7,11 @@ export const GET_ECOGESTURES = gql`
       ecogestures {
         id
         label
+        description
         pictureUrl
+        level1Expectation
+        level2Expectation
+        level3Expectation
       }
     }
   }

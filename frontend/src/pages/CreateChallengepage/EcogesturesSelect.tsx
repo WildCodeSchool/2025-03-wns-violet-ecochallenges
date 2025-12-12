@@ -31,34 +31,35 @@ function EcogesturesSelect({
         {data.getEcogestures.ecogestures.map((eco) => (
           <div
             key={eco.id}
-            className="border rounded p-3 flex flex-col gap-3 items-start bg-gray-50"
+            className="border rounded p-3 flex flex-col justify-between items-center h-full bg-gray-50"
           >
-            <div className="flex items-center gap-3 w-full">
-              {eco.pictureUrl && (
-                <img
-                  src={eco.pictureUrl}
-                  alt={eco.label}
-                  className="w-10 h-10 object-contain"
-                />
-              )}
-              <span className="font-semibold text-lg">{eco.label}</span>
+            <div className="w-full">
+              <div className="flex items-center gap-3 w-full mb-3">
+                {eco.pictureUrl && (
+                  <img
+                    src={eco.pictureUrl}
+                    alt={eco.label}
+                    className="w-10 h-10 object-contain"
+                  />
+                )}
+                <span className="font-semibold text-lg text-black">{eco.label}</span>
+              </div>
+              <p className="text-sm text-gray-700 mb-2">{eco.description}</p>
+              <ul className="text-xs text-gray-600 list-disc ml-5">
+                <li>Niveau 1 : {eco.level1Expectation}</li>
+                <li>Niveau 2 : {eco.level2Expectation}</li>
+                <li>Niveau 3 : {eco.level3Expectation}</li>
+              </ul>
             </div>
-            <p className="text-sm text-gray-700">{eco.description}</p>
-            <ul className="text-xs text-gray-600 list-disc ml-5">
-              <li>Niveau 1 : {eco.level1Expectation}</li>
-              <li>Niveau 2 : {eco.level2Expectation}</li>
-              <li>Niveau 3 : {eco.level3Expectation}</li>
-            </ul>
             <Button
               type="button"
-              onClick={() => handleCheckbox(eco.id)}
-              className={`mt-2 px-4 py-2 rounded font-semibold transition-colors ${
-                value.includes(eco.id)
-                  ? "bg-green-500 text-white"
+              onClick={() => handleCheckbox(eco.id.toString())}
+              className={`mt-4 px-4 py-2 rounded font-semibold transition-colors w-full ${value.includes(eco.id.toString())
+                  ? "bg-green-100 text-white"
                   : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-              }`}
+                }`}
             >
-              {value.includes(eco.id) ? "✓ Sélectionné" : "Sélectionner"}
+              {value.includes(eco.id.toString()) ? "✓ Sélectionné" : "Sélectionner"}
             </Button>
           </div>
         ))}

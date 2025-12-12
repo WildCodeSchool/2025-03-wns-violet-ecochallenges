@@ -15,6 +15,18 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTimeISO: { input: any; output: any; }
+};
+
+export type Challenge = {
+  __typename?: 'Challenge';
+  description: Scalars['String']['output'];
+  ecogestures?: Maybe<Array<Ecogesture>>;
+  endingDate: Scalars['DateTimeISO']['output'];
+  id: Scalars['Float']['output'];
+  label: Scalars['String']['output'];
+  picture?: Maybe<Scalars['String']['output']>;
+  startingDate: Scalars['DateTimeISO']['output'];
 };
 
 export type Ecogesture = {
@@ -41,10 +53,16 @@ export type GetEcogesturesInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createChallenge: Challenge;
   login: Scalars['String']['output'];
   logout: Scalars['String']['output'];
   seedEcogestures: Array<Ecogesture>;
   signup: Scalars['String']['output'];
+};
+
+
+export type MutationCreateChallengeArgs = {
+  data: NewChallengeInput;
 };
 
 
@@ -57,6 +75,15 @@ export type MutationSignupArgs = {
   data: NewUserInput;
 };
 
+export type NewChallengeInput = {
+  description: Scalars['String']['input'];
+  ecogestureIds: Array<Scalars['Float']['input']>;
+  endingDate: Scalars['DateTimeISO']['input'];
+  label: Scalars['String']['input'];
+  picture: Scalars['String']['input'];
+  startingDate: Scalars['DateTimeISO']['input'];
+};
+
 export type NewUserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -64,6 +91,7 @@ export type NewUserInput = {
 
 export type Query = {
   __typename?: 'Query';
+  getAllChallenges: Array<Challenge>;
   getAllUsers: Array<User>;
   getEcogestures: EcogestureListResponse;
 };
@@ -86,6 +114,13 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
+export type CreateChallengeMutationVariables = Exact<{
+  data: NewChallengeInput;
+}>;
+
+
+export type CreateChallengeMutation = { __typename?: 'Mutation', createChallenge: { __typename?: 'Challenge', id: number, label: string, description: string, startingDate: any, endingDate: any, picture?: string | null, ecogestures?: Array<{ __typename?: 'Ecogesture', id: number, label: string }> | null } };
+
 export type LoginMutationVariables = Exact<{
   data: NewUserInput;
 }>;
@@ -93,14 +128,63 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: string };
 
+export type SignupMutationVariables = Exact<{
+  data: NewUserInput;
+}>;
+
+
+export type SignupMutation = { __typename?: 'Mutation', signup: string };
+
 export type GetEcogesturesQueryVariables = Exact<{
   input?: InputMaybe<GetEcogesturesInput>;
 }>;
 
 
-export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> } };
+export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> } };
 
 
+export const CreateChallengeDocument = gql`
+    mutation CreateChallenge($data: NewChallengeInput!) {
+  createChallenge(data: $data) {
+    id
+    label
+    description
+    startingDate
+    endingDate
+    picture
+    ecogestures {
+      id
+      label
+    }
+  }
+}
+    `;
+export type CreateChallengeMutationFn = Apollo.MutationFunction<CreateChallengeMutation, CreateChallengeMutationVariables>;
+
+/**
+ * __useCreateChallengeMutation__
+ *
+ * To run a mutation, you first call `useCreateChallengeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChallengeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createChallengeMutation, { data, loading, error }] = useCreateChallengeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateChallengeMutation(baseOptions?: Apollo.MutationHookOptions<CreateChallengeMutation, CreateChallengeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateChallengeMutation, CreateChallengeMutationVariables>(CreateChallengeDocument, options);
+      }
+export type CreateChallengeMutationHookResult = ReturnType<typeof useCreateChallengeMutation>;
+export type CreateChallengeMutationResult = Apollo.MutationResult<CreateChallengeMutation>;
+export type CreateChallengeMutationOptions = Apollo.BaseMutationOptions<CreateChallengeMutation, CreateChallengeMutationVariables>;
 export const LoginDocument = gql`
     mutation login($data: NewUserInput!) {
   login(data: $data)
@@ -132,6 +216,37 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const SignupDocument = gql`
+    mutation Signup($data: NewUserInput!) {
+  signup(data: $data)
+}
+    `;
+export type SignupMutationFn = Apollo.MutationFunction<SignupMutation, SignupMutationVariables>;
+
+/**
+ * __useSignupMutation__
+ *
+ * To run a mutation, you first call `useSignupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signupMutation, { data, loading, error }] = useSignupMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<SignupMutation, SignupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, options);
+      }
+export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
+export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
+export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
 export const GetEcogesturesDocument = gql`
     query GetEcogestures($input: GetEcogesturesInput) {
   getEcogestures(input: $input) {
@@ -139,7 +254,11 @@ export const GetEcogesturesDocument = gql`
     ecogestures {
       id
       label
+      description
       pictureUrl
+      level1Expectation
+      level2Expectation
+      level3Expectation
     }
   }
 }
