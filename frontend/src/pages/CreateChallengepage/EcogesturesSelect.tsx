@@ -1,4 +1,5 @@
 import { useGetEcogesturesQuery } from "@/generated/graphql-types";
+import { Button } from "@/components/ui/button";
 
 function EcogesturesSelect({
   value,
@@ -21,7 +22,7 @@ function EcogesturesSelect({
   };
 
   if (!data?.getEcogestures?.ecogestures?.length) {
-    return <p>aucun challenger à selectionner</p>;
+    return <p>Aucun challenge à selectionner</p>;
   }
 
   return (
@@ -32,13 +33,7 @@ function EcogesturesSelect({
             key={eco.id}
             className="border rounded p-3 flex flex-col gap-3 items-start bg-gray-50"
           >
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                checked={value.includes(eco.id)}
-                onChange={() => handleCheckbox(eco.id)}
-                className="mt-2"
-              />
+            <div className="flex items-center gap-3 w-full">
               {eco.pictureUrl && (
                 <img
                   src={eco.pictureUrl}
@@ -54,11 +49,21 @@ function EcogesturesSelect({
               <li>Niveau 2 : {eco.level2Expectation}</li>
               <li>Niveau 3 : {eco.level3Expectation}</li>
             </ul>
+            <Button
+              type="button"
+              onClick={() => handleCheckbox(eco.id)}
+              className={`mt-2 px-4 py-2 rounded font-semibold transition-colors ${
+                value.includes(eco.id)
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              }`}
+            >
+              {value.includes(eco.id) ? "✓ Sélectionné" : "Sélectionner"}
+            </Button>
           </div>
         ))}
       </div>
     </div>
   );
 }
-
 export default EcogesturesSelect;

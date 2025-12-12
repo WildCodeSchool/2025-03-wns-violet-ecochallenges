@@ -1,5 +1,6 @@
 import { Field, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
+import { Challenge } from "./Challenge";
 
 @Entity()
 @ObjectType()
@@ -31,4 +32,7 @@ export class Ecogesture extends BaseEntity {
   @Column()
   @Field()
   level3Expectation: string;
+
+  @ManyToMany(() => Challenge, (challenge) => challenge.ecogestures)
+  challenges: Challenge[];
 }

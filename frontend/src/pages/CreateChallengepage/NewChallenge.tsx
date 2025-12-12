@@ -12,6 +12,7 @@ function NewChallenge({
 }) {
   const [form, setForm] = useState({
     label: "",
+    description: "",
     startingDate: "",
     endingDate: "",
     picture: ""
@@ -25,22 +26,34 @@ function NewChallenge({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Selected ecogestures:", selectedEcogestures);
+    console.log("Form data:", {
+      label: form.label,
+      description: form.description,
+      startingDate: new Date(form.startingDate).toISOString(),
+      endingDate: new Date(form.endingDate).toISOString(),
+      picture: form.picture,
+      ecogestureIds: selectedEcogestures,
+    });
     try {
       await createChallenge({
         variables: {
           data: {
             label: form.label,
+            description: form.description,
             startingDate: new Date(form.startingDate).toISOString(),
             endingDate: new Date(form.endingDate).toISOString(),
             picture: form.picture,
+            ecogestureIds: selectedEcogestures,
           }
         }
       });
       // Optionnel: reset form or show success
       setForm({ label: "", startingDate: "", endingDate: "", picture: "" });
+      setSelectedEcogestures([]);
     } catch (err) {
       // Optionnel: gérer l'erreur
-      console.error(err);
+      console.error("Full error:", err);
     }
   };
 
@@ -52,58 +65,69 @@ function NewChallenge({
             <div
               className="rounded-lg p-4 mb-4 flex items-center gap-4"
               style={{
-                backgroundImage: "url('https://picsum.photos/600/200')",
+                backgroundImage: form.picture ? `url('${form.picture}')` : "url('https://picsum.photos/600/200')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
             >
-            <h2 className="text-xl font-bold text-white drop-shadow">Créer un nouveau challenge</h2>
+              <h2 className="text-xl font-bold text-white drop-shadow">Créer un nouveau challenge</h2>
+            </div>
+            <label className="block mb-1 font-medium" htmlFor="label">Titre</label>
           </div>
-          <label className="block mb-1 font-medium" htmlFor="label">Titre</label>
+          <input
+            type="text"
+            id="label"
+            name="label"
+            value={form.label}
+            onChange={handleChange}
+            required
+            className="w-full border rounded px-3 py-2"
+            placeholder="Mon challenge"
+          />
+          <label className="block mb-1 font-medium" htmlFor="description">Description</label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            required
+            className="w-full border rounded px-3 py-2"
+            placeholder="Decrivez votre challenge ici ...."
+          />
         </div>
-        <input
-          type="text"
-          id="label"
-          name="label"
-          value={form.label}
-          onChange={handleChange}
-          required
-          className="w-full border rounded px-3 py-2"
-          placeholder="Mon challenge"
-        />
-      </div>
-      <div>
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="block mb-1 font-medium" htmlFor="startingDate">Date de début</label>
-            <input
-              type="datetime-local"
-              id="startingDate"
-              name="startingDate"
-              value={form.startingDate}
-              onChange={handleChange}
-              required
-              className="w-full border rounded px-3 py-2"
-            />
+        <div>
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block mb-1 font-medium" htmlFor="startingDate">Date de début</label>
+              <input
+                type="datetime-local"
+                id="startingDate"
+                name="startingDate"
+                value={form.startingDate}
+                onChange={handleChange}
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block mb-1 font-medium" htmlFor="endingDate">Date de fin</label>
+              <input
+                type="datetime-local"
+                id="endingDate"
+                name="endingDate"
+                value={form.endingDate}
+                onChange={handleChange}
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
           </div>
-          <div className="flex-1">
-            <label className="block mb-1 font-medium" htmlFor="endingDate">Date de fin</label>
-            <input
-              type="datetime-local"
-              id="endingDate"
-              name="endingDate"
-              value={form.endingDate}
-              onChange={handleChange}
-              required
-              className="w-full border rounded px-3 py-2"
-            />
-          </div>
-        </div>
-        <label className="block mb-1 font-medium">Sélectionnez vos écogestes : </label>
-        <EcogesturesSelect
-          value={selectedEcogestures ?? []}
-          onChange={setSelectedEcogestures}
-        />
+          <label className="block mb-1 font-medium">Sélectionnez vos écogestes : </label>
+          <EcogesturesSelect
+            value={selectedEcogestures ?? []}
+            onChange={setSelectedEcogestures}
+          />
         </div>
         <button type="submit" className="bg-primary text-white px-4 py-2 rounded font-semibold" disabled={loading}>
           {loading ? "Création..." : "Créer un challenge"}
