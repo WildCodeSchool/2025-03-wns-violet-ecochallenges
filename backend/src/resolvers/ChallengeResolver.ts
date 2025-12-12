@@ -5,6 +5,7 @@ import {
   Field,
   InputType,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
 } from "type-graphql";
@@ -36,6 +37,33 @@ export class NewChallengeInput {
   picture: string;
 }
 
+@ObjectType()
+class ChallengeListResponse {
+  @Field(() => Number)
+  totalCount: number;
+
+  @Field(() => [Challenge])
+  challenges: Challenge[];
+}
+
+@InputType()
+class GetMyChallengesInput {
+  @Field(() => Number, { nullable: true })
+  page?: number;
+
+  @Field(() => Number, { nullable: true })
+  limit?: number;
+
+  @Field({ nullable: true })
+  filter?: ChallengeFilter;
+}
+
+export enum ChallengeFilter {
+  CREATED = "CREATED",
+  IN_PROGRESS = "IN_PROGRESS",
+  TERMINATED = "TERMINATED",
+}
+
 @Resolver(Challenge)
 export default class ChallengeResolver {
   @Query(() => [Challenge])
@@ -45,16 +73,43 @@ export default class ChallengeResolver {
   }
 
   @Authorized()
-  @Query(() => [Challenge])
-  async getMyChallenges(@Ctx() ctx: Context) {
+  @Query(() => ChallengeListResponse)
+  async getMyChallenges(
+    @Ctx() ctx: Context,
+    @Arg("input", () => GetMyChallengesInput, { nullable: true })
+    input?: GetMyChallengesInput
+  ): Promise<ChallengeListResponse> {
     if (!ctx.user) {
       throw new Error("Utilisateur non authentifié");
     }
 
-    return Challenge.find({
-      where: [{ createdBy: { id: ctx.user.id } }],
-      relations: ["participants", "createdBy"],
-    });
+    const page = input?.page ?? 1;
+    const limit = input?.limit ?? 10;
+    const skip = (page - 1) * limit;
+    const filter = input?.filter;
+
+    const queryBuilder = Challenge.createQueryBuilder("challenge")
+      .leftJoinAndSelect("challenge.createdBy", "createdBy")
+      .leftJoinAndSelect("challenge.participants", "participants")
+      .skip(skip)
+      .take(limit);
+
+    if (filter === ChallengeFilter.CREATED) {
+      queryBuilder.where("challenge.createdById = :userId", {
+        userId: ctx.user.id,
+      });
+    } else if (
+      filter === ChallengeFilter.IN_PROGRESS ||
+      filter === ChallengeFilter.TERMINATED
+    ) {
+      queryBuilder.where("challenge.status = :status", {
+        status: filter,
+      });
+    }
+
+    const [challenges, totalCount] = await queryBuilder.getManyAndCount();
+
+    return { totalCount, challenges };
   }
 
   @Authorized()
@@ -85,6 +140,7 @@ export default class ChallengeResolver {
       endingDate: data.endingDate,
       picture: data.picture,
       createdBy: user,
+      //TODO add participants
     });
 
     await challenge.save();
