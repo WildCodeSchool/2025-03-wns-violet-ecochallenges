@@ -76,7 +76,7 @@ export default class UserResolver {
   @Query(() => User)
   @Authorized()
   async getCurrentUser(@Ctx() ctx: Context) {
-    if (!ctx.user) throw new Error("Not authenticated");
+    if (!ctx.user) throw new Error("Utilisateur non authentifié");
     const user = await User.findOneBy({ id: ctx.user.id });
     return user;
   }
