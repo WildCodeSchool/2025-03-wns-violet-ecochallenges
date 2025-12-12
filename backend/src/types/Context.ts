@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { Role } from "../entities/User";
 
-export type UserProfile = {
+export type UserPayload = {
   id: number;
   roles: Role[];
 };
@@ -9,5 +9,5 @@ export type UserProfile = {
 export type Context = {
   req: IncomingMessage;
   res: ServerResponse;
-  user?: UserProfile;
+  user?: UserPayload;
 };
