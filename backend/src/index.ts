@@ -8,7 +8,7 @@ import UserResolver from "./resolvers/UserResolver";
 import EcogestureResolver from "./resolvers/EcogestureResolver";
 import * as jwt from "jsonwebtoken";
 import { authChecker } from "./lib/helpers/authChecker";
-import { UserProfile } from "./types/Context";
+import { UserPayload } from "./types/Context";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -35,7 +35,7 @@ async function startServer() {
         if (typeof user === "string") user = null;
       }
 
-      return { req, res, user: user as UserProfile };
+      return { req, res, user: user as UserPayload };
     },
   });
   console.info("Server started on " + url);
