@@ -29,13 +29,15 @@ function Banner() {
             "sm:gap-5"
           )}
         >
-          <Button asChild className="w-[200px]">
-            <Link to="/signup">S'inscrire</Link>
-          </Button>
+          <Link to="/signup">
+            <Button className="w-[200px]">S'inscrire</Button>
+          </Link>
 
-          <Button asChild variant="secondary" className="w-[200px]">
-            <Link to="/signin">Se connecter</Link>
-          </Button>
+          <Link to="/signin">
+            <Button variant="secondary" className="w-[200px]">
+              Se connecter
+            </Button>
+          </Link>
         </div>
       </div>
 
