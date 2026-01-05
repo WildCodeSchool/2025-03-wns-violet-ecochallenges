@@ -9,7 +9,7 @@ function DashboardBanner({ username }: { username: string }) {
     <div
       className={cn(
         "max-w-7xl mx-auto",
-        "flex items-center justify-between",
+        "flex flex-col items-center justify-between sm:flex-row gap-8",
         "p-4 mt-8"
       )}
     >
