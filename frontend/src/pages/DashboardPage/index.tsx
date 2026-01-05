@@ -13,20 +13,20 @@ function DashboardPage() {
       <div className="flex text-white items-center justify-center min-h-[60vh] gap-2">
         <Spinner />
         <TypographyP>Chargement...</TypographyP>
-        <ValidatedEcogestures />
       </div>
     );
   }
-
+  
   if (error || !data?.getCurrentUser) {
     return <UnauthorizedPage />;
   }
-
+  
   return (
     <main>
       <DashboardBanner username={data.getCurrentUser.username} />
+      <ValidatedEcogestures />
     </main>
   );
 }
 
-export default Dashboard;
+export default DashboardPage;

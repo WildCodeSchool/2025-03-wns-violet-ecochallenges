@@ -22,8 +22,8 @@ export class UserEcogestureResolver {
 
     return await UserEcogesture.find({
       where: { userId },
-      relations: ["ecogesture"],
-    });
+      relations: ["ecogesture", "user"],
+    }) as UserEcogesture[];
   }
 
   @Mutation(() => UserEcogesture)
@@ -45,11 +45,14 @@ export class UserEcogestureResolver {
 
     await userEcogesture.save();
 
-    return userEcogesture;
+    return (await UserEcogesture.findOne({
+      where: { id: userEcogesture.id },
+      relations: ["ecogesture", "user"],
+    })) as UserEcogesture;
   }
 }
 
-// TODO: 
+// TODO:
 // 1. Créer un user
 // 2. validateEcogesture: valider un ecogste sur Appolo ( ajouter dans Header: Authorization : "Bearer TOKEN RENVOYE" )
 // 3. getValidatedEcogesture : vérifier la liste des éco-gestes validés sur appolo (ajouter dans Header: Authorization: "Bearer TOKEN RENVOYE")
