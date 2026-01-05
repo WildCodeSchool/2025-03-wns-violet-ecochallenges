@@ -11,14 +11,16 @@ import {
 import { User } from "./User";
 import { UserChallenge } from "./UserChallenge";
 
-export enum ChallengeStatus {
+export enum ChallengeTimeStatus {
+  UPCOMING = "UPCOMING",
   IN_PROGRESS = "IN_PROGRESS",
   TERMINATED = "TERMINATED",
 }
 
-registerEnumType(ChallengeStatus, {
-  name: "ChallengeStatus",
-  description: "The status of a challenge",
+registerEnumType(ChallengeTimeStatus, {
+  name: "ChallengeTimeStatus",
+  description:
+    "The temporal status of a challenge based on start and end dates",
 });
 
 @Entity()
@@ -46,11 +48,11 @@ export class Challenge extends BaseEntity {
 
   @Column({
     type: "enum",
-    enum: ChallengeStatus,
-    default: ChallengeStatus.IN_PROGRESS,
+    enum: ChallengeTimeStatus,
+    default: ChallengeTimeStatus.UPCOMING,
   })
-  @Field(() => ChallengeStatus)
-  status: ChallengeStatus;
+  @Field(() => ChallengeTimeStatus)
+  status: ChallengeTimeStatus;
 
   @ManyToOne(() => User, (user) => user.challengesCreated)
   @Field(() => User)
