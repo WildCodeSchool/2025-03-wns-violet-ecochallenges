@@ -6,6 +6,7 @@ import { useAuthStore } from "@/stores/authStore";
 import ValidatedEcogesturesDesktop from "./ValidatedEcogestures/ValidatedEcogesturesDesktop";
 import { useMediaQuery } from "usehooks-ts";
 import ValidatedEcogesturesTabletMobile from "./ValidatedEcogestures/ValidatedEcogesturesTabletMobile";
+import MyChallenges from "./MyChallenges.tsx";
 
 function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -29,6 +30,8 @@ function DashboardPage() {
   return (
     <main>
       <DashboardBanner username={user.username} />
+
+      <MyChallenges />
 
       {isDesktop ? (
         <ValidatedEcogesturesDesktop />
