@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   Field,
   InputType,
   Mutation,
@@ -47,6 +48,7 @@ export default class EcogestureResolver {
   }
 
   @Mutation(() => [Ecogesture])
+  @Authorized()
   async seedEcogestures() {
     const ecogesturesData = [
       {
