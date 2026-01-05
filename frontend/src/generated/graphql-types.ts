@@ -64,6 +64,7 @@ export type GetEcogesturesInput = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  cleanEcogestures: Scalars["Boolean"]["output"];
   createChallenge: Challenge;
   login: Scalars["String"]["output"];
   logout: Scalars["String"]["output"];
@@ -120,6 +121,29 @@ export type User = {
   username: Scalars["String"]["output"];
 };
 
+export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never }>;
+
+export type SeedEcogesturesMutation = {
+  __typename?: "Mutation";
+  seedEcogestures: Array<{
+    __typename?: "Ecogesture";
+    id: number;
+    label: string;
+    description: string;
+    pictureUrl: string;
+    level1Expectation: string;
+    level2Expectation: string;
+    level3Expectation: string;
+  }>;
+};
+
+export type CleanEcogesturesMutationVariables = Exact<{ [key: string]: never }>;
+
+export type CleanEcogesturesMutation = {
+  __typename?: "Mutation";
+  cleanEcogestures: boolean;
+};
+
 export type LoginMutationVariables = Exact<{
   data: NewUserInput;
 }>;
@@ -163,6 +187,108 @@ export type GetCurrentUserQuery = {
   };
 };
 
+export const SeedEcogesturesDocument = gql`
+  mutation SeedEcogestures {
+    seedEcogestures {
+      id
+      label
+      description
+      pictureUrl
+      level1Expectation
+      level2Expectation
+      level3Expectation
+    }
+  }
+`;
+export type SeedEcogesturesMutationFn = Apollo.MutationFunction<
+  SeedEcogesturesMutation,
+  SeedEcogesturesMutationVariables
+>;
+
+/**
+ * __useSeedEcogesturesMutation__
+ *
+ * To run a mutation, you first call `useSeedEcogesturesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSeedEcogesturesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [seedEcogesturesMutation, { data, loading, error }] = useSeedEcogesturesMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSeedEcogesturesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SeedEcogesturesMutation,
+    SeedEcogesturesMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    SeedEcogesturesMutation,
+    SeedEcogesturesMutationVariables
+  >(SeedEcogesturesDocument, options);
+}
+export type SeedEcogesturesMutationHookResult = ReturnType<
+  typeof useSeedEcogesturesMutation
+>;
+export type SeedEcogesturesMutationResult =
+  Apollo.MutationResult<SeedEcogesturesMutation>;
+export type SeedEcogesturesMutationOptions = Apollo.BaseMutationOptions<
+  SeedEcogesturesMutation,
+  SeedEcogesturesMutationVariables
+>;
+export const CleanEcogesturesDocument = gql`
+  mutation CleanEcogestures {
+    cleanEcogestures
+  }
+`;
+export type CleanEcogesturesMutationFn = Apollo.MutationFunction<
+  CleanEcogesturesMutation,
+  CleanEcogesturesMutationVariables
+>;
+
+/**
+ * __useCleanEcogesturesMutation__
+ *
+ * To run a mutation, you first call `useCleanEcogesturesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCleanEcogesturesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cleanEcogesturesMutation, { data, loading, error }] = useCleanEcogesturesMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCleanEcogesturesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CleanEcogesturesMutation,
+    CleanEcogesturesMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CleanEcogesturesMutation,
+    CleanEcogesturesMutationVariables
+  >(CleanEcogesturesDocument, options);
+}
+export type CleanEcogesturesMutationHookResult = ReturnType<
+  typeof useCleanEcogesturesMutation
+>;
+export type CleanEcogesturesMutationResult =
+  Apollo.MutationResult<CleanEcogesturesMutation>;
+export type CleanEcogesturesMutationOptions = Apollo.BaseMutationOptions<
+  CleanEcogesturesMutation,
+  CleanEcogesturesMutationVariables
+>;
 export const LoginDocument = gql`
   mutation login($data: NewUserInput!) {
     login(data: $data)

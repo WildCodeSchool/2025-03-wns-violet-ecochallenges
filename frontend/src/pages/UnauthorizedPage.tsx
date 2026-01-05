@@ -18,6 +18,7 @@ function UnauthorizedPage() {
           alt="Crew Planet - Illustration challenge écologique"
         />
       </div>
+
       <Link to="/signin">
         <Button>Se connecter</Button>
       </Link>
