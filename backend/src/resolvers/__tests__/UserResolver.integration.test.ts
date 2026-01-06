@@ -264,11 +264,19 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
         password: "CorrectPassword123!",
       };
 
-      const token = await resolver.login(loginData, mockContext);
+      const stringifiedProfile = await resolver.login(loginData, mockContext);
 
-      expect(token).toBeDefined();
-      expect(typeof token).toBe("string");
-      expect(token.split(".").length).toBe(3); // Format JWT: header.payload.signature
+      expect(stringifiedProfile).toBeDefined();
+      expect(typeof stringifiedProfile).toBe("string");
+
+      const profile = JSON.parse(stringifiedProfile);
+
+      expect(profile).toMatchObject({
+        email: "logintest@test.com",
+        username: "logintest",
+        roles: [Role.USER],
+      });
+      expect(profile.id).toBeDefined();
 
       expect(mockContext.res.setHeader).toHaveBeenCalledWith(
         "Set-Cookie",
