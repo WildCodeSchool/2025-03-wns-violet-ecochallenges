@@ -3,7 +3,7 @@ import UnauthorizedPage from "../UnauthorizedPage";
 import { useGetCurrentUserQuery } from "@/generated/graphql-types";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyP } from "@/components/ui/typographyP";
-import ValidatedEcogestures from "./ValidatedEcogestures/ValidatedEcogesturesCard";
+import ValidatedEcogesturesDesktop from "./ValidatedEcogestures/ValidatedEcogesturesDesktop";
 
 function DashboardPage() {
   const { data, loading, error } = useGetCurrentUserQuery();
@@ -24,7 +24,7 @@ function DashboardPage() {
   return (
     <main>
       <DashboardBanner username={data.getCurrentUser.username} />
-      <ValidatedEcogestures />
+      <ValidatedEcogesturesDesktop />
     </main>
   );
 }

@@ -14,7 +14,7 @@ import { UserEcogesture } from "../entities/UserEcogesture";
 import { Context } from "../types/Context";
 
 @InputType()
-class GetValidatedEcogesturesInput {
+class PaginationInput {
   @Field(() => Number, { nullable: true })
   page?: number;
 
@@ -36,10 +36,10 @@ export class UserEcogestureResolver {
   @Query(() => ValidatedEcogesturesResponse)
   @Authorized()
   async getValidatedEcogestures(
-    @Arg("input", () => GetValidatedEcogesturesInput, { nullable: true })
-    input: GetValidatedEcogesturesInput,
+    @Arg("input", () => PaginationInput, { nullable: true })
+    input: PaginationInput,
     @Ctx() ctx: Context
-  ): Promise<UserEcogesture[]> {
+  ): Promise<ValidatedEcogesturesResponse> {
     const userId = ctx.user?.id;
     if (!userId) throw new Error("Utilisateur non connecté");
 
@@ -47,13 +47,18 @@ export class UserEcogestureResolver {
     const limit = input?.limit ?? 5;
     const skip = (page - 1) * limit;
 
-    return (await UserEcogesture.find({
+    const [userEcogestures, totalCount] = await UserEcogesture.findAndCount({
       where: { userId },
       skip,
       take: limit,
       relations: ["ecogesture", "user"],
       order: { validated_at: "DESC" },
-    })) as UserEcogesture[];
+    });
+
+    return {
+      userEcogestures,
+      totalCount,
+    };
   }
 
   @Mutation(() => UserEcogesture)

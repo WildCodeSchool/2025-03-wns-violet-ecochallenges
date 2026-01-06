@@ -1,9 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
-import { useGetValidatedEcogesturesQuery } from "@/generated/graphql-types";
+import {
+  useGetValidatedEcogesturesQuery,
+  type UserEcogesture,
+  type Ecogesture,
+} from "@/generated/graphql-types";
 
 export const useValidatedEcogesturesPagination = (itemsPerPage: number) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [allEcogestures, setAllEcogestures] = useState<any[]>([]);
+  const [allEcogestures, setAllEcogestures] = useState<
+    Array<
+      Pick<UserEcogesture, "id" | "level_validated" | "validated_at"> & {
+        ecogesture: Pick<Ecogesture, "id" | "label" | "pictureUrl">;
+      }
+    >
+  >([]);
 
   const { data, loading } = useGetValidatedEcogesturesQuery({
     variables: {

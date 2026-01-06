@@ -1,17 +1,15 @@
 import { TypographyH2 } from "@/components/ui/typographyH2";
-import { useGetValidatedEcogesturesQuery } from "@/generated/graphql-types";
 import ValidatedEcogesturesCard from "./ValidatedEcogesturesCard";
 import { Button } from "@/components/ui/button";
 import { TypographyP } from "@/components/ui/typographyP";
 import { cn } from "@/lib/utils";
+import { useValidatedEcogesturesPagination } from "./useValidatedEcogesturesPagination";
 
 const ITEM_PER_PAGE = 3;
 
 function ValidatedEcogesturesDesktop() {
   const { allEcogestures, loading, loadMore, hasMore } =
-    useGetValidatedEcogesturesQuery(ITEM_PER_PAGE);
-
-  console.log("allEcogestures ============ ", allEcogestures);
+    useValidatedEcogesturesPagination(ITEM_PER_PAGE);
 
   return (
     <section className="max-w-7xl m-auto flex pt-4 pb-12 flex-col gap-6">
@@ -34,6 +32,7 @@ function ValidatedEcogesturesDesktop() {
           variant="secondary"
           className={cn(
             "w-[200px]",
+            "self-center",
             loading && "opacity-50 pointer-events-none"
           )}
           onClick={loadMore}

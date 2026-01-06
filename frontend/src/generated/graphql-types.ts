@@ -51,7 +51,7 @@ export type GetEcogesturesInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  cleanEcogestures: Scalars["Boolean"]["output"];
+  cleanEcogestures: Scalars['Boolean']['output'];
   createChallenge: Challenge;
   login: Scalars['String']['output'];
   logout: Scalars['String']['output'];
@@ -93,18 +93,28 @@ export type NewUserInput = {
   password: Scalars['String']['input'];
 };
 
+export type PaginationInput = {
+  limit?: InputMaybe<Scalars['Float']['input']>;
+  page?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllChallenges: Array<Challenge>;
   getAllUsers: Array<User>;
   getCurrentUser: User;
   getEcogestures: EcogestureListResponse;
-  getValidatedEcogestures: Array<UserEcogesture>;
+  getValidatedEcogestures: ValidatedEcogesturesResponse;
 };
 
 
 export type QueryGetEcogesturesArgs = {
   input?: InputMaybe<GetEcogesturesInput>;
+};
+
+
+export type QueryGetValidatedEcogesturesArgs = {
+  input?: InputMaybe<PaginationInput>;
 };
 
 /** Roles for users in this app */
@@ -131,28 +141,21 @@ export type UserEcogesture = {
   validated_at: Scalars['DateTimeISO']['output'];
 };
 
-export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never }>;
-
-export type SeedEcogesturesMutation = {
-  __typename?: "Mutation";
-  seedEcogestures: Array<{
-    __typename?: "Ecogesture";
-    id: number;
-    label: string;
-    description: string;
-    pictureUrl: string;
-    level1Expectation: string;
-    level2Expectation: string;
-    level3Expectation: string;
-  }>;
+export type ValidatedEcogesturesResponse = {
+  __typename?: 'ValidatedEcogesturesResponse';
+  totalCount: Scalars['Int']['output'];
+  userEcogestures: Array<UserEcogesture>;
 };
 
-export type CleanEcogesturesMutationVariables = Exact<{ [key: string]: never }>;
+export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
 
-export type CleanEcogesturesMutation = {
-  __typename?: "Mutation";
-  cleanEcogestures: boolean;
-};
+
+export type SeedEcogesturesMutation = { __typename?: 'Mutation', seedEcogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> };
+
+export type CleanEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CleanEcogesturesMutation = { __typename?: 'Mutation', cleanEcogestures: boolean };
 
 export type LoginMutationVariables = Exact<{
   data: NewUserInput;
@@ -180,10 +183,12 @@ export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles> } };
 
-export type GetValidatedEcogesturesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetValidatedEcogesturesQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
 
 
-export type GetValidatedEcogesturesQuery = { __typename?: 'Query', getValidatedEcogestures: Array<{ __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } }> };
+export type GetValidatedEcogesturesQuery = { __typename?: 'Query', getValidatedEcogestures: { __typename?: 'ValidatedEcogesturesResponse', totalCount: number, userEcogestures: Array<{ __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } }> } };
 
 export type ValidateEcogestureMutationVariables = Exact<{
   ecogestureId: Scalars['Int']['input'];
@@ -195,22 +200,19 @@ export type ValidateEcogestureMutation = { __typename?: 'Mutation', validateEcog
 
 
 export const SeedEcogesturesDocument = gql`
-  mutation SeedEcogestures {
-    seedEcogestures {
-      id
-      label
-      description
-      pictureUrl
-      level1Expectation
-      level2Expectation
-      level3Expectation
-    }
+    mutation SeedEcogestures {
+  seedEcogestures {
+    id
+    label
+    description
+    pictureUrl
+    level1Expectation
+    level2Expectation
+    level3Expectation
   }
-`;
-export type SeedEcogesturesMutationFn = Apollo.MutationFunction<
-  SeedEcogesturesMutation,
-  SeedEcogesturesMutationVariables
->;
+}
+    `;
+export type SeedEcogesturesMutationFn = Apollo.MutationFunction<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>;
 
 /**
  * __useSeedEcogesturesMutation__
@@ -228,36 +230,19 @@ export type SeedEcogesturesMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useSeedEcogesturesMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    SeedEcogesturesMutation,
-    SeedEcogesturesMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    SeedEcogesturesMutation,
-    SeedEcogesturesMutationVariables
-  >(SeedEcogesturesDocument, options);
-}
-export type SeedEcogesturesMutationHookResult = ReturnType<
-  typeof useSeedEcogesturesMutation
->;
-export type SeedEcogesturesMutationResult =
-  Apollo.MutationResult<SeedEcogesturesMutation>;
-export type SeedEcogesturesMutationOptions = Apollo.BaseMutationOptions<
-  SeedEcogesturesMutation,
-  SeedEcogesturesMutationVariables
->;
+export function useSeedEcogesturesMutation(baseOptions?: Apollo.MutationHookOptions<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>(SeedEcogesturesDocument, options);
+      }
+export type SeedEcogesturesMutationHookResult = ReturnType<typeof useSeedEcogesturesMutation>;
+export type SeedEcogesturesMutationResult = Apollo.MutationResult<SeedEcogesturesMutation>;
+export type SeedEcogesturesMutationOptions = Apollo.BaseMutationOptions<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>;
 export const CleanEcogesturesDocument = gql`
-  mutation CleanEcogestures {
-    cleanEcogestures
-  }
-`;
-export type CleanEcogesturesMutationFn = Apollo.MutationFunction<
-  CleanEcogesturesMutation,
-  CleanEcogesturesMutationVariables
->;
+    mutation CleanEcogestures {
+  cleanEcogestures
+}
+    `;
+export type CleanEcogesturesMutationFn = Apollo.MutationFunction<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>;
 
 /**
  * __useCleanEcogesturesMutation__
@@ -275,27 +260,13 @@ export type CleanEcogesturesMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCleanEcogesturesMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CleanEcogesturesMutation,
-    CleanEcogesturesMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CleanEcogesturesMutation,
-    CleanEcogesturesMutationVariables
-  >(CleanEcogesturesDocument, options);
-}
-export type CleanEcogesturesMutationHookResult = ReturnType<
-  typeof useCleanEcogesturesMutation
->;
-export type CleanEcogesturesMutationResult =
-  Apollo.MutationResult<CleanEcogesturesMutation>;
-export type CleanEcogesturesMutationOptions = Apollo.BaseMutationOptions<
-  CleanEcogesturesMutation,
-  CleanEcogesturesMutationVariables
->;
+export function useCleanEcogesturesMutation(baseOptions?: Apollo.MutationHookOptions<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>(CleanEcogesturesDocument, options);
+      }
+export type CleanEcogesturesMutationHookResult = ReturnType<typeof useCleanEcogesturesMutation>;
+export type CleanEcogesturesMutationResult = Apollo.MutationResult<CleanEcogesturesMutation>;
+export type CleanEcogesturesMutationOptions = Apollo.BaseMutationOptions<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>;
 export const LoginDocument = gql`
     mutation login($data: NewUserInput!) {
   login(data: $data)
@@ -446,19 +417,22 @@ export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentU
 export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
 export const GetValidatedEcogesturesDocument = gql`
-    query GetValidatedEcogestures {
-  getValidatedEcogestures {
-    id
-    validated_at
-    level_validated
-    ecogesture {
+    query GetValidatedEcogestures($input: PaginationInput!) {
+  getValidatedEcogestures(input: $input) {
+    userEcogestures {
       id
-      label
-      pictureUrl
+      validated_at
+      level_validated
+      ecogesture {
+        id
+        label
+        pictureUrl
+      }
+      user {
+        id
+      }
     }
-    user {
-      id
-    }
+    totalCount
   }
 }
     `;
@@ -475,10 +449,11 @@ export const GetValidatedEcogesturesDocument = gql`
  * @example
  * const { data, loading, error } = useGetValidatedEcogesturesQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useGetValidatedEcogesturesQuery(baseOptions?: Apollo.QueryHookOptions<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>) {
+export function useGetValidatedEcogesturesQuery(baseOptions: Apollo.QueryHookOptions<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables> & ({ variables: GetValidatedEcogesturesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>(GetValidatedEcogesturesDocument, options);
       }
