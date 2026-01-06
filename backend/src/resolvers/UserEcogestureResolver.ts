@@ -6,24 +6,54 @@ import {
   Mutation,
   Arg,
   Int,
+  InputType,
+  Field,
+  ObjectType,
 } from "type-graphql";
 import { UserEcogesture } from "../entities/UserEcogesture";
 import { Context } from "../types/Context";
 
+@InputType()
+class GetValidatedEcogesturesInput {
+  @Field(() => Number, { nullable: true })
+  page?: number;
+
+  @Field(() => Number, { nullable: true })
+  limit?: number;
+}
+
+@ObjectType()
+class ValidatedEcogesturesResponse {
+  @Field(() => [UserEcogesture])
+  userEcogestures: UserEcogesture[];
+
+  @Field(() => Int)
+  totalCount: number;
+}
+
 @Resolver()
 export class UserEcogestureResolver {
-  @Query(() => [UserEcogesture])
+  @Query(() => ValidatedEcogesturesResponse)
   @Authorized()
   async getValidatedEcogestures(
+    @Arg("input", () => GetValidatedEcogesturesInput, { nullable: true })
+    input: GetValidatedEcogesturesInput,
     @Ctx() ctx: Context
   ): Promise<UserEcogesture[]> {
     const userId = ctx.user?.id;
     if (!userId) throw new Error("Utilisateur non connecté");
 
-    return await UserEcogesture.find({
+    const page = input?.page ?? 1;
+    const limit = input?.limit ?? 5;
+    const skip = (page - 1) * limit;
+
+    return (await UserEcogesture.find({
       where: { userId },
+      skip,
+      take: limit,
       relations: ["ecogesture", "user"],
-    }) as UserEcogesture[];
+      order: { validated_at: "DESC" },
+    })) as UserEcogesture[];
   }
 
   @Mutation(() => UserEcogesture)

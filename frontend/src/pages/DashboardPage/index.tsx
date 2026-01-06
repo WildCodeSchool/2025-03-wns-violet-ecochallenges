@@ -3,7 +3,7 @@ import UnauthorizedPage from "../UnauthorizedPage";
 import { useGetCurrentUserQuery } from "@/generated/graphql-types";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyP } from "@/components/ui/typographyP";
-import ValidatedEcogestures from "./ValidatedEcogestures";
+import ValidatedEcogestures from "./ValidatedEcogestures/ValidatedEcogesturesCard";
 
 function DashboardPage() {
   const { data, loading, error } = useGetCurrentUserQuery();
