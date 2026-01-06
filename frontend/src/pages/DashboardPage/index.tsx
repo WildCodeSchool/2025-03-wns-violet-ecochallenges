@@ -4,9 +4,12 @@ import { useGetCurrentUserQuery } from "@/generated/graphql-types";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyP } from "@/components/ui/typographyP";
 import ValidatedEcogesturesDesktop from "./ValidatedEcogestures/ValidatedEcogesturesDesktop";
+import { useMediaQuery } from "usehooks-ts";
+import ValidatedEcogesturesTabletMobile from "./ValidatedEcogestures/ValidatedEcogesturesTabletMobile";
 
 function DashboardPage() {
   const { data, loading, error } = useGetCurrentUserQuery();
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   if (loading) {
     return (
@@ -16,15 +19,20 @@ function DashboardPage() {
       </div>
     );
   }
-  
+
   if (error || !data?.getCurrentUser) {
     return <UnauthorizedPage />;
   }
-  
+
   return (
     <main>
       <DashboardBanner username={data.getCurrentUser.username} />
-      <ValidatedEcogesturesDesktop />
+
+      {isDesktop ? (
+        <ValidatedEcogesturesDesktop />
+      ) : (
+        <ValidatedEcogesturesTabletMobile />
+      )}
     </main>
   );
 }
