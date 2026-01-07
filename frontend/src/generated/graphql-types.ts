@@ -133,11 +133,9 @@ export type User = {
 export type UserEcogesture = {
   __typename?: 'UserEcogesture';
   ecogesture: Ecogesture;
-  ecogestureId: Scalars['Float']['output'];
   id: Scalars['Float']['output'];
   level_validated: Scalars['Float']['output'];
   user: User;
-  userId: Scalars['Float']['output'];
   validated_at: Scalars['DateTimeISO']['output'];
 };
 

@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import App from "./App.tsx";
-import HomePage from "./pages/Homepage/index.tsx";
+import HomePage from "./pages/HomePage/index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
 import { LoginPage } from "./pages/LoginPage.tsx";

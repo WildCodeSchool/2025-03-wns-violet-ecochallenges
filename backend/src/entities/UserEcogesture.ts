@@ -12,14 +12,6 @@ export class UserEcogesture extends BaseEntity {
 
   @Column()
   @Field()
-  public userId: number;
-
-  @Column()
-  @Field()
-  public ecogestureId: number;
-
-  @Column()
-  @Field()
   public validated_at: Date;
 
   @Column()

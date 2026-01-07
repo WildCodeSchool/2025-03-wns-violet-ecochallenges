@@ -11,6 +11,8 @@ import {
   ObjectType,
 } from "type-graphql";
 import { UserEcogesture } from "../entities/UserEcogesture";
+import { User } from "../entities/User";
+import { Ecogesture } from "../entities/Ecogesture";
 import { Context } from "../types/Context";
 
 @InputType()
@@ -48,7 +50,7 @@ export class UserEcogestureResolver {
     const skip = (page - 1) * limit;
 
     const [userEcogestures, totalCount] = await UserEcogesture.findAndCount({
-      where: { userId },
+      where: { user: { id: userId } },
       skip,
       take: limit,
       relations: ["ecogesture", "user"],
@@ -71,9 +73,17 @@ export class UserEcogestureResolver {
     const userId = ctx.user?.id;
     if (!userId) throw new Error("Utilisateur non connecté");
 
+    const user = await User.findOne({ where: { id: userId } });
+    const ecogesture = await Ecogesture.findOne({
+      where: { id: ecogestureId },
+    });
+
+    if (!user) throw new Error("Utilisateur introuvable");
+    if (!ecogesture) throw new Error("Écogeste introuvable");
+
     const userEcogesture = UserEcogesture.create({
-      userId,
-      ecogestureId,
+      user,
+      ecogesture,
       validated_at: new Date(),
       level_validated,
     });
