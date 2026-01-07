@@ -14,6 +14,8 @@ import {
   PostgreSqlContainer,
   StartedPostgreSqlContainer,
 } from "@testcontainers/postgresql";
+import { UserEcogesture } from "../../entities/UserEcogesture";
+import { Ecogesture } from "../../entities/Ecogesture";
 
 /**
  * UserResolver Integration Tests
@@ -61,7 +63,7 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
       username: container.getUsername(),
       password: container.getPassword(),
       database: container.getDatabase(),
-      entities: [User],
+      entities: [User, UserEcogesture, Ecogesture],
       synchronize: true,
       logging: false,
       dropSchema: true,
