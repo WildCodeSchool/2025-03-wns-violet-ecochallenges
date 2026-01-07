@@ -7,6 +7,8 @@ import { Card } from "../../../ui/card";
 import MobileMenuLink from "./MobileMenuLink";
 import type { RefObject } from "react";
 import { LogInIcon, SquarePenIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuthMenuActions } from "../useAuthMenuActions";
 
 const MobileMenu = ({
   isMenuOpen,
@@ -17,6 +19,8 @@ const MobileMenu = ({
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   ref: RefObject<HTMLDivElement | null>;
 }) => {
+  const { isConnected, handleLogout } = useAuthMenuActions();
+
   return (
     <Card
       ref={ref}
@@ -34,22 +38,47 @@ const MobileMenu = ({
     >
       <NavigationMenu className="text-background">
         <NavigationMenuList className="flex flex-col gap-0">
-          <MobileMenuLink
-            to="/signup"
-            Icon={SquarePenIcon}
-            setIsMenuOpen={setIsMenuOpen}
-          >
-            S'inscrire
-          </MobileMenuLink>
+          {isConnected ? (
+            <>
+              <MobileMenuLink
+                to="/dashboard"
+                Icon={SquarePenIcon}
+                setIsMenuOpen={setIsMenuOpen}
+              >
+                Mes challenges
+              </MobileMenuLink>
 
-          <MobileMenuLink
-            to="/signin"
-            Icon={LogInIcon}
-            withDivider={false}
-            setIsMenuOpen={setIsMenuOpen}
-          >
-            Se connecter
-          </MobileMenuLink>
+              <MobileMenuLink
+                to="/"
+                Icon={LogInIcon}
+                withDivider={false}
+                setIsMenuOpen={setIsMenuOpen}
+              >
+                <Button variant="ghost" onClick={handleLogout} size="xs">
+                  Se déconnecter
+                </Button>
+              </MobileMenuLink>
+            </>
+          ) : (
+            <>
+              <MobileMenuLink
+                to="/signup"
+                Icon={SquarePenIcon}
+                setIsMenuOpen={setIsMenuOpen}
+              >
+                S'inscrire
+              </MobileMenuLink>
+
+              <MobileMenuLink
+                to="/signin"
+                Icon={LogInIcon}
+                withDivider={false}
+                setIsMenuOpen={setIsMenuOpen}
+              >
+                Se connecter
+              </MobileMenuLink>
+            </>
+          )}
         </NavigationMenuList>
       </NavigationMenu>
     </Card>

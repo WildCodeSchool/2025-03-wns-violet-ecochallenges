@@ -15,7 +15,7 @@ const MobileMenuLink = ({
   setIsMenuOpen,
 }: {
   to: string;
-  children: string;
+  children: string | React.ReactNode;
   Icon: React.ElementType;
   withDivider?: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;

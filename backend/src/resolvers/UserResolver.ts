@@ -115,6 +115,7 @@ export default class UserResolver {
     setCookie(ctx, token);
 
     const publicProfile = {
+      id: user.id,
       email: user.email,
       roles: user.roles,
       pictureUrl: user.pictureUrl,
@@ -136,7 +137,14 @@ export default class UserResolver {
     const token = createJwt(payload);
     setCookie(ctx, token);
 
-    return token;
+    const publicProfile = {
+      id: user.id,
+      email: user.email,
+      roles: user.roles,
+      username: user.username,
+    };
+
+    return JSON.stringify(publicProfile);
   }
 
   //TODO manual test with front
