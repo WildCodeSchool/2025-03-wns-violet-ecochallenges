@@ -105,16 +105,19 @@ export default class UserResolver {
 
     const hashedPassword = await argon2.hash(data.password);
     const username = data.email.split("@")[0];
-    const user = User.create({ ...data, hashedPassword, username });
+    const pictureUrl = `https://avatar.iran.liara.run/username?username=${username}`;
+
+    const user = User.create({ ...data, hashedPassword, username, pictureUrl });
     await user.save();
+
     const payload = createUserPayload(user);
     const token = createJwt(payload);
     setCookie(ctx, token);
 
-    //TODO : add avatar
     const publicProfile = {
       email: user.email,
       roles: user.roles,
+      pictureUrl: user.pictureUrl,
       username,
     };
 

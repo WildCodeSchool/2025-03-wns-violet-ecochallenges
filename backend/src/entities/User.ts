@@ -18,8 +18,12 @@ export class User extends BaseEntity {
   id: number;
 
   @Column()
-  @Field() 
+  @Field()
   username: string;
+
+  @Column()
+  @Field()
+  pictureUrl: string;
 
   @Column({ unique: true })
   @Field()
