@@ -38,6 +38,13 @@ export type Challenge = {
 >>>>>>> fa4c1e3 (add query getMyChallenges)
 };
 
+/** Filter used on Challenge */
+export enum ChallengeFilter {
+  CreatedByMe = 'CREATED_BY_ME',
+  InProgress = 'IN_PROGRESS',
+  Terminated = 'TERMINATED'
+}
+
 export type ChallengeListResponse = {
   __typename?: 'ChallengeListResponse';
   challenges: Array<Challenge>;
@@ -76,7 +83,7 @@ export type GetEcogesturesInput = {
 };
 
 export type GetMyChallengesInput = {
-  filter?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ChallengeFilter>;
   limit?: InputMaybe<Scalars['Float']['input']>;
   page?: InputMaybe<Scalars['Float']['input']>;
 >>>>>>> fa4c1e3 (add query getMyChallenges)

@@ -7,6 +7,7 @@ import {
   Mutation,
   ObjectType,
   Query,
+  registerEnumType,
   Resolver,
 } from "type-graphql";
 import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
@@ -54,7 +55,7 @@ class GetMyChallengesInput {
   @Field(() => Number, { nullable: true })
   limit?: number;
 
-  @Field({ nullable: true })
+  @Field(() => ChallengeFilter, { nullable: true })
   filter?: ChallengeFilter;
 }
 
@@ -64,6 +65,11 @@ export enum ChallengeFilter {
   IN_PROGRESS = "IN_PROGRESS",
   TERMINATED = "TERMINATED",
 }
+
+registerEnumType(ChallengeFilter, {
+  name: "ChallengeFilter",
+  description: "Filter used on Challenge",
+});
 
 @Resolver(Challenge)
 export default class ChallengeResolver {
