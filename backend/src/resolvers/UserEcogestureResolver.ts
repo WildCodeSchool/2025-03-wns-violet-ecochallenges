@@ -86,8 +86,3 @@ export class UserEcogestureResolver {
     })) as UserEcogesture;
   }
 }
-
-// TODO:
-// 1. Créer un user
-// 2. validateEcogesture: valider un ecogste sur Appolo ( ajouter dans Header: Authorization : "Bearer TOKEN RENVOYE" )
-// 3. getValidatedEcogesture : vérifier la liste des éco-gestes validés sur appolo (ajouter dans Header: Authorization: "Bearer TOKEN RENVOYE")

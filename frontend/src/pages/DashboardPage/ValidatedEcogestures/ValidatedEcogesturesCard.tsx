@@ -12,11 +12,26 @@ export type ValidatedEcogesturesCardProps = {
   level_validated: number;
 };
 
+const calculatePoints = (level: number) => {
+  switch (level) {
+    case 1:
+      return 50;
+    case 2:
+      return 100;
+    case 3:
+      return 150;
+    default:
+      return 0;
+  }
+};
+
 function ValidatedEcogesturesCard({
   ecogesture,
   level_validated,
 }: ValidatedEcogesturesCardProps) {
   if (!ecogesture) return null;
+
+  const points = calculatePoints(level_validated);
 
   return (
     <Card
@@ -52,6 +67,7 @@ function ValidatedEcogesturesCard({
             <circle cx="12" cy="8" r="6" />
           </svg>
           Niveau {level_validated} validé
+          <span className="font-bold ml-3"> {points} points</span>
         </TypographyP>
       </CardContent>
     </Card>

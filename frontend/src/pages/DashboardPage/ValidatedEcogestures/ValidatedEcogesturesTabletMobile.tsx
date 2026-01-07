@@ -50,13 +50,22 @@ function ValidatedEcogesturesTabletMobile() {
   useEffect(() => {
     loadMoreIfNeeded();
   }, [currentIndex, loadMoreIfNeeded]);
+
   if (allEcogestures.length === 0 && loading) {
     return (
       <div className="max-w-7xl m-auto flex pt-4 pb-12 flex-col items-center gap-6">
         <TypographyH2 className="text-white">
-          Mes derniers écogestes validés
+          Mes derniers écotestes validés
         </TypographyH2>
         <div className="text-white">Chargement...</div>
+      </div>
+    );
+  } else if (allEcogestures.length === 0 && !loading) {
+    return (
+      <div className="max-w-7xl m-auto flex pt-4 pb-12 flex-col items-center gap-6">
+        <TypographyH2 className="text-white">
+          Pas d'écogestes validés pour le moment.
+        </TypographyH2>
       </div>
     );
   }
