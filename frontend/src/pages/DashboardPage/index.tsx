@@ -1,11 +1,17 @@
 import DashboardBanner from "./DashboardBanner";
 import UnauthorizedPage from "../UnauthorizedPage";
-import { useGetCurrentUserQuery } from "@/generated/graphql-types";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyP } from "@/components/ui/typographyP";
+import { useAuthStore } from "@/stores/authStore";
 
 function DashboardPage() {
-  const { data, loading, error } = useGetCurrentUserQuery();
+  const user = useAuthStore((state) => state.user);
+  const isConnected = useAuthStore((state) => state.isConnected);
+  const loading = useAuthStore((state) => state.isAuthLoading);
+
+  if (!isConnected || !user) {
+    return <UnauthorizedPage />;
+  }
 
   if (loading) {
     return (
@@ -16,13 +22,9 @@ function DashboardPage() {
     );
   }
 
-  if (error || !data?.getCurrentUser) {
-    return <UnauthorizedPage />;
-  }
-
   return (
     <main>
-      <DashboardBanner username={data.getCurrentUser.username} />
+      <DashboardBanner username={user.username} />
     </main>
   );
 }
