@@ -95,6 +95,8 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
 
   //clean between tests
   beforeEach(async () => {
+    await dataSource.getRepository(UserEcogesture).clear();
+    await dataSource.getRepository(Ecogesture).clear();
     await dataSource.getRepository(User).clear();
     (mockContext.res.setHeader as jest.Mock).mockClear();
   });
