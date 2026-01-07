@@ -46,8 +46,10 @@ export class User extends BaseEntity {
   public UserEcogesture: UserEcogesture[];
 
   @OneToMany(() => Challenge, (challenge) => challenge.createdBy)
-  challengesCreated: Relation<Challenge[]>;
+  @Field(() => [Challenge], { nullable: true })
+  challengesCreated?: Relation<Challenge[]>;
 
   @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.user)
-  participations: Relation<UserChallenge[]>;
+  @Field(() => [UserChallenge], { nullable: true })
+  participations?: Relation<UserChallenge[]>;
 }
