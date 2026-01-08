@@ -34,15 +34,18 @@ export type Challenge = {
   participants: Array<UserChallenge>;
   picture: Scalars['String']['output'];
   startingDate: Scalars['DateTimeISO']['output'];
+<<<<<<< HEAD
   status: ChallengeTimeStatus;
 >>>>>>> fa4c1e3 (add query getMyChallenges)
+=======
+>>>>>>> 0c7270e (fixes after code review)
 };
 
 /** Filter used on Challenge */
 export enum ChallengeFilter {
   CreatedByMe = 'CREATED_BY_ME',
-  InProgress = 'IN_PROGRESS',
-  Terminated = 'TERMINATED'
+  Finished = 'FINISHED',
+  InProgress = 'IN_PROGRESS'
 }
 
 export type ChallengeListResponse = {
@@ -50,13 +53,6 @@ export type ChallengeListResponse = {
   challenges: Array<Challenge>;
   totalCount: Scalars['Float']['output'];
 };
-
-/** The temporal status of a challenge based on start and end dates */
-export enum ChallengeTimeStatus {
-  InProgress = 'IN_PROGRESS',
-  Terminated = 'TERMINATED',
-  Upcoming = 'UPCOMING'
-}
 
 export type Ecogesture = {
   __typename?: 'Ecogesture';
@@ -94,9 +90,12 @@ export type Mutation = {
   cleanEcogestures: Scalars['Boolean']['output'];
   createChallenge: Challenge;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   deleteChallenge: Challenge;
 >>>>>>> fa4c1e3 (add query getMyChallenges)
+=======
+>>>>>>> 0c7270e (fixes after code review)
   login: Scalars['String']['output'];
   logout: Scalars['String']['output'];
   seedEcogestures: Array<Ecogesture>;
@@ -114,6 +113,7 @@ export type MutationCreateChallengeArgs = {
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 export type MutationDeleteChallengeArgs = {
   id: Scalars['Float']['input'];
@@ -121,6 +121,8 @@ export type MutationDeleteChallengeArgs = {
 
 
 >>>>>>> fa4c1e3 (add query getMyChallenges)
+=======
+>>>>>>> 0c7270e (fixes after code review)
 export type MutationLoginArgs = {
   data: NewUserInput;
 };
@@ -191,8 +193,10 @@ export enum Roles {
 
 export type User = {
   __typename?: 'User';
+  challengesCreated?: Maybe<Array<Challenge>>;
   email: Scalars['String']['output'];
   id: Scalars['Float']['output'];
+  participations?: Maybe<Array<UserChallenge>>;
   roles: Array<Roles>;
   username: Scalars['String']['output'];
 };
@@ -271,8 +275,12 @@ export type GetMyChallengesQueryVariables = Exact<{
 }>;
 
 
+<<<<<<< HEAD
 export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, picture: string, status: ChallengeTimeStatus, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
 >>>>>>> fa4c1e3 (add query getMyChallenges)
+=======
+export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
+>>>>>>> 0c7270e (fixes after code review)
 
 export type GetEcogesturesQueryVariables = Exact<{
   input?: InputMaybe<GetEcogesturesInput>;
@@ -487,7 +495,6 @@ export const GetMyChallengesDocument = gql`
       startingDate
       endingDate
       picture
-      status
       createdBy {
         id
         username

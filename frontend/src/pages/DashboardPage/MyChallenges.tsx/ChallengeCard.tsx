@@ -2,10 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { TypographyH3 } from "@/components/ui/typographyH3";
 import { formatDate, cn } from "@/lib/utils";
-import {
-  ChallengeTimeStatus,
-  type GetMyChallengesQuery,
-} from "@/generated/graphql-types";
+import { type GetMyChallengesQuery } from "@/generated/graphql-types";
 import {
   Calendar,
   Users,
@@ -21,20 +18,20 @@ interface ChallengeCardProps {
 }
 
 const ChallengeCard = ({ challenge, userId }: ChallengeCardProps) => {
-  const calculateTimeRemaining = () => {
-    const now = new Date();
-    const end = new Date(challenge.endingDate);
-    const diffTime = Math.abs(end.getTime() - now.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
+  const now = new Date();
+  const startingDate = new Date(challenge.startingDate);
+  const endingDate = new Date(challenge.endingDate);
 
-  const daysRemaining = calculateTimeRemaining();
+  const isChallengeInProgress = now >= startingDate && now <= endingDate;
+  const isChallengeFinished = now >= endingDate;
+
+  const diffTime = Math.abs(endingDate.getTime() - now.getTime());
+  const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   return (
     <Card
       className={cn(
-        "w-full overflow-hidden",
+        "w-full overflow-hidden pt-0",
         "bg-secondary-foreground border-none shadow-2xl"
       )}
     >
@@ -54,10 +51,10 @@ const ChallengeCard = ({ challenge, userId }: ChallengeCardProps) => {
           {challenge.createdBy.id === userId && (
             <User className="w-5 h-5 text-slate-700" />
           )}
-          {challenge.status === ChallengeTimeStatus.InProgress && (
+          {isChallengeInProgress && (
             <Hourglass className="w-5 h-5 text-slate-700" />
           )}
-          {challenge.status === ChallengeTimeStatus.Terminated && (
+          {isChallengeFinished && (
             <CircleCheck className="w-5 h-5 text-slate-700" />
           )}
         </div>

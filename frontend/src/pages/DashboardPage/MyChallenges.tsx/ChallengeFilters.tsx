@@ -14,7 +14,11 @@ const ChallengeFilters = ({ filter, onFilterChange }: Props) => {
 
   return (
     <div
-      className={cn("flex justify-center gap-3", "mx-auto", "p-4 my-4 w-full")}
+      className={cn(
+        "flex flex-col items-center justify-center gap-3 sm:flex-row",
+        "mx-auto",
+        "p-4 my-4 w-full"
+      )}
     >
       <Button
         className={cn(
@@ -59,16 +63,16 @@ const ChallengeFilters = ({ filter, onFilterChange }: Props) => {
       <Button
         className={cn(
           "w-36 justify-center gap-2",
-          filter === ChallengeFilter.Terminated ? active : inactive
+          filter === ChallengeFilter.Finished ? active : inactive
         )}
         onClick={() => {
-          onFilterChange(ChallengeFilter.Terminated);
+          onFilterChange(ChallengeFilter.Finished);
         }}
       >
         <CircleCheck
           className={cn(
             "w-5 h-5",
-            filter === ChallengeFilter.Terminated
+            filter === ChallengeFilter.Finished
               ? "text-secondary"
               : "text-white"
           )}

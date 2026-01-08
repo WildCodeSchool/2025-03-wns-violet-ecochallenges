@@ -12,7 +12,7 @@ import {
 } from "type-graphql";
 import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
 import { plainToClass, Type } from "class-transformer";
-import { Challenge, ChallengeTimeStatus } from "../entities/Challenge";
+import { Challenge } from "../entities/Challenge";
 import { Context } from "../types/Context";
 import { User } from "../entities/User";
 
@@ -63,7 +63,7 @@ class GetMyChallengesInput {
 export enum ChallengeFilter {
   CREATED_BY_ME = "CREATED_BY_ME",
   IN_PROGRESS = "IN_PROGRESS",
-  TERMINATED = "TERMINATED",
+  FINISHED = "FINISHED",
 }
 
 registerEnumType(ChallengeFilter, {
@@ -73,35 +73,8 @@ registerEnumType(ChallengeFilter, {
 
 @Resolver(Challenge)
 export default class ChallengeResolver {
-  private async updateChallengeStatuses() {
-    const now = new Date();
-
-    // update UPCOMING challenges to IN_PROGRESS
-    await Challenge.createQueryBuilder()
-      .update(Challenge)
-      .set({ status: ChallengeTimeStatus.IN_PROGRESS })
-      .where("status = :upcoming", { upcoming: ChallengeTimeStatus.UPCOMING })
-      .andWhere("startingDate <= :now", { now })
-      .andWhere("endingDate >= :now", { now })
-      .execute();
-
-    // update IN_PROGRESS to TERMINATED
-    await Challenge.createQueryBuilder()
-      .update(Challenge)
-      .set({ status: ChallengeTimeStatus.TERMINATED })
-      .where("status IN (:...statuses)", {
-        statuses: [
-          ChallengeTimeStatus.UPCOMING,
-          ChallengeTimeStatus.IN_PROGRESS,
-        ],
-      })
-      .andWhere("endingDate < :now", { now })
-      .execute();
-  }
-
   @Query(() => [Challenge])
   async getAllChallenges() {
-    await this.updateChallengeStatuses();
     const challenges = await Challenge.find();
     return challenges;
   }
@@ -117,31 +90,30 @@ export default class ChallengeResolver {
       throw new Error("Utilisateur non authentifié");
     }
 
-    await this.updateChallengeStatuses();
-
     const page = input?.page ?? 1;
     const limit = input?.limit ?? 10;
     const skip = (page - 1) * limit;
     const filter = input?.filter;
 
+    //TODO : calculer en fonction de la date du jour
     const queryBuilder = Challenge.createQueryBuilder("challenge")
       .leftJoinAndSelect("challenge.createdBy", "createdBy")
       .leftJoinAndSelect("challenge.participants", "participants")
       .skip(skip)
       .take(limit);
 
+    const now = new Date();
+
     if (filter === ChallengeFilter.CREATED_BY_ME) {
       queryBuilder.where("challenge.createdById = :userId", {
         userId: ctx.user.id,
       });
     } else if (filter === ChallengeFilter.IN_PROGRESS) {
-      queryBuilder.where("challenge.status = :status", {
-        status: "IN_PROGRESS",
-      });
-    } else if (filter === ChallengeFilter.TERMINATED) {
-      queryBuilder.where("challenge.status = :status", {
-        status: "TERMINATED",
-      });
+      queryBuilder
+        .where("challenge.startingDate <= :now", { now })
+        .andWhere("challenge.endingDate >= :now", { now });
+    } else if (filter === ChallengeFilter.FINISHED) {
+      queryBuilder.where("challenge.endingDate < :now", { now });
     }
     const [challenges, totalCount] = await queryBuilder.getManyAndCount();
 
@@ -170,37 +142,16 @@ export default class ChallengeResolver {
 
     const user = await User.findOneByOrFail({ id: ctx.user.id });
 
-    // Determine initial status according to date
-    const now = new Date();
-    let initialStatus = ChallengeTimeStatus.UPCOMING;
-    if (data.startingDate <= now && data.endingDate >= now) {
-      initialStatus = ChallengeTimeStatus.IN_PROGRESS;
-    } else if (data.endingDate < now) {
-      initialStatus = ChallengeTimeStatus.TERMINATED;
-    }
-
     const challenge = Challenge.create({
       label: data.label,
       startingDate: data.startingDate,
       endingDate: data.endingDate,
       picture: data.picture,
-      status: initialStatus,
       createdBy: user,
       //TODO add participants
     });
 
     await challenge.save();
-    return Challenge.findOne({
-      where: { id: challenge.id },
-      relations: ["createdBy", "participants"],
-    });
-  }
-
-  @Mutation(() => Challenge)
-  async deleteChallenge(@Arg("id") id: number) {
-    const challenge = await Challenge.findOneByOrFail({ id });
-    //TODO handle db errors
-    await Challenge.delete(id);
     return challenge;
   }
 }

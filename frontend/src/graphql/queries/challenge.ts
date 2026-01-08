@@ -9,7 +9,6 @@ export const GET_MY_CHALLENGES = gql`
         startingDate
         endingDate
         picture
-        status
         createdBy {
           id
           username
