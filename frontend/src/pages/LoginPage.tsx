@@ -5,6 +5,8 @@ import { useLoginMutation } from "@/generated/graphql-types";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { TypographyH1 } from "@/components/ui/typographyH1";
+import { useAuthStore } from "@/stores/authStore";
+import type { Profile } from "@/types/User";
 
 // TODO : Supprimer les console.log lorsque dashboard sera créée, ils ne sont là que pour tester la connexion pour le moment.
 
@@ -15,6 +17,8 @@ export const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,6 +38,26 @@ export const LoginPage = () => {
 
       console.log(" ✅ Login successful:", data);
       console.log("Email : ", email);
+
+      const payload = data?.login;
+      let profile: Profile | null = null;
+
+      try {
+        profile = payload ? JSON.parse(payload) : null;
+      } catch {
+        setErrorMessage("Format de réponse invalide");
+      }
+      if (!profile) {
+        setErrorMessage("Profil invalide");
+        return;
+      }
+
+      setUser({
+        id: profile.id,
+        email: profile.email,
+        username: profile.username,
+      });
+
       navigate("/dashboard");
     } catch (err) {
       if (err instanceof Error) {

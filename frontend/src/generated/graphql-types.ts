@@ -108,6 +108,7 @@ export type Query = {
 };
 
 
+
 export type QueryGetEcogesturesArgs = {
   input?: InputMaybe<GetEcogesturesInput>;
 };
@@ -145,7 +146,8 @@ export type ValidatedEcogesturesResponse = {
   userEcogestures: Array<UserEcogesture>;
 };
 
-export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
+export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never;; }>;
+
 
 
 export type SeedEcogesturesMutation = { __typename?: 'Mutation', seedEcogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> };
@@ -162,10 +164,17 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: string };
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: string };
+
 export type SignupMutationVariables = Exact<{
   data: NewUserInput;
 }>;
 
+
+export type SignupMutation = { __typename?: 'Mutation', signup: string };
 
 export type SignupMutation = { __typename?: 'Mutation', signup: string };
 
@@ -176,7 +185,10 @@ export type GetEcogesturesQueryVariables = Exact<{
 
 export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> } };
 
-export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> } };
+
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never;; }>;
+
 
 
 export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles> } };
@@ -198,6 +210,19 @@ export type ValidateEcogestureMutation = { __typename?: 'Mutation', validateEcog
 
 
 export const SeedEcogesturesDocument = gql`
+    mutation SeedEcogestures {
+  seedEcogestures {
+    id
+    label
+    description
+    pictureUrl
+    level1Expectation
+    level2Expectation
+    level3Expectation
+  }
+}
+    `;
+export type SeedEcogesturesMutationFn = Apollo.MutationFunction<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>;
     mutation SeedEcogestures {
   seedEcogestures {
     id
@@ -235,7 +260,19 @@ export function useSeedEcogesturesMutation(baseOptions?: Apollo.MutationHookOpti
 export type SeedEcogesturesMutationHookResult = ReturnType<typeof useSeedEcogesturesMutation>;
 export type SeedEcogesturesMutationResult = Apollo.MutationResult<SeedEcogesturesMutation>;
 export type SeedEcogesturesMutationOptions = Apollo.BaseMutationOptions<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>;
+export function useSeedEcogesturesMutation(baseOptions?: Apollo.MutationHookOptions<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>(SeedEcogesturesDocument, options);
+      }
+export type SeedEcogesturesMutationHookResult = ReturnType<typeof useSeedEcogesturesMutation>;
+export type SeedEcogesturesMutationResult = Apollo.MutationResult<SeedEcogesturesMutation>;
+export type SeedEcogesturesMutationOptions = Apollo.BaseMutationOptions<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>;
 export const CleanEcogesturesDocument = gql`
+    mutation CleanEcogestures {
+  cleanEcogestures
+}
+    `;
+export type CleanEcogesturesMutationFn = Apollo.MutationFunction<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>;
     mutation CleanEcogestures {
   cleanEcogestures
 }
@@ -293,10 +330,49 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
       }
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const SignupDocument = gql`
+    mutation Signup($data: NewUserInput!) {
+  signup(data: $data)
+}
+    `;
+export type SignupMutationFn = Apollo.MutationFunction<SignupMutation, SignupMutationVariables>;
     mutation Signup($data: NewUserInput!) {
   signup(data: $data)
 }

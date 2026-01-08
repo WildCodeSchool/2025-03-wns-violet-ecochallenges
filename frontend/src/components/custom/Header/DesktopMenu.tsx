@@ -4,22 +4,68 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "../../ui/navigation-menu";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
+import { Button } from "@/components/ui/button";
+import { useAuthMenuActions } from "./useAuthMenuActions";
 
 const DesktopMenu = () => {
+  const { isConnected, handleLogout } = useAuthMenuActions();
+
+  const activeLinkClass = "text-primary font-semibold";
+
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link to="/signup">S'inscrire</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link to="/signin">Se connecter</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
+        {isConnected ? (
+          <>
+            <NavigationMenuItem>
+              <NavigationMenuLink>
+                <NavLink
+                  to="/dashboard"
+                  className={({ isActive }) =>
+                    isActive ? activeLinkClass : ""
+                  }
+                >
+                  Mes challenges
+                </NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink>
+                <Button variant="ghost" onClick={handleLogout} size="xs">
+                  Se déconnecter
+                </Button>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </>
+        ) : (
+          <>
+            <NavigationMenuItem>
+              <NavigationMenuLink>
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) =>
+                    isActive ? activeLinkClass : ""
+                  }
+                >
+                  S'inscrire
+                </NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink>
+                <NavLink
+                  to="/signin"
+                  className={({ isActive }) =>
+                    isActive ? activeLinkClass : ""
+                  }
+                >
+                  Se connecter
+                </NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </>
+        )}
       </NavigationMenuList>
     </NavigationMenu>
   );

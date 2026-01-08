@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
 import { TypographyH1 } from "@/components/ui/typographyH1";
-
-type Profile = { email: string; roles: string[]; username: string } | null;
+import { useAuthStore } from "@/stores/authStore";
+import type { Profile } from "@/types/User";
 
 export default function RegisterPage() {
   const [email, setEmail] = React.useState("");
@@ -24,6 +24,8 @@ export default function RegisterPage() {
   const [signup, { loading }] = useMutation(SIGNUP_MUTATION);
   const formValid = emailValid && passwordValid && !loading;
   const navigate = useNavigate();
+
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,6 +52,13 @@ export default function RegisterPage() {
       let profile: Profile | null = null;
       try {
         profile = payload ? JSON.parse(payload) : null;
+        if (profile) {
+          setUser({
+            id: profile.id,
+            email: profile.email,
+            username: profile.username,
+          });
+        }
       } catch {
         setLocalError("Format de réponse invalide");
         return;
