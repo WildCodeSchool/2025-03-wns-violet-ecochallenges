@@ -20,13 +20,6 @@ export type Scalars = {
 
 export type Challenge = {
   __typename?: 'Challenge';
-<<<<<<< HEAD
-  endingDate: Scalars['DateTimeISO']['output'];
-  id: Scalars['Float']['output'];
-  label: Scalars['String']['output'];
-  picture: Scalars['String']['output'];
-  startingDate: Scalars['DateTimeISO']['output'];
-=======
   createdBy: User;
   endingDate: Scalars['DateTimeISO']['output'];
   id: Scalars['Float']['output'];
@@ -34,11 +27,6 @@ export type Challenge = {
   participants: Array<UserChallenge>;
   picture: Scalars['String']['output'];
   startingDate: Scalars['DateTimeISO']['output'];
-<<<<<<< HEAD
-  status: ChallengeTimeStatus;
->>>>>>> fa4c1e3 (add query getMyChallenges)
-=======
->>>>>>> 0c7270e (fixes after code review)
 };
 
 /** Filter used on Challenge */
@@ -74,36 +62,23 @@ export type EcogestureListResponse = {
 export type GetEcogesturesInput = {
   limit?: InputMaybe<Scalars['Float']['input']>;
   page?: InputMaybe<Scalars['Float']['input']>;
-<<<<<<< HEAD
-=======
 };
 
 export type GetMyChallengesInput = {
   filter?: InputMaybe<ChallengeFilter>;
   limit?: InputMaybe<Scalars['Float']['input']>;
   page?: InputMaybe<Scalars['Float']['input']>;
->>>>>>> fa4c1e3 (add query getMyChallenges)
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   cleanEcogestures: Scalars['Boolean']['output'];
   createChallenge: Challenge;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  deleteChallenge: Challenge;
->>>>>>> fa4c1e3 (add query getMyChallenges)
-=======
->>>>>>> 0c7270e (fixes after code review)
   login: Scalars['String']['output'];
   logout: Scalars['String']['output'];
   seedEcogestures: Array<Ecogesture>;
   signup: Scalars['String']['output'];
-<<<<<<< HEAD
   validateEcogesture: UserEcogesture;
-=======
->>>>>>> fa4c1e3 (add query getMyChallenges)
 };
 
 
@@ -112,17 +87,6 @@ export type MutationCreateChallengeArgs = {
 };
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-export type MutationDeleteChallengeArgs = {
-  id: Scalars['Float']['input'];
-};
-
-
->>>>>>> fa4c1e3 (add query getMyChallenges)
-=======
->>>>>>> 0c7270e (fixes after code review)
 export type MutationLoginArgs = {
   data: NewUserInput;
 };
@@ -148,14 +112,11 @@ export type NewChallengeInput = {
 export type NewUserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
-<<<<<<< HEAD
 };
 
 export type PaginationInput = {
   limit?: InputMaybe<Scalars['Float']['input']>;
   page?: InputMaybe<Scalars['Float']['input']>;
-=======
->>>>>>> fa4c1e3 (add query getMyChallenges)
 };
 
 export type Query = {
@@ -164,11 +125,8 @@ export type Query = {
   getAllUsers: Array<User>;
   getCurrentUser: User;
   getEcogestures: EcogestureListResponse;
-<<<<<<< HEAD
-  getValidatedEcogestures: ValidatedEcogesturesResponse;
-=======
   getMyChallenges: ChallengeListResponse;
->>>>>>> fa4c1e3 (add query getMyChallenges)
+  getValidatedEcogestures: ValidatedEcogesturesResponse;
 };
 
 
@@ -177,13 +135,13 @@ export type QueryGetEcogesturesArgs = {
 };
 
 
-<<<<<<< HEAD
-export type QueryGetValidatedEcogesturesArgs = {
-  input?: InputMaybe<PaginationInput>;
-=======
 export type QueryGetMyChallengesArgs = {
   input?: InputMaybe<GetMyChallengesInput>;
->>>>>>> fa4c1e3 (add query getMyChallenges)
+};
+
+
+export type QueryGetValidatedEcogesturesArgs = {
+  input?: InputMaybe<PaginationInput>;
 };
 
 /** Roles for users in this app */
@@ -201,7 +159,14 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
-<<<<<<< HEAD
+export type UserChallenge = {
+  __typename?: 'UserChallenge';
+  challenge: Challenge;
+  hasAccepted: Scalars['Boolean']['output'];
+  id: Scalars['Float']['output'];
+  user: User;
+};
+
 export type UserEcogesture = {
   __typename?: 'UserEcogesture';
   ecogesture: Ecogesture;
@@ -216,25 +181,6 @@ export type ValidatedEcogesturesResponse = {
   totalCount: Scalars['Int']['output'];
   userEcogestures: Array<UserEcogesture>;
 };
-=======
-export type UserChallenge = {
-  __typename?: 'UserChallenge';
-  challenge: Challenge;
-  hasAccepted: Scalars['Boolean']['output'];
-  id: Scalars['Float']['output'];
-  user: User;
-};
-
-export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SeedEcogesturesMutation = { __typename?: 'Mutation', seedEcogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> };
-
-export type CleanEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CleanEcogesturesMutation = { __typename?: 'Mutation', cleanEcogestures: boolean };
->>>>>>> fa4c1e3 (add query getMyChallenges)
 
 export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -252,14 +198,11 @@ export type LoginMutationVariables = Exact<{
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: string };
-<<<<<<< HEAD
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: string };
-=======
->>>>>>> fa4c1e3 (add query getMyChallenges)
 
 export type SignupMutationVariables = Exact<{
   data: NewUserInput;
@@ -267,20 +210,13 @@ export type SignupMutationVariables = Exact<{
 
 
 export type SignupMutation = { __typename?: 'Mutation', signup: string };
-<<<<<<< HEAD
-=======
 
 export type GetMyChallengesQueryVariables = Exact<{
   input?: InputMaybe<GetMyChallengesInput>;
 }>;
 
 
-<<<<<<< HEAD
-export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, picture: string, status: ChallengeTimeStatus, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
->>>>>>> fa4c1e3 (add query getMyChallenges)
-=======
 export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
->>>>>>> 0c7270e (fixes after code review)
 
 export type GetEcogesturesQueryVariables = Exact<{
   input?: InputMaybe<GetEcogesturesInput>;
@@ -293,7 +229,6 @@ export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles> } };
-<<<<<<< HEAD
 
 export type GetValidatedEcogesturesQueryVariables = Exact<{
   input: PaginationInput;
@@ -309,8 +244,6 @@ export type ValidateEcogestureMutationVariables = Exact<{
 
 
 export type ValidateEcogestureMutation = { __typename?: 'Mutation', validateEcogesture: { __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } } };
-=======
->>>>>>> fa4c1e3 (add query getMyChallenges)
 
 
 export const SeedEcogesturesDocument = gql`
@@ -412,7 +345,6 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
-<<<<<<< HEAD
 export const LogoutDocument = gql`
     mutation Logout {
   logout
@@ -443,8 +375,6 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
-=======
->>>>>>> fa4c1e3 (add query getMyChallenges)
 export const SignupDocument = gql`
     mutation Signup($data: NewUserInput!) {
   signup(data: $data)
@@ -476,16 +406,6 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
-<<<<<<< HEAD
-export const GetEcogesturesDocument = gql`
-    query GetEcogestures($input: GetEcogesturesInput) {
-  getEcogestures(input: $input) {
-    totalCount
-    ecogestures {
-      id
-      label
-      pictureUrl
-=======
 export const GetMyChallengesDocument = gql`
     query GetMyChallenges($input: GetMyChallengesInput) {
   getMyChallenges(input: $input) {
@@ -502,14 +422,11 @@ export const GetMyChallengesDocument = gql`
       participants {
         id
       }
->>>>>>> fa4c1e3 (add query getMyChallenges)
     }
     totalCount
   }
 }
     `;
-<<<<<<< HEAD
-=======
 
 /**
  * __useGetMyChallengesQuery__
@@ -555,7 +472,6 @@ export const GetEcogesturesDocument = gql`
   }
 }
     `;
->>>>>>> fa4c1e3 (add query getMyChallenges)
 
 /**
  * __useGetEcogesturesQuery__
@@ -630,7 +546,6 @@ export function useGetCurrentUserSuspenseQuery(baseOptions?: Apollo.SkipToken | 
 export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
-<<<<<<< HEAD
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
 export const GetValidatedEcogesturesDocument = gql`
     query GetValidatedEcogestures($input: PaginationInput!) {
@@ -732,6 +647,3 @@ export function useValidateEcogestureMutation(baseOptions?: Apollo.MutationHookO
 export type ValidateEcogestureMutationHookResult = ReturnType<typeof useValidateEcogestureMutation>;
 export type ValidateEcogestureMutationResult = Apollo.MutationResult<ValidateEcogestureMutation>;
 export type ValidateEcogestureMutationOptions = Apollo.BaseMutationOptions<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>;
-=======
-export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
->>>>>>> fa4c1e3 (add query getMyChallenges)
