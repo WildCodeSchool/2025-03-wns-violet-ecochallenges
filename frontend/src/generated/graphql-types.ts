@@ -57,6 +57,7 @@ export type Mutation = {
   logout: Scalars['String']['output'];
   seedEcogestures: Array<Ecogesture>;
   signup: Scalars['String']['output'];
+  validateEcogesture: UserEcogesture;
 };
 
 
@@ -74,6 +75,12 @@ export type MutationSignupArgs = {
   data: NewUserInput;
 };
 
+
+export type MutationValidateEcogestureArgs = {
+  ecogestureId: Scalars['Int']['input'];
+  level_validated: Scalars['Int']['input'];
+};
+
 export type NewChallengeInput = {
   endingDate: Scalars['DateTimeISO']['input'];
   label: Scalars['String']['input'];
@@ -86,17 +93,28 @@ export type NewUserInput = {
   password: Scalars['String']['input'];
 };
 
+export type PaginationInput = {
+  limit?: InputMaybe<Scalars['Float']['input']>;
+  page?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllChallenges: Array<Challenge>;
   getAllUsers: Array<User>;
   getCurrentUser: User;
   getEcogestures: EcogestureListResponse;
+  getValidatedEcogestures: ValidatedEcogesturesResponse;
 };
 
 
 export type QueryGetEcogesturesArgs = {
   input?: InputMaybe<GetEcogesturesInput>;
+};
+
+
+export type QueryGetValidatedEcogesturesArgs = {
+  input?: InputMaybe<PaginationInput>;
 };
 
 /** Roles for users in this app */
@@ -110,6 +128,21 @@ export type User = {
   id: Scalars['Float']['output'];
   roles: Array<Roles>;
   username: Scalars['String']['output'];
+};
+
+export type UserEcogesture = {
+  __typename?: 'UserEcogesture';
+  ecogesture: Ecogesture;
+  id: Scalars['Float']['output'];
+  level_validated: Scalars['Float']['output'];
+  user: User;
+  validated_at: Scalars['DateTimeISO']['output'];
+};
+
+export type ValidatedEcogesturesResponse = {
+  __typename?: 'ValidatedEcogesturesResponse';
+  totalCount: Scalars['Int']['output'];
+  userEcogestures: Array<UserEcogesture>;
 };
 
 export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
@@ -152,6 +185,21 @@ export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles> } };
+
+export type GetValidatedEcogesturesQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+
+export type GetValidatedEcogesturesQuery = { __typename?: 'Query', getValidatedEcogestures: { __typename?: 'ValidatedEcogesturesResponse', totalCount: number, userEcogestures: Array<{ __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } }> } };
+
+export type ValidateEcogestureMutationVariables = Exact<{
+  ecogestureId: Scalars['Int']['input'];
+  level_validated: Scalars['Int']['input'];
+}>;
+
+
+export type ValidateEcogestureMutation = { __typename?: 'Mutation', validateEcogesture: { __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } } };
 
 
 export const SeedEcogesturesDocument = gql`
@@ -401,3 +449,103 @@ export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQ
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetValidatedEcogesturesDocument = gql`
+    query GetValidatedEcogestures($input: PaginationInput!) {
+  getValidatedEcogestures(input: $input) {
+    userEcogestures {
+      id
+      validated_at
+      level_validated
+      ecogesture {
+        id
+        label
+        pictureUrl
+      }
+      user {
+        id
+      }
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useGetValidatedEcogesturesQuery__
+ *
+ * To run a query within a React component, call `useGetValidatedEcogesturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetValidatedEcogesturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetValidatedEcogesturesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetValidatedEcogesturesQuery(baseOptions: Apollo.QueryHookOptions<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables> & ({ variables: GetValidatedEcogesturesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>(GetValidatedEcogesturesDocument, options);
+      }
+export function useGetValidatedEcogesturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>(GetValidatedEcogesturesDocument, options);
+        }
+export function useGetValidatedEcogesturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>(GetValidatedEcogesturesDocument, options);
+        }
+export type GetValidatedEcogesturesQueryHookResult = ReturnType<typeof useGetValidatedEcogesturesQuery>;
+export type GetValidatedEcogesturesLazyQueryHookResult = ReturnType<typeof useGetValidatedEcogesturesLazyQuery>;
+export type GetValidatedEcogesturesSuspenseQueryHookResult = ReturnType<typeof useGetValidatedEcogesturesSuspenseQuery>;
+export type GetValidatedEcogesturesQueryResult = Apollo.QueryResult<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>;
+export const ValidateEcogestureDocument = gql`
+    mutation ValidateEcogesture($ecogestureId: Int!, $level_validated: Int!) {
+  validateEcogesture(
+    ecogestureId: $ecogestureId
+    level_validated: $level_validated
+  ) {
+    id
+    validated_at
+    level_validated
+    ecogesture {
+      id
+      label
+      pictureUrl
+    }
+    user {
+      id
+    }
+  }
+}
+    `;
+export type ValidateEcogestureMutationFn = Apollo.MutationFunction<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>;
+
+/**
+ * __useValidateEcogestureMutation__
+ *
+ * To run a mutation, you first call `useValidateEcogestureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useValidateEcogestureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [validateEcogestureMutation, { data, loading, error }] = useValidateEcogestureMutation({
+ *   variables: {
+ *      ecogestureId: // value for 'ecogestureId'
+ *      level_validated: // value for 'level_validated'
+ *   },
+ * });
+ */
+export function useValidateEcogestureMutation(baseOptions?: Apollo.MutationHookOptions<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>(ValidateEcogestureDocument, options);
+      }
+export type ValidateEcogestureMutationHookResult = ReturnType<typeof useValidateEcogestureMutation>;
+export type ValidateEcogestureMutationResult = Apollo.MutationResult<ValidateEcogestureMutation>;
+export type ValidateEcogestureMutationOptions = Apollo.BaseMutationOptions<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>;

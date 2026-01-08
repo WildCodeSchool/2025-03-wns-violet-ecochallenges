@@ -1,5 +1,12 @@
 import { Field, ObjectType, registerEnumType } from "type-graphql";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+} from "typeorm";
+import { UserEcogesture } from "./UserEcogesture";
 
 export enum Role {
   USER = "USER",
@@ -18,7 +25,7 @@ export class User extends BaseEntity {
   id: number;
 
   @Column()
-  @Field() 
+  @Field()
   username: string;
 
   @Column({ unique: true })
@@ -31,4 +38,7 @@ export class User extends BaseEntity {
   @Column({ type: "enum", enum: Role, array: true, default: [Role.USER] })
   @Field(() => [Role])
   roles: Role[];
+
+  @OneToMany(() => UserEcogesture, (userEcogesture) => userEcogesture.user)
+  public UserEcogesture: UserEcogesture[];
 }

@@ -3,6 +3,9 @@ import UnauthorizedPage from "../UnauthorizedPage";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyP } from "@/components/ui/typographyP";
 import { useAuthStore } from "@/stores/authStore";
+import ValidatedEcogesturesDesktop from "./ValidatedEcogestures/ValidatedEcogesturesDesktop";
+import { useMediaQuery } from "usehooks-ts";
+import ValidatedEcogesturesTabletMobile from "./ValidatedEcogestures/ValidatedEcogesturesTabletMobile";
 
 function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -12,6 +15,7 @@ function DashboardPage() {
   if (!isConnected || !user) {
     return <UnauthorizedPage />;
   }
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   if (loading) {
     return (
@@ -25,6 +29,12 @@ function DashboardPage() {
   return (
     <main>
       <DashboardBanner username={user.username} />
+
+      {isDesktop ? (
+        <ValidatedEcogesturesDesktop />
+      ) : (
+        <ValidatedEcogesturesTabletMobile />
+      )}
     </main>
   );
 }
