@@ -57,6 +57,7 @@ export default function RegisterPage() {
             id: profile.id,
             email: profile.email,
             username: profile.username,
+            pictureUrl: profile.pictureUrl,
           });
         }
       } catch {

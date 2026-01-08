@@ -9,12 +9,12 @@ import { useOnClickOutside } from "usehooks-ts";
 
 const Header = () => {
   const isScrolled = useScrolled();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useOnClickOutside([menuRef, closeButtonRef] as RefObject<HTMLElement>[], () =>
-    setIsMenuOpen(false)
+    setIsMobileMenuOpen(false)
   );
 
   return (
@@ -23,7 +23,7 @@ const Header = () => {
         "sticky top-0 z-10",
         "bg-background text-white",
         "transition-shadow duration-300",
-        isScrolled || isMenuOpen ? "shadow-md" : "shadow-none"
+        isScrolled || isMobileMenuOpen ? "shadow-md" : "shadow-none"
       )}
     >
       <div
@@ -35,16 +35,16 @@ const Header = () => {
         <LogoLink />
 
         <MobileMenuButton
-          isMenuOpen={isMenuOpen}
-          setIsMenuOpen={setIsMenuOpen}
+          isMenuOpen={isMobileMenuOpen}
+          setIsMenuOpen={setIsMobileMenuOpen}
           ref={closeButtonRef}
         />
 
         <DesktopMenu />
       </div>
       <MobileMenu
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
+        isMenuOpen={isMobileMenuOpen}
+        setIsMenuOpen={setIsMobileMenuOpen}
         ref={menuRef}
       />
     </header>

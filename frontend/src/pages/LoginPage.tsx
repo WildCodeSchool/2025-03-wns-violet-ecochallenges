@@ -9,7 +9,6 @@ import { useAuthStore } from "@/stores/authStore";
 import type { Profile } from "@/types/User";
 
 // TODO : Supprimer les console.log lorsque dashboard sera créée, ils ne sont là que pour tester la connexion pour le moment.
-
 export const LoginPage = () => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
@@ -56,6 +55,7 @@ export const LoginPage = () => {
         id: profile.id,
         email: profile.email,
         username: profile.username,
+        pictureUrl: profile.pictureUrl,
       });
 
       navigate("/dashboard");

@@ -108,6 +108,7 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
   id: Scalars['Float']['output'];
+  pictureUrl: Scalars['String']['output'];
   roles: Array<Roles>;
   username: Scalars['String']['output'];
 };
@@ -151,7 +152,7 @@ export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __ty
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles> } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles>, pictureUrl: string } };
 
 
 export const SeedEcogesturesDocument = gql`
@@ -366,6 +367,7 @@ export const GetCurrentUserDocument = gql`
     email
     username
     roles
+    pictureUrl
   }
 }
     `;
