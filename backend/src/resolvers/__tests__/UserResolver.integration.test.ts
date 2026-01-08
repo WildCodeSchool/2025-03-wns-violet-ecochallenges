@@ -14,6 +14,8 @@ import {
   PostgreSqlContainer,
   StartedPostgreSqlContainer,
 } from "@testcontainers/postgresql";
+import { UserEcogesture } from "../../entities/UserEcogesture";
+import { Ecogesture } from "../../entities/Ecogesture";
 
 /**
  * UserResolver Integration Tests
@@ -61,7 +63,7 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
       username: container.getUsername(),
       password: container.getPassword(),
       database: container.getDatabase(),
-      entities: [User],
+      entities: [User, UserEcogesture, Ecogesture],
       synchronize: true,
       logging: false,
       dropSchema: true,
@@ -93,9 +95,29 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
 
   //clean between tests
   beforeEach(async () => {
-    await dataSource.getRepository(User).clear();
+    // Delete in dependency order to avoid FK constraint errors (TRUNCATE fails with FK)
+    await dataSource
+      .getRepository(UserEcogesture)
+      .createQueryBuilder()
+      .delete()
+      .where("1=1")
+      .execute();
+
+    await dataSource
+      .getRepository(Ecogesture)
+      .createQueryBuilder()
+      .delete()
+      .where("1=1")
+      .execute();
+
+    await dataSource
+      .getRepository(User)
+      .createQueryBuilder()
+      .delete()
+      .where("1=1")
+      .execute();
     (mockContext.res.setHeader as jest.Mock).mockClear();
-  });
+  }, 10000);
 
   describe("signup", () => {
     it("should create a real user in PostgreSQL with hashed password", async () => {
