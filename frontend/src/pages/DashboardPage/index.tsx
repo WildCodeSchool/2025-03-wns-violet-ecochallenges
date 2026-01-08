@@ -11,11 +11,11 @@ function DashboardPage() {
   const user = useAuthStore((state) => state.user);
   const isConnected = useAuthStore((state) => state.isConnected);
   const loading = useAuthStore((state) => state.isAuthLoading);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   if (!isConnected || !user) {
     return <UnauthorizedPage />;
   }
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   if (loading) {
     return (
