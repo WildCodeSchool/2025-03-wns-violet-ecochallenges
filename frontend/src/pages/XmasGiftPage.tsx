@@ -43,7 +43,7 @@ const XmasGiftPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 my-5 text-white">
+    <main className="flex flex-col items-center justify-center gap-4 my-5 text-white">
       <TypographyH1>Ici on sème des écogestes !</TypographyH1>
       <img
         src="/xmas-gift.png"
@@ -76,7 +76,7 @@ const XmasGiftPage = () => {
         </Button>
       </div>
       {message && <p className="mt-4 text-lg font-semibold">{message}</p>}
-    </div>
+    </main>
   );
 };
 
