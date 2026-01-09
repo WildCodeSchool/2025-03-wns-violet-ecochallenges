@@ -8,8 +8,6 @@ import { TypographyH1 } from "@/components/ui/typographyH1";
 import { useAuthStore } from "@/stores/authStore";
 import type { Profile } from "@/types/User";
 
-// TODO : Supprimer les console.log lorsque dashboard sera créée, ils ne sont là que pour tester la connexion pour le moment.
-
 export const LoginPage = () => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
@@ -35,9 +33,6 @@ export const LoginPage = () => {
       if (!data?.login) {
         throw new Error(" ❌ No token received");
       }
-
-      console.log(" ✅ Login successful:", data);
-      console.log("Email : ", email);
 
       const payload = data?.login;
       let profile: Profile | null = null;

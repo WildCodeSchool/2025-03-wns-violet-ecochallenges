@@ -20,11 +20,26 @@ export type Scalars = {
 
 export type Challenge = {
   __typename?: 'Challenge';
+  createdBy: User;
   endingDate: Scalars['DateTimeISO']['output'];
   id: Scalars['Float']['output'];
   label: Scalars['String']['output'];
+  participants: Array<UserChallenge>;
   picture: Scalars['String']['output'];
   startingDate: Scalars['DateTimeISO']['output'];
+};
+
+/** Filter used on Challenge */
+export enum ChallengeFilter {
+  CreatedByMe = 'CREATED_BY_ME',
+  Finished = 'FINISHED',
+  InProgress = 'IN_PROGRESS'
+}
+
+export type ChallengeListResponse = {
+  __typename?: 'ChallengeListResponse';
+  challenges: Array<Challenge>;
+  totalCount: Scalars['Float']['output'];
 };
 
 export type Ecogesture = {
@@ -45,6 +60,12 @@ export type EcogestureListResponse = {
 };
 
 export type GetEcogesturesInput = {
+  limit?: InputMaybe<Scalars['Float']['input']>;
+  page?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type GetMyChallengesInput = {
+  filter?: InputMaybe<ChallengeFilter>;
   limit?: InputMaybe<Scalars['Float']['input']>;
   page?: InputMaybe<Scalars['Float']['input']>;
 };
@@ -104,12 +125,18 @@ export type Query = {
   getAllUsers: Array<User>;
   getCurrentUser: User;
   getEcogestures: EcogestureListResponse;
+  getMyChallenges: ChallengeListResponse;
   getValidatedEcogestures: ValidatedEcogesturesResponse;
 };
 
 
 export type QueryGetEcogesturesArgs = {
   input?: InputMaybe<GetEcogesturesInput>;
+};
+
+
+export type QueryGetMyChallengesArgs = {
+  input?: InputMaybe<GetMyChallengesInput>;
 };
 
 
@@ -124,10 +151,20 @@ export enum Roles {
 
 export type User = {
   __typename?: 'User';
+  challengesCreated?: Maybe<Array<Challenge>>;
   email: Scalars['String']['output'];
   id: Scalars['Float']['output'];
+  participations?: Maybe<Array<UserChallenge>>;
   roles: Array<Roles>;
   username: Scalars['String']['output'];
+};
+
+export type UserChallenge = {
+  __typename?: 'UserChallenge';
+  challenge: Challenge;
+  hasAccepted: Scalars['Boolean']['output'];
+  id: Scalars['Float']['output'];
+  user: User;
 };
 
 export type UserEcogesture = {
@@ -173,6 +210,13 @@ export type SignupMutationVariables = Exact<{
 
 
 export type SignupMutation = { __typename?: 'Mutation', signup: string };
+
+export type GetMyChallengesQueryVariables = Exact<{
+  input?: InputMaybe<GetMyChallengesInput>;
+}>;
+
+
+export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
 
 export type GetEcogesturesQueryVariables = Exact<{
   input?: InputMaybe<GetEcogesturesInput>;
@@ -362,6 +406,60 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export const GetMyChallengesDocument = gql`
+    query GetMyChallenges($input: GetMyChallengesInput) {
+  getMyChallenges(input: $input) {
+    challenges {
+      id
+      label
+      startingDate
+      endingDate
+      picture
+      createdBy {
+        id
+        username
+      }
+      participants {
+        id
+      }
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useGetMyChallengesQuery__
+ *
+ * To run a query within a React component, call `useGetMyChallengesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyChallengesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyChallengesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetMyChallengesQuery(baseOptions?: Apollo.QueryHookOptions<GetMyChallengesQuery, GetMyChallengesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyChallengesQuery, GetMyChallengesQueryVariables>(GetMyChallengesDocument, options);
+      }
+export function useGetMyChallengesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyChallengesQuery, GetMyChallengesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyChallengesQuery, GetMyChallengesQueryVariables>(GetMyChallengesDocument, options);
+        }
+export function useGetMyChallengesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMyChallengesQuery, GetMyChallengesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyChallengesQuery, GetMyChallengesQueryVariables>(GetMyChallengesDocument, options);
+        }
+export type GetMyChallengesQueryHookResult = ReturnType<typeof useGetMyChallengesQuery>;
+export type GetMyChallengesLazyQueryHookResult = ReturnType<typeof useGetMyChallengesLazyQuery>;
+export type GetMyChallengesSuspenseQueryHookResult = ReturnType<typeof useGetMyChallengesSuspenseQuery>;
+export type GetMyChallengesQueryResult = Apollo.QueryResult<GetMyChallengesQuery, GetMyChallengesQueryVariables>;
 export const GetEcogesturesDocument = gql`
     query GetEcogestures($input: GetEcogesturesInput) {
   getEcogestures(input: $input) {
