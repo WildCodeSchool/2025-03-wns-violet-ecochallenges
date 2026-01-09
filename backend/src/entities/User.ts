@@ -5,8 +5,11 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
+  Relation,
 } from "typeorm";
 import { UserEcogesture } from "./UserEcogesture";
+import { Challenge } from "./Challenge";
+import { UserChallenge } from "./UserChallenge";
 
 export enum Role {
   USER = "USER",
@@ -41,4 +44,12 @@ export class User extends BaseEntity {
 
   @OneToMany(() => UserEcogesture, (userEcogesture) => userEcogesture.user)
   public UserEcogesture: UserEcogesture[];
+
+  @OneToMany(() => Challenge, (challenge) => challenge.createdBy)
+  @Field(() => [Challenge], { nullable: true })
+  challengesCreated?: Relation<Challenge[]>;
+
+  @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.user)
+  @Field(() => [UserChallenge], { nullable: true })
+  participations?: Relation<UserChallenge[]>;
 }

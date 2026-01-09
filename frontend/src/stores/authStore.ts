@@ -1,17 +1,12 @@
+import type { ProfileLight } from "@/types/User";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-interface User {
-  id: number;
-  email: string;
-  username: string;
-}
-
 interface AuthState {
-  user: User | null;
+  user: ProfileLight | null;
   isConnected: boolean;
   isAuthLoading: boolean;
-  setUser: (user: User | null) => void;
+  setUser: (user: ProfileLight | null) => void;
   setAuthLoading: (isLoading: boolean) => void;
   logout: () => void;
 }

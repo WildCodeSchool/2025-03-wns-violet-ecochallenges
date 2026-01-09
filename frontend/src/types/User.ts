@@ -4,3 +4,5 @@ export type Profile = {
   roles: string[];
   username: string;
 };
+
+export type ProfileLight = Omit<Profile, "roles">;
