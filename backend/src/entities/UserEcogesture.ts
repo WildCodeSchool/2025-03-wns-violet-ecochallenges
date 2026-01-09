@@ -1,4 +1,12 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Ecogesture } from "./Ecogesture";
 import { Field, ObjectType } from "type-graphql";
 import { User } from "./User";
@@ -19,10 +27,18 @@ export class UserEcogesture extends BaseEntity {
   public level_validated: number;
 
   @ManyToOne(() => User, (user) => user.UserEcogesture)
-  @Field(() => User) 
+  @Field(() => User)
   public user: User;
 
   @ManyToOne(() => Ecogesture, (ecogesture) => ecogesture.UserEcogesture)
   @Field(() => Ecogesture)
   public ecogesture: Ecogesture;
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }
