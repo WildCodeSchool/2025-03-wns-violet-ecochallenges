@@ -93,7 +93,6 @@ const ChallengeCard = ({ challenge, userId }: ChallengeCardProps) => {
               </span>
             </div>
           </div>
-
           <div className="flex items-center gap-3">
             <div className="bg-white p-2 rounded-lg shadow-sm">
               <Clock className="w-5 h-5 text-slate-700" />
@@ -103,7 +102,7 @@ const ChallengeCard = ({ challenge, userId }: ChallengeCardProps) => {
                 Temps restant
               </span>
               <span className="text-sm font-bold text-slate-900">
-                {daysRemaining} jours
+                {isChallengeFinished ? "Challenge terminé" : `${daysRemaining} jours`}
               </span>
             </div>
           </div>

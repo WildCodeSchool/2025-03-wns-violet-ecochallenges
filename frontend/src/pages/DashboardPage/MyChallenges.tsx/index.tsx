@@ -2,15 +2,20 @@ import { cn } from "@/lib/utils";
 import { TypographyH3 } from "@/components/ui/typographyH3";
 import {
   ChallengeFilter,
-  useGetCurrentUserQuery,
   useGetMyChallengesQuery,
 } from "@/generated/graphql-types";
 import { useState } from "react";
 import ChallengeCard from "./ChallengeCard";
 import { Spinner } from "@/components/ui/spinner";
 import ChallengeFilters from "./ChallengeFilters";
+import type { ProfileLight } from "@/types/User";
 
-const MyChallenges = () => {
+interface Props {
+  user: ProfileLight;
+  loading: boolean;
+}
+
+const MyChallenges = ({ user, loading }: Props) => {
   const [filter, setFilter] = useState(ChallengeFilter.InProgress);
   const { data: myChallengesData, loading: myChallengesLoading } =
     useGetMyChallengesQuery({
@@ -21,14 +26,11 @@ const MyChallenges = () => {
       },
     });
 
-  const { data: currentUserData, loading: currentUserLoading } =
-    useGetCurrentUserQuery();
-
-  if (myChallengesLoading || currentUserLoading) {
+  if (myChallengesLoading || loading) {
     return <Spinner />;
   }
 
-  if (!myChallengesData?.getMyChallenges || !currentUserData?.getCurrentUser) {
+  if (!myChallengesData?.getMyChallenges || !user) {
     return <div>Erreur de chargement</div>;
   }
 
@@ -42,7 +44,7 @@ const MyChallenges = () => {
           <ChallengeCard
             key={challenge.id}
             challenge={challenge}
-            userId={currentUserData.getCurrentUser.id}
+            userId={user.id}
           />
         ))}
       </div>

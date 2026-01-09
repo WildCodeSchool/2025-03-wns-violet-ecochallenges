@@ -95,7 +95,6 @@ export default class ChallengeResolver {
     const skip = (page - 1) * limit;
     const filter = input?.filter;
 
-    //TODO : calculer en fonction de la date du jour
     const queryBuilder = Challenge.createQueryBuilder("challenge")
       .leftJoinAndSelect("challenge.createdBy", "createdBy")
       .leftJoinAndSelect("challenge.participants", "participants")

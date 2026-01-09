@@ -31,7 +31,7 @@ function DashboardPage() {
     <main>
       <DashboardBanner username={user.username} />
 
-      <MyChallenges />
+      <MyChallenges user={user} loading={loading} />
 
       {isDesktop ? (
         <ValidatedEcogesturesDesktop />
