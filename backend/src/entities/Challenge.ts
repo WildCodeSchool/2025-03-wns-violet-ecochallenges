@@ -1,5 +1,15 @@
 import { Field, ObjectType } from "type-graphql";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+  Relation,
+} from "typeorm";
+import { User } from "./User";
+import { UserChallenge } from "./UserChallenge";
 
 @Entity()
 @ObjectType()
@@ -23,4 +33,12 @@ export class Challenge extends BaseEntity {
   @Column()
   @Field()
   picture: string;
+
+  @ManyToOne(() => User, (user) => user.challengesCreated)
+  @Field(() => User)
+  createdBy: User;
+
+  @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.challenge)
+  @Field(() => [UserChallenge])
+  participants: Relation<UserChallenge[]>;
 }

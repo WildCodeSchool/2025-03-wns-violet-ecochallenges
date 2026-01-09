@@ -5,3 +5,5 @@ export type Profile = {
   pictureUrl: string;
   roles: string[];
 };
+
+export type ProfileLight = Omit<Profile, "roles">;

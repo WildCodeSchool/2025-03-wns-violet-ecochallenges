@@ -3,6 +3,7 @@ import Protected from "@/components/auth/Protected";
 import { useMediaQuery } from "usehooks-ts";
 import ValidatedEcogesturesDesktop from "./ValidatedEcogestures/ValidatedEcogesturesDesktop";
 import ValidatedEcogesturesTabletMobile from "./ValidatedEcogestures/ValidatedEcogesturesTabletMobile";
+import MyChallenges from "./MyChallenges.tsx";
 
 function DashboardPage() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -11,6 +12,7 @@ function DashboardPage() {
       {(user) => (
         <main>
           <DashboardBanner username={user.username} />
+          <MyChallenges user={user} />
           {isDesktop ? (
             <ValidatedEcogesturesDesktop />
           ) : (

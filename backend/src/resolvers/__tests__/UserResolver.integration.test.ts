@@ -9,6 +9,8 @@ import {
 import { DataSource } from "typeorm";
 import UserResolver from "../UserResolver";
 import { User, Role } from "../../entities/User";
+import { Challenge } from "../../entities/Challenge";
+import { UserChallenge } from "../../entities/UserChallenge";
 import { Context } from "../../types/Context";
 import {
   PostgreSqlContainer,
@@ -63,7 +65,7 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
       username: container.getUsername(),
       password: container.getPassword(),
       database: container.getDatabase(),
-      entities: [User, UserEcogesture, Ecogesture],
+      entities: [User, UserEcogesture, Ecogesture, Challenge, UserChallenge],
       synchronize: true,
       logging: false,
       dropSchema: true,
@@ -112,6 +114,13 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
 
     await dataSource
       .getRepository(User)
+      .createQueryBuilder()
+      .delete()
+      .where("1=1")
+      .execute();
+
+    await dataSource
+      .getRepository(UserChallenge)
       .createQueryBuilder()
       .delete()
       .where("1=1")
