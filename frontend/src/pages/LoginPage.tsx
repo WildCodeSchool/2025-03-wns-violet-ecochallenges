@@ -65,7 +65,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <section className={`flex items-center justify-center my-6`}>
+    <main className={`flex items-center justify-center my-6`}>
       <div className="flex items-center justify-center">
         <div className="w-full px-4">
           <form
@@ -136,6 +136,6 @@ export const LoginPage = () => {
           </form>
         </div>
       </div>
-    </section>
+    </main>
   );
 };
