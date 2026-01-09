@@ -8,11 +8,11 @@ import { NavLink } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useAuthMenuActions } from "./useAuthMenuActions";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { ChevronUp, UserIcon } from "lucide-react";
+import { ChevronUp, LogInIcon, UserIcon } from "lucide-react";
 import { useRef, useState, type RefObject } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import MobileMenuLink from "./MobileMenu/MobileMenuLink";
+import MenuLink from "./MenuLink";
 import { useOnClickOutside } from "usehooks-ts";
 import { AvatarFallback } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
@@ -85,7 +85,7 @@ const DesktopMenu = () => {
               ref={userMenuCardRef}
               className={cn(
                 "overflow-hidden",
-                "absolute top-full right-0 py-0",
+                "absolute top-[3.7rem] -right-4 py-0",
                 "bg-popover-foreground shadow-2xl",
                 "rounded-t-none border-accent border-b-2",
                 "transition-all duration-300 ease-in-out",
@@ -97,26 +97,26 @@ const DesktopMenu = () => {
             >
               <NavigationMenu className="text-background">
                 <NavigationMenuList className="flex flex-col gap-0">
-                  <MobileMenuLink
+                  <MenuLink
                     to="/profile"
                     Icon={UserIcon}
+                    setIsMenuOpen={setIsUserMenuOpen}
+                  >
+                    Mon profil
+                  </MenuLink>
+                  <MenuLink
+                    to="/"
+                    Icon={LogInIcon}
                     withDivider={false}
                     setIsMenuOpen={setIsUserMenuOpen}
                   >
                     <Button variant="ghost" onClick={handleLogout} size="xs">
-                      Mon profil
+                      Se déconnecter
                     </Button>
-                  </MobileMenuLink>
+                  </MenuLink>
                 </NavigationMenuList>
               </NavigationMenu>
             </Card>
-            <NavigationMenuItem>
-              <NavigationMenuLink>
-                <Button variant="ghost" onClick={handleLogout} size="xs">
-                  Se déconnecter
-                </Button>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
           </>
         ) : (
           <>

@@ -105,7 +105,7 @@ export default class UserResolver {
 
     const hashedPassword = await argon2.hash(data.password);
     const username = data.email.split("@")[0];
-    const pictureUrl = `https://avatar.iran.liara.run/username?username=${username}`;
+    const pictureUrl = `https://ui-avatars.com/api/?name=${username}`;
 
     const user = User.create({ ...data, hashedPassword, username, pictureUrl });
     await user.save();
@@ -142,6 +142,7 @@ export default class UserResolver {
       email: user.email,
       roles: user.roles,
       username: user.username,
+      pictureUrl: user.pictureUrl,
     };
 
     return JSON.stringify(publicProfile);
