@@ -25,6 +25,7 @@
     "install": "^0.13.0",
     "lucide-react": "^0.533.0",
     "react": "^19.1.0",
+    "react-datepicker": "^9.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.7.1",
     "tailwind-merge": "^3.3.1",

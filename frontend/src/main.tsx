@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage/index.tsx";
 import "./index.css";
 import "./styles/fonts.css";
 import { LoginPage } from "./pages/LoginPage.tsx";
+import { CreateChallengePage} from "./pages/CreateChallengePage/index.tsx"
 import RegisterPage from "./pages/RegisterPage.tsx";
 import Error404 from "./pages/Error404.tsx";
 import DashboardPage from "./pages/DashboardPage/index.tsx";
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <RegisterPage />,
+      },
+      {
+        path: "/new-challenge",
+        element: <CreateChallengePage />
       },
       {
         path: "/signin",

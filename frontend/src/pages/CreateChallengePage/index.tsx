@@ -1,8 +1,15 @@
-// function CreateChallengePage () {
+import { useState } from "react";
+import NewChallenge from "@/pages/CreateChallengepage/NewChallenge";
+// import EcogesturesSelect from "@/pages/CreateChallengepage/EcogesturesSelect";
 
-//     return (
-//             <div>"Hello"</div>
-//     );
-// }
+function CreateChallengePage() {
+const [selectedEcogestures, setSelectedEcogestures] = useState<string[]>([]);
+  return (
+    <NewChallenge
+      selectedEcogestures={selectedEcogestures}
+      setSelectedEcogestures={setSelectedEcogestures}
+    />
+  );
+}
 
-// export default CreateChallengePage;
+export default CreateChallengePage;
