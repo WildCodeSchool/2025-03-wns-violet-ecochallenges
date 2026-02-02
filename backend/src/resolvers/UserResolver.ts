@@ -49,6 +49,16 @@ class NewUserInput {
   password: string;
 }
 
+@InputType()
+class UpdateProfilePictureInput {
+  @Field()
+  @IsNotEmpty({ message: "L'URL de l'image ne peut pas être vide" })
+  @Matches(/^https?:\/\/.+/, {
+    message: "L'URL de l'image doit commencer par http:// ou https://",
+  })
+  pictureUrl: string;
+}
+
 function setCookie(ctx: Context, token: string) {
   ctx.res.setHeader(
     "Set-Cookie",
@@ -148,11 +158,37 @@ export default class UserResolver {
     return JSON.stringify(publicProfile);
   }
 
-  //TODO manual test with front
   @Mutation(() => String)
   async logout(@Ctx() ctx: Context) {
     setCookie(ctx, "");
 
     return `Logged out`;
+  }
+
+  @Mutation(() => User)
+  @Authorized()
+  async updateProfilePicture(
+    @Arg("data") data: UpdateProfilePictureInput,
+    @Ctx() ctx: Context
+  ) {
+    if (!ctx.user) throw new Error("Utilisateur non authentifié");
+
+    const input = plainToClass(UpdateProfilePictureInput, data);
+    const errors = await validate(input);
+
+    if (errors.length > 0) {
+      const messages = errors
+        .map((error) => Object.values(error.constraints || {}))
+        .flat();
+      throw new Error(messages.join(", "));
+    }
+
+    const user = await User.findOneBy({ id: ctx.user.id });
+    if (!user) throw new Error("Utilisateur non trouvé");
+
+    user.pictureUrl = data.pictureUrl;
+    await user.save();
+
+    return user;
   }
 }
