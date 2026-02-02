@@ -3,6 +3,8 @@ name: E2E Tests
 on:
   pull_request:
     branches: [main, dev, staging]
+  push:
+    branches: [main, dev, staging]
 
 jobs:
   e2e-tests:
@@ -52,12 +54,13 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: postgres
           DB_DATABASE: test_db
+          DB_PORT: 5432
           API_PORT: 3000
-          JWT_SECRET: test-secret-key-for-ci
-          NODE_ENV: test
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          NODE_ENV: development
 
       - name: Wait for backend to be ready
-        run: npx wait-on http://localhost:3000 -t 60000
+        run: npx wait-on http://localhost:3000 -t 120000
 
       - name: Start frontend
         working-directory: ./frontend
@@ -66,7 +69,7 @@ jobs:
           VITE_API_URL_FROM_CLIENT: http://localhost:3000
 
       - name: Wait for frontend to be ready
-        run: npx wait-on http://localhost:5173 -t 60000
+        run: npx wait-on http://localhost:5173 -t 120000
 
       - name: Run E2E tests
         working-directory: ./frontend
