@@ -3,8 +3,6 @@ name: E2E Tests
 on:
   pull_request:
     branches: [main, dev, staging]
-  push:
-    branches: [main, dev, staging]
 
 jobs:
   e2e-tests:
@@ -48,7 +46,9 @@ jobs:
 
       - name: Start backend
         working-directory: ./backend
-        run: npm run dev &
+        run: |
+          npm run dev > backend.log 2>&1 &
+          echo $! > backend.pid
         env:
           DB_HOST: localhost
           DB_USER: postgres
@@ -58,6 +58,14 @@ jobs:
           API_PORT: 3000
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           NODE_ENV: development
+
+      - name: Wait a bit and check backend logs
+        run: |
+          sleep 10
+          echo "=== Backend logs ==="
+          cat backend/backend.log || echo "No logs found"
+          echo "=== Checking if backend is running ==="
+          curl -f http://localhost:3000 || echo "Backend not responding"
 
       - name: Wait for backend to be ready
         run: npx wait-on http://localhost:3000 -t 120000
@@ -76,6 +84,14 @@ jobs:
         run: npm run test:e2e
         env:
           CI: true
+
+      - name: Upload backend logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-logs
+          path: backend/backend.log
+          retention-days: 7
 
       - name: Upload Playwright report
         if: always()
