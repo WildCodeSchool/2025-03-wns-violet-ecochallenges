@@ -52,7 +52,7 @@ class NewUserInput {
 function setCookie(ctx: Context, token: string) {
   ctx.res.setHeader(
     "Set-Cookie",
-    `eco-auth=${token};secure;httpOnly;SameSite=Strict;`
+    `eco-auth=${token};secure;httpOnly;SameSite=Strict;`,
   );
 }
 
@@ -102,6 +102,9 @@ export default class UserResolver {
         .flat();
       throw new Error(messages.join(", "));
     }
+
+    const existingUser = await User.findOneBy({ email: data.email });
+    if (existingUser) throw new Error("Email ou mot de passe invalide.");
 
     const hashedPassword = await argon2.hash(data.password);
     const username = data.email.split("@")[0];
