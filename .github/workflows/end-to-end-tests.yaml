@@ -59,16 +59,20 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           NODE_ENV: development
 
-      - name: Wait a bit and check backend logs
-        run: |
-          sleep 10
-          echo "=== Backend logs ==="
-          cat backend/backend.log || echo "No logs found"
-          echo "=== Checking if backend is running ==="
-          curl -f http://localhost:3000 || echo "Backend not responding"
-
       - name: Wait for backend to be ready
-        run: npx wait-on http://localhost:3000 -t 120000
+        run: |
+          echo "Waiting for backend..."
+          for i in {1..30}; do
+            if curl -s http://localhost:3000 > /dev/null 2>&1; then
+              echo "Backend is ready!"
+              exit 0
+            fi
+            echo "Attempt $i/30: Backend not ready yet..."
+            sleep 2
+          done
+          echo "Backend failed to start"
+          cat backend/backend.log
+          exit 1
 
       - name: Start frontend
         working-directory: ./frontend
