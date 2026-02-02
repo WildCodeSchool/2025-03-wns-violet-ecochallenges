@@ -5,6 +5,7 @@ export const CREATE_CHALLENGE = gql`
     createChallenge(data: $data) {
       id
       label
+      description
       startingDate
       endingDate
       picture

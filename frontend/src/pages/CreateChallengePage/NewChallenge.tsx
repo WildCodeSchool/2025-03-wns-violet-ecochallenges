@@ -23,8 +23,7 @@ function NewChallenge({
     description: "",
     startingDate: "",
     endingDate: "",
-    picture: "",
-    createdBy: ""
+    picture: ""
   });
   // State pour la plage de dates
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
@@ -33,6 +32,10 @@ function NewChallenge({
   const [createChallenge, { loading, error, data }] = useMutation(CREATE_CHALLENGE);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(`Champ modifié: ${e.target.name}, Nouvelle valeur: "${e.target.value}"`);
+    if (e.target.name === 'description') {
+      console.log('✅ Description capturée dans le formulaire');
+    }
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -59,35 +62,72 @@ function NewChallenge({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    console.log("État du formulaire :", form);
+    console.log("Description actuelle :", `"${form.description}"`, "Longueur:", form.description.length);
+
+    // Vérification supplémentaire pour la description
+    const finalDescription = form.description.trim() || "Pas de description";
+    console.log("Description finale qui sera envoyée:", finalDescription);
+
     const variables = {
       data: {
         label: form.label,
-        description: form.description,
+        description: finalDescription,
         startingDate: new Date(form.startingDate).toISOString(),
         endingDate: new Date(form.endingDate).toISOString(),
         picture: form.picture,
         ecogestureIds: selectedEcogestures.map(Number),
       },
-      createdBy: 1 // TODO À remplacer par l'id réel de l'utilisateur connecté en faisant appel a thestand
     };
-    console.log('Variables envoyées à la mutation:', variables);
+
+    console.log('=== VARIABLES ENVOYÉES (VERSION 3 - FORCÉE) ===');
+    console.log('Description dans variables:', variables.data.description);
+    console.log('Longueur description:', variables.data.description?.length);
+    console.log('Contenu complet des variables:', variables);
+    console.log(JSON.stringify(variables, null, 2));
+
     try {
-      await createChallenge({ variables });
+      const result = await createChallenge({ variables }); // ← Capturer result
+      
+      console.log('=== RÉSULTAT REÇU ===');
+      console.log(JSON.stringify(result.data, null, 2));
+      
+      if (result.data?.createChallenge?.description) {
+        console.log('✅ Description sauvegardée:', result.data.createChallenge.description);
+      } else {
+        console.log('❌ Description NULL dans la réponse');
+      }
+      
       setForm({ label: "", description: "", startingDate: "", endingDate: "", picture: "" });
       setSelectedEcogestures([]);
       setParticipants([]);
     } catch (err: any) {
+      console.error("Erreur complète:", err); 
       if (err.message) {
-        console.error("Oups! Votre Challenge n'a pas pu être créé. Veuillez réessayer ultérieurement.", err.message);
+        console.error("Message d'erreur:", err.message);
       }
     }
+    
+    // try {
+    //   await createChallenge({ variables });
+    //   setForm({ label: "", description: "", startingDate: "", endingDate: "", picture: "" });
+    //   setSelectedEcogestures([]);
+    //   setParticipants([]);
+    // } catch (err: any) {
+    //   console.error("Erreur complète:", err); 
+    //   if (err.message) {
+    //     console.error("Oups! Votre Challenge n'a pas pu être créé. Veuillez réessayer ultérieurement.", err.message);
+    //   }
+    // }
+
   };
 
   return (
     <div className="container max-w-4xl mx-auto py-6 px-2">
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 
-        <Card className="overflow-hidden p-0 bg-secondary-foreground  w-full">
+        <Card className="overflow-hidden p-0 bg-primary-foreground w-full">
           <div className="w-full h-40 sm:h-56 md:h-72 relative flex items-center justify-center">
             <img
               src={form.picture || 'https://picsum.photos/600/400'}

@@ -24,6 +24,9 @@ export class NewChallengeInput {
   @MinLength(3, { message: "Le titre doit faire au moins 3 caractères" })
   label: string;
 
+  @Field({ nullable: true })
+  description: string;
+
   @Field()
   @Type(() => Date)
   @IsDate({ message: "La date de début doit être une date valide" })
@@ -36,6 +39,7 @@ export class NewChallengeInput {
 
   @Field()
   picture: string;
+
 
   @Field(() => [Number], { nullable: true })
   ecogestureIds?: number[];
@@ -132,6 +136,15 @@ export default class ChallengeResolver {
       throw new Error("Utilisateur non authentifié");
     }
 
+    // ✅ AJOUTER CES LOGS
+    console.log("=== DATA REÇUE PAR LE RESOLVER ===");
+    console.log("Label:", data.label);
+    console.log("Description:", data.description);
+    console.log("Description type:", typeof data.description);
+    console.log("Description is undefined?", data.description === undefined);
+    console.log("Description is null?", data.description === null);
+    console.log("Full data:", JSON.stringify(data, null, 2));
+
     const input = plainToClass(NewChallengeInput, data);
 
     const errors = await validate(input);
@@ -155,17 +168,31 @@ export default class ChallengeResolver {
       }
     }
 
+    // ✅ AJOUTER CE LOG AVANT LA CRÉATION
+    console.log("=== AVANT CRÉATION ===");
+    console.log("Description à sauvegarder:", data.description);
+
     const challenge = Challenge.create({
       label: data.label,
       startingDate: data.startingDate,
       endingDate: data.endingDate,
       picture: data.picture,
+      description : data.description,
       createdBy: user,
       ecogestures: ecogestures,
       //TODO add participants
     });
 
+    // ✅ AJOUTER CE LOG APRÈS LA CRÉATION
+    console.log("=== APRÈS CRÉATION (avant save) ===");
+    console.log("Challenge.description:", challenge.description);
+
     await challenge.save();
+
+    // ✅ AJOUTER CE LOG APRÈS SAUVEGARDE
+    console.log("=== APRÈS SAUVEGARDE ===");
+    console.log("Challenge.description:", challenge.description);
+    
     return challenge;
   }
 }

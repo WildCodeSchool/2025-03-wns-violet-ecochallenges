@@ -39,6 +39,10 @@ export class Challenge extends BaseEntity {
   @Field()
   picture: string;
 
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  description: string;
+
   @ManyToOne(() => User, (user) => user.challengesCreated)
   @Field(() => User)
   createdBy: User;

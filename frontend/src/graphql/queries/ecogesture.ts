@@ -8,6 +8,9 @@ export const GET_ECOGESTURES = gql`
         id
         label
         pictureUrl
+        level1Expectation
+        level2Expectation
+        level3Expectation
       }
     }
   }
