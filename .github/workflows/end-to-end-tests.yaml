@@ -3,13 +3,11 @@ name: E2E Tests
 on:
   pull_request:
     branches: [main, dev, staging]
-  push:
-    branches: [main, dev, staging]
 
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -32,8 +30,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.19.0'
-          cache: 'npm'
+          node-version: "20.19.0"
 
       - name: Install backend dependencies
         working-directory: ./backend
