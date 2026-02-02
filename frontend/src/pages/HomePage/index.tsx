@@ -8,12 +8,12 @@ function HomePage() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   return (
-    <>
+    <main>
       <Banner />
       <Explanations />
 
       {isDesktop ? <EcogesturesDesktop /> : <EcogesturesTabletMobile />}
-    </>
+    </main>
   );
 }
 

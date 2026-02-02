@@ -5,6 +5,8 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { UserEcogesture } from "./UserEcogesture";
 
@@ -44,4 +46,12 @@ export class Ecogesture extends BaseEntity {
     (userEcogesture) => userEcogesture.ecogesture
   )
   public UserEcogesture: UserEcogesture[];
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

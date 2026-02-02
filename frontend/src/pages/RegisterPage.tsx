@@ -87,7 +87,7 @@ export default function RegisterPage() {
   );
 
   return (
-    <div className={`flex items-center justify-center mt-10 mb-10`}>
+    <main className={`flex items-center justify-center mt-10 mb-10`}>
       <section className="flex items-center justify-center">
         <div className="w-full px-4">
           <form
@@ -189,6 +189,6 @@ export default function RegisterPage() {
           </form>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

@@ -23,6 +23,7 @@ const EcogestureCard = ({ ecogesture }: EcogestureProps) => {
             src={ecogesture.pictureUrl}
             alt={ecogesture.label}
             className="w-16 h-16"
+            aria-label={ecogesture.label}
           />
         </CardHeader>
         <CardContent className="text-center">

@@ -7,6 +7,8 @@ import {
   ManyToOne,
   OneToMany,
   Relation,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User";
 import { UserChallenge } from "./UserChallenge";
@@ -41,4 +43,12 @@ export class Challenge extends BaseEntity {
   @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.challenge)
   @Field(() => [UserChallenge])
   participants: Relation<UserChallenge[]>;
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }
