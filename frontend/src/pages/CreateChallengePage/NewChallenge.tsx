@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { CHALLENGE_MUTATION } from "@/graphql/mutations/challenge";
+import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
 import EcogesturesSelect from "@/pages/CreateChallengepage/EcogesturesSelect";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -30,7 +30,7 @@ function NewChallenge({
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [participants, setParticipants] = useState<string[]>([]);
   const [participantInput, setParticipantInput] = useState("");
-  const [createChallenge, { loading, error, data }] = useMutation(CHALLENGE_MUTATION);
+  const [createChallenge, { loading, error, data }] = useMutation(CREATE_CHALLENGE);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
