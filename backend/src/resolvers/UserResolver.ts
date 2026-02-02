@@ -20,6 +20,12 @@ import {
   validate,
 } from "class-validator";
 import { plainToClass } from "class-transformer";
+import {
+  deleteImageFromCloudinary,
+  extractPublicIdFromUrl,
+  isCloudinaryUrl,
+  isDefaultAvatar,
+} from "../lib/cloudinary";
 
 @InputType()
 class NewUserInput {
@@ -62,7 +68,7 @@ class UpdateProfilePictureInput {
 function setCookie(ctx: Context, token: string) {
   ctx.res.setHeader(
     "Set-Cookie",
-    `eco-auth=${token};secure;httpOnly;SameSite=Strict;`
+    `eco-auth=${token};secure;httpOnly;SameSite=Strict;`,
   );
 }
 
@@ -169,7 +175,7 @@ export default class UserResolver {
   @Authorized()
   async updateProfilePicture(
     @Arg("data") data: UpdateProfilePictureInput,
-    @Ctx() ctx: Context
+    @Ctx() ctx: Context,
   ) {
     if (!ctx.user) throw new Error("Utilisateur non authentifié");
 
@@ -185,6 +191,33 @@ export default class UserResolver {
 
     const user = await User.findOneBy({ id: ctx.user.id });
     if (!user) throw new Error("Utilisateur non trouvé");
+
+    const oldPictureUrl = user.pictureUrl;
+
+    // If the old picture is not a default avatar, delete it from Cloudinary
+    if (
+      oldPictureUrl &&
+      isCloudinaryUrl(oldPictureUrl) &&
+      !isDefaultAvatar(oldPictureUrl)
+    ) {
+      const publicId = extractPublicIdFromUrl(oldPictureUrl);
+
+      if (publicId) {
+        console.info(
+          `Deleting old profile picture with public_id: ${publicId}`,
+        );
+
+        const deleted = await deleteImageFromCloudinary(publicId);
+
+        if (!deleted) {
+          console.warn(
+            `Failed to delete old profile picture with public_id: ${publicId}`,
+          );
+        }
+      } else {
+        console.warn(`Could not extract public_id from URL: ${oldPictureUrl}`);
+      }
+    }
 
     user.pictureUrl = data.pictureUrl;
     await user.save();
