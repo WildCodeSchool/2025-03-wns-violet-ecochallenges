@@ -15,20 +15,51 @@ import { TypographyH1 } from "@/components/ui/typographyH1";
 import { useNavigate } from "react-router";
 import { Spinner } from "@/components/ui/spinner";
 import { PencilIcon } from "lucide-react";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useUpdateProfilePictureMutation } from "@/generated/graphql-types";
+import { useCallback } from "react";
+import { useCloudinaryWidget } from "@/hooks/useCloudinaryWidget";
 
 function ProfilePage() {
-  const [avatarEditionModalOpen, setAvatarEditionModalOpen] = useState(false);
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
+
+  const [updateProfilePicture, { loading: updatingPicture }] =
+    useUpdateProfilePictureMutation({
+      refetchQueries: ["GetCurrentUser"],
+    });
+
+  const handleUploadSuccess = useCallback(
+    async (pictureUrl: string) => {
+      try {
+        await updateProfilePicture({
+          variables: {
+            data: {
+              pictureUrl,
+            },
+          },
+        });
+      } catch (error) {
+        console.error("Error updating profile picture:", error);
+      }
+    },
+    [updateProfilePicture]
+  );
+
+  const { openWidget } = useCloudinaryWidget({
+    cloudName: import.meta.env.VITE_CLOUNDINARY_CLOUD_NAME,
+    uploadPreset: import.meta.env.VITE_CLOUNDINARY_UPLOAD_PRESET,
+    onSuccess: handleUploadSuccess,
+    onError: (error) => {
+      console.error("Erreur du widget Cloudinary :", error);
+      alert("Erreur lors du téléchargement de l'image. Veuillez réessayer.");
+    },
+  });
 
   const handleLogout = () => {
     logout();
     navigate("/", { replace: true });
   };
-
-  console.log("Avatar Edition Modal Open:", avatarEditionModalOpen);
 
   return (
     <Protected>
@@ -58,14 +89,20 @@ function ProfilePage() {
                     </Avatar>
 
                     <Button
-                      onClick={() => setAvatarEditionModalOpen(true)}
+                      onClick={openWidget}
+                      disabled={updatingPicture}
                       className={cn(
                         "absolute top-0 left-0 h-40 w-40 m-0 p-0 flex items-center justify-center rounded-full text-white bg-primary",
                         "opacity-0 group-hover:opacity-80 pointer-events-none group-hover:pointer-events-auto",
-                        "transition-opacity duration-200"
+                        "transition-opacity duration-200",
+                        updatingPicture && "cursor-wait"
                       )}
                     >
-                      <PencilIcon className="h-10 w-10" />
+                      {updatingPicture ? (
+                        <Spinner />
+                      ) : (
+                        <PencilIcon className="h-10 w-10" />
+                      )}
                     </Button>
                   </div>
 
