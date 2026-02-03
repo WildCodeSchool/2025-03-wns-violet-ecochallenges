@@ -32,7 +32,7 @@ export function CalendarPopover(props: CalendarProps & { triggerLabel?: string }
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <button type="button" className="px-4 py-2 bg-white border rounded shadow" onClick={() => setOpen(true)}>
+                <button type="button" className="w-full px-4 py-2 bg-white border border-black rounded shadow text-black" onClick={() => setOpen(true)}>
                     {props.triggerLabel || "Sélectionner une date"}
                 </button>
             </PopoverTrigger>

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
 import EcogesturesSelect from "@/pages/CreateChallengepage/EcogesturesSelect";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { X, User, Upload } from "lucide-react";
@@ -18,6 +20,7 @@ function NewChallenge({
   selectedEcogestures: string[];
   setSelectedEcogestures: (value: string[]) => void;
 }) {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     label: "",
     description: "",
@@ -25,17 +28,12 @@ function NewChallenge({
     endingDate: "",
     picture: ""
   });
-  // State pour la plage de dates
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [participants, setParticipants] = useState<string[]>([]);
   const [participantInput, setParticipantInput] = useState("");
   const [createChallenge, { loading, error, data }] = useMutation(CREATE_CHALLENGE);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(`Champ modifié: ${e.target.name}, Nouvelle valeur: "${e.target.value}"`);
-    if (e.target.name === 'description') {
-      console.log('✅ Description capturée dans le formulaire');
-    }
     setForm({ ...form, [e.target.name]: e.target.value });
   };
  
@@ -62,14 +60,6 @@ function NewChallenge({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log("État du formulaire :", form);
-    console.log("Description actuelle :", `"${form.description}"`, "Longueur:", form.description.length);
-
-    // Vérification supplémentaire pour la description
-    // const finalDescription = form.description.trim() || "Pas de description";
-    // console.log("Description finale qui sera envoyée:", finalDescription);
-
     const variables = {
       data: {
         label: form.label,
@@ -81,46 +71,18 @@ function NewChallenge({
       },
     };
 
-    console.log('=== VARIABLES ENVOYÉES (VERSION 3 - FORCÉE) ===');
-    console.log('Description dans variables:', variables.data.description);
-    console.log('Longueur description:', variables.data.description?.length);
-    console.log('Contenu complet des variables:', variables);
-    console.log(JSON.stringify(variables, null, 2));
-
     try {
-      const result = await createChallenge({ variables }); // ← Capturer result
-      
-      console.log('=== RÉSULTAT REÇU ===');
-      console.log(JSON.stringify(result.data, null, 2));
-      
-      if (result.data?.createChallenge?.description) {
-        console.log('✅ Description sauvegardée:', result.data.createChallenge.description);
-      } else {
-        console.log('❌ Description NULL dans la réponse');
-      }
-      
+      const result = await createChallenge({ variables });
       setForm({ label: "", description: "", startingDate: "", endingDate: "", picture: "" });
       setSelectedEcogestures([]);
       setParticipants([]);
+      navigate("/dashboard");
     } catch (err: any) {
       console.error("Erreur complète:", err); 
       if (err.message) {
         console.error("Message d'erreur:", err.message);
       }
     }
-    
-    // try {
-    //   await createChallenge({ variables });
-    //   setForm({ label: "", description: "", startingDate: "", endingDate: "", picture: "" });
-    //   setSelectedEcogestures([]);
-    //   setParticipants([]);
-    // } catch (err: any) {
-    //   console.error("Erreur complète:", err); 
-    //   if (err.message) {
-    //     console.error("Oups! Votre Challenge n'a pas pu être créé. Veuillez réessayer ultérieurement.", err.message);
-    //   }
-    // }
-
   };
 
   return (
@@ -173,41 +135,44 @@ function NewChallenge({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-black">Description</Label>
-                <Input
+                <Textarea
                   id="description"
                   name="description"
                   value={form.description}
                   onChange={handleChange}
                   required
                   placeholder="Décrivez votre challenge..."
-                  className="bg-white text-black"
+                  className="bg-white text-black min-h-[100px] px-3 py-1"
                 />
               </div>
-              <div className="space-y-2 flex flex-row gap-6 items-start">
-                <div className="flex-1">
-                  <Label className="text-black">
-                    Période du Challenge <span className="text-red-600 italic">*</span>
-                  </Label>
-                  <CalendarPopover
-                    mode="range"
-                    selected={dateRange}
-                    onSelect={(range) => {
-                      setDateRange(range);
-                      setForm((prev) => ({
-                        ...prev,
-                        startingDate: range?.from ? range.from.toISOString() : "",
-                        endingDate: range?.to ? range.to.toISOString() : "",
-                      }));
-                    }}
-                    numberOfMonths={2}
-                    className="rounded-lg border shadow-sm"
-                  />
-                </div>
-                <div className="flex-1 min-w-[180px] p-4 bg-white border rounded-lg shadow-sm">
-                  {/* <div className="font-semibold mb-2 text-black">Période de votre challenge :</div> */}
-                  <div className="text-sm text-gray-700">
-                    {dateRange?.from ? `Début : ${dateRange.from.toLocaleDateString()}` : "Début : non renseignée"}<br />
-                    {dateRange?.to ? `Fin : ${dateRange.to.toLocaleDateString()}` : "Fin : non renseignée"}
+              <div className="space-y-2">
+                <Label className="text-black">
+                  Période du Challenge <span className="text-red-600 italic">*</span>
+                </Label>
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                  <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full">
+                    <div className="w-full sm:w-1/2">
+                      <CalendarPopover
+                        mode="range"
+                        selected={dateRange}
+                        onSelect={(range) => {
+                          setDateRange(range);
+                          setForm((prev) => ({
+                            ...prev,
+                            startingDate: range?.from ? range.from.toISOString() : "",
+                            endingDate: range?.to ? range.to.toISOString() : "",
+                          }));
+                        }}
+                        numberOfMonths={2}
+                        className="rounded-lg border shadow-sm w-full"
+                      />
+                    </div>
+                    <div className="w-full sm:w-1/2 min-w-[180px] p-3 bg-white border rounded-lg shadow-sm">
+                      <div className="text-sm text-gray-700">
+                        {dateRange?.from ? `Début : ${dateRange.from.toLocaleDateString()}` : "Début : non renseignée"}<br />
+                        {dateRange?.to ? `Fin : ${dateRange.to.toLocaleDateString()}` : "Fin : non renseignée"}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -263,33 +228,7 @@ function NewChallenge({
             </ul>
           </CardContent>
         </Card>
-
-        {error && (
-          <Alert variant="destructive">
-            <AlertDescription>
-              Oups! Le challenge n'a pas été créé. Veuillez ressayer s'il vous plait.
-            </AlertDescription>
-          </Alert>
-        )}
-        {data && (
-          <Alert className="bg-green-50 text-green-900 border-green-200">
-            <AlertDescription>
-              ✓ Challenge créé avec succès !
-            </AlertDescription>
-          </Alert>
-        )}
         <div className="flex justify-end gap-4 mt-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setForm({ label: "", description: "", startingDate: "", endingDate: "", picture: "" });
-              setSelectedEcogestures([]);
-              setParticipants([]);
-            }}
-          >
-            Réinitialiser
-          </Button>
           <Button type="submit" disabled={loading} size="lg">
             {loading ? "Création en cours..." : "Créer le challenge"}
           </Button>

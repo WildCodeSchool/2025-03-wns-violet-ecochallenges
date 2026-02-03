@@ -65,7 +65,7 @@ function EcogesturesSelect({
               variant="outline"
               role="combobox"
               aria-expanded={openCombobox}
-              className="w-full justify-between mb-2"
+              className="w-full justify-between mb-2 border border-black text-black bg-white"
               type="button"
               onClick={() => setOpenCombobox((prev) => !prev)}
             >
@@ -154,25 +154,27 @@ function EcogesturesSelect({
       </div>
 
       {/* Liste des écogestes sélectionnés */}
-      <div className="w-full md:w-1/2">
-        <div className="flex justify-center font-semibold mb-2 ">Votre selection</div>
-        <ul className="flex flex-col gap-2">
-          {(showAll ? value : value.slice(0, maxSelectionToShow)).map((ecoId) => {
-            const eco = ecogestures.find((e) => e.id.toString() === ecoId);
-            if (!eco) return null;
-            return (
-              <li key={ecoId} className="flex items-center gap-2 bg-gray-100 rounded px-3 py-2">
-                <span className="flex-1 text-black text-sm">{eco.label}</span>
-                <Button type="button" size="icon" variant="ghost" onClick={() => handleRemove(ecoId)}>
-                  <Trash2 size={18} className="text-red-500" />
-                </Button>
-              </li>
-            );
-          })}
-        </ul>
+      <div className="w-full md:w-1/2 border rounded">
+        <div className="border rounded flex justify-center font-semibold mb-2 text-black bg-white pt-2">Votre sélection</div>
+        {value.length > 0 && (
+          <ul className="flex flex-col gap-2 bg-white p-2 rounded">
+            {(showAll ? value : value.slice(0, maxSelectionToShow)).map((ecoId) => {
+              const eco = ecogestures.find((e) => e.id.toString() === ecoId);
+              if (!eco) return null;
+              return (
+                <li key={ecoId} className="flex items-center gap-2 bg-gray-100 rounded px-3 py-2">
+                  <span className="flex-1 text-black text-sm">{eco.label}</span>
+                  <Button type="button" size="icon" variant="ghost" onClick={() => handleRemove(ecoId)}>
+                    <Trash2 size={18} className="text-red-500" />
+                  </Button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
         {value.length > maxSelectionToShow && (
           <div className="flex justify-center mt-2">
-            <Button variant="outline" size="sm" type="button" onClick={() => setShowAll(!showAll)}>
+            <Button size="sm" type="button" onClick={() => setShowAll(!showAll)}>
               {showAll ? "Voir moins" : `Voir plus (${value.length - maxSelectionToShow})`}
             </Button>
           </div>

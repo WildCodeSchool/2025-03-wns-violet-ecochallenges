@@ -245,7 +245,7 @@ export type GetEcogesturesQueryVariables = Exact<{
 }>;
 
 
-export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> } };
+export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> } };
 
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -536,7 +536,11 @@ export const GetEcogesturesDocument = gql`
     ecogestures {
       id
       label
+      description
       pictureUrl
+      level1Expectation
+      level2Expectation
+      level3Expectation
     }
   }
 }

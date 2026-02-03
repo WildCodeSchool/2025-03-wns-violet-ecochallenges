@@ -7,6 +7,7 @@ export const GET_ECOGESTURES = gql`
       ecogestures {
         id
         label
+        description
         pictureUrl
         level1Expectation
         level2Expectation
