@@ -65,7 +65,7 @@ export function PopoverContent({ className, ...props }: React.ComponentProps<"di
     return (
         <div
             className={cn(
-                "absolute z-50 mt-2 w-auto min-w-[8rem] max-w-[90vw] rounded-md border bg-popover p-2 text-popover-foreground shadow-md outline-none",
+                "absolute z-50 mt-2 w-auto min-w-[8rem] max-w-[90vw] rounded-md border bg-white p-2 text-black shadow-md outline-none",
                 className
             )}
             {...props}

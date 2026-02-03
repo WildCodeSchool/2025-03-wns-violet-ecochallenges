@@ -78,10 +78,10 @@ function NewChallenge({
       setParticipants([]);
       navigate("/dashboard");
     } catch (err: any) {
-      console.error("Erreur complète:", err); 
-      if (err.message) {
-        console.error("Message d'erreur:", err.message);
-      }
+      // console.error("Erreur complète:", err); 
+      // if (err.message) {
+      //   console.error("Message d'erreur:", err.message);
+      // }
     }
   };
 
@@ -169,8 +169,8 @@ function NewChallenge({
                     </div>
                     <div className="w-full sm:w-1/2 min-w-[180px] p-3 bg-white border rounded-lg shadow-sm">
                       <div className="text-sm text-gray-700">
-                        {dateRange?.from ? `Début : ${dateRange.from.toLocaleDateString()}` : "Début : non renseignée"}<br />
-                        {dateRange?.to ? `Fin : ${dateRange.to.toLocaleDateString()}` : "Fin : non renseignée"}
+                        {dateRange?.from ? `Début : ${dateRange.from.toLocaleDateString()}` : "Date de début : non renseignée"}<br />
+                        {dateRange?.to ? `Fin : ${dateRange.to.toLocaleDateString()}` : "Date de fin : non renseignée"}
                       </div>
                     </div>
                   </div>

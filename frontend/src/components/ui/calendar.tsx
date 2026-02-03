@@ -10,7 +10,7 @@ export type CalendarProps = DayPickerProps
 
 export function Calendar(props: CalendarProps) {
     return (
-        <div className="p-3 bg-white rounded-lg border shadow-sm">
+        <div className="p-3 bg-white rounded-lg shadow-sm">
             <DayPicker {...props} />
         </div>
     )

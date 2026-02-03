@@ -6,7 +6,7 @@ export function Command({ className, ...props }: React.ComponentProps<"div">) {
     return (
         <div
             className={cn(
-                "flex flex-col overflow-hidden rounded-md bg-popover text-popover-foreground shadow-md border border-border",
+                "flex flex-col overflow-hidden rounded-md bg-white text-black shadow-md border border-border",
                 className
             )}
             {...props}
@@ -48,7 +48,7 @@ export function CommandItem({ className, onSelect, onClick, ...props }: React.Co
     return (
         <div
             className={cn(
-                "flex cursor-pointer select-none items-center px-3 py-2 text-sm aria-selected:bg-accent aria-selected:text-accent-foreground",
+                "flex cursor-pointer select-none items-center px-3 py-2 text-sm text-black hover:bg-gray-100 aria-selected:bg-gray-200 aria-selected:text-black",
                 className
             )}
             role="option"
