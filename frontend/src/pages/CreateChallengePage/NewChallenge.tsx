@@ -38,7 +38,7 @@ function NewChallenge({
     }
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
+ 
   // // Upload image (placeholder)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -67,13 +67,13 @@ function NewChallenge({
     console.log("Description actuelle :", `"${form.description}"`, "Longueur:", form.description.length);
 
     // Vérification supplémentaire pour la description
-    const finalDescription = form.description.trim() || "Pas de description";
-    console.log("Description finale qui sera envoyée:", finalDescription);
+    // const finalDescription = form.description.trim() || "Pas de description";
+    // console.log("Description finale qui sera envoyée:", finalDescription);
 
     const variables = {
       data: {
         label: form.label,
-        description: finalDescription,
+        description: form.description,
         startingDate: new Date(form.startingDate).toISOString(),
         endingDate: new Date(form.endingDate).toISOString(),
         picture: form.picture,
