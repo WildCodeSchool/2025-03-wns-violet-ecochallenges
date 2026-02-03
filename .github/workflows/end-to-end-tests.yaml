@@ -98,6 +98,10 @@ jobs:
         env:
           CI: true
 
+      - name: Show backend logs
+        if: always()
+        run: cat backend/backend.log || echo "No backend logs"
+
       - name: Upload backend logs on failure
         if: failure()
         uses: actions/upload-artifact@v4
