@@ -9,6 +9,8 @@ import { UserChallenge } from "../entities/UserChallenge";
 dotenv.config();
 const { DB_HOST, DB_USER, DB_DATABASE, DB_PASSWORD } = process.env;
 
+console.log("=================== DB_USER used:", DB_USER);
+
 const dataSource = new DataSource({
   type: "postgres",
   host: DB_HOST,
