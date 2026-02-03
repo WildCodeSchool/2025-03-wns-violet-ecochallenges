@@ -36,6 +36,14 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
+      - name: Remove backend .env files for CI
+        working-directory: ./backend
+        run: rm -f .env .env.dev
+
+      - name: List backend files after env removal
+        working-directory: ./backend
+        run: ls -la
+
       - name: Install frontend dependencies
         working-directory: ./frontend
         run: npm ci
@@ -47,6 +55,7 @@ jobs:
       - name: Start backend
         working-directory: ./backend
         run: |
+          echo "DB_USER in workflow: $DB_USER"
           npm run dev > backend.log 2>&1 &
           echo $! > backend.pid
         env:
@@ -76,7 +85,7 @@ jobs:
 
       - name: Start frontend
         working-directory: ./frontend
-        run: npm run dev &
+        run: npm run dev > frontend.log 2>&1 &
         env:
           VITE_API_URL_FROM_CLIENT: http://localhost:3000
 
@@ -95,6 +104,14 @@ jobs:
         with:
           name: backend-logs
           path: backend/backend.log
+          retention-days: 7
+
+      - name: Upload frontend logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-logs
+          path: frontend/frontend.log
           retention-days: 7
 
       - name: Upload Playwright report
