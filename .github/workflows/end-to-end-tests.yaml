@@ -44,10 +44,6 @@ jobs:
         working-directory: ./frontend
         run: npx playwright install --with-deps chromium
 
-      - name: Remove backend .env.dev for CI
-        working-directory: ./backend
-        run: rm -f .env .env.dev
-
       - name: Start backend
         working-directory: ./backend
         run: |
