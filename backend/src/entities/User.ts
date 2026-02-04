@@ -33,6 +33,10 @@ export class User extends BaseEntity {
   @Field()
   username: string;
 
+  @Column()
+  @Field()
+  pictureUrl: string;
+
   @Column({ unique: true })
   @Field()
   email: string;

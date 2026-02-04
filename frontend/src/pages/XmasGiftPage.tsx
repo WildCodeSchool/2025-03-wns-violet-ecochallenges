@@ -8,6 +8,7 @@ import {
 } from "@/graphql/mutations/ecogestures";
 import { useState } from "react";
 import type { Ecogesture } from "@/generated/graphql-types";
+import Protected from "@/components/auth/Protected";
 
 const XmasGiftPage = () => {
   const navigate = useNavigate();
@@ -43,40 +44,48 @@ const XmasGiftPage = () => {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center gap-4 my-5 text-white">
-      <TypographyH1>Ici on sème des écogestes !</TypographyH1>
-      <img
-        src="/xmas-gift.png"
-        alt="Crew Planet - Illustration challenge écologique"
-      />
-      <div className="flex gap-4 mt-4">
-        <Button
-          onClick={handleSeedEcogestures}
-          variant="default"
-          disabled={loading || !!ecogesture}
-        >
-          {loading ? "Seeding en cours..." : "Lancer le seeding des écogestes"}
-        </Button>
-        <Button
-          onClick={handleCleanEcogestures}
-          variant="destructive"
-          disabled={cleaning || !ecogesture}
-        >
-          {loading ? "Nettoyage en cours..." : "Nettoyer les écogestes semés"}
-        </Button>
-      </div>
-      <div className="mt-4">
-        <Button
-          onClick={() => {
-            navigate("/");
-          }}
-          variant="outline"
-        >
-          Retour à l'accueil
-        </Button>
-      </div>
-      {message && <p className="mt-4 text-lg font-semibold">{message}</p>}
-    </main>
+    <Protected>
+      {() => (
+        <main className="flex flex-col items-center justify-center gap-4 my-5 text-white">
+          <TypographyH1>Ici on sème des écogestes !</TypographyH1>
+          <img
+            src="/xmas-gift.png"
+            alt="Crew Planet - Illustration challenge écologique"
+          />
+          <div className="flex gap-4 mt-4">
+            <Button
+              onClick={handleSeedEcogestures}
+              variant="default"
+              disabled={loading || !!ecogesture}
+            >
+              {loading
+                ? "Seeding en cours..."
+                : "Lancer le seeding des écogestes"}
+            </Button>
+            <Button
+              onClick={handleCleanEcogestures}
+              variant="destructive"
+              disabled={cleaning || !ecogesture}
+            >
+              {loading
+                ? "Nettoyage en cours..."
+                : "Nettoyer les écogestes semés"}
+            </Button>
+          </div>
+          <div className="mt-4">
+            <Button
+              onClick={() => {
+                navigate("/");
+              }}
+              variant="outline"
+            >
+              Retour à l'accueil
+            </Button>
+          </div>
+          {message && <p className="mt-4 text-lg font-semibold">{message}</p>}
+        </main>
+      )}
+    </Protected>
   );
 };
 

@@ -20,6 +20,12 @@ import {
   validate,
 } from "class-validator";
 import { plainToClass } from "class-transformer";
+import {
+  deleteImageFromCloudinary,
+  extractPublicIdFromUrl,
+  isCloudinaryUrl,
+  isDefaultAvatar,
+} from "../lib/cloudinary";
 
 @InputType()
 class NewUserInput {
@@ -49,10 +55,20 @@ class NewUserInput {
   password: string;
 }
 
+@InputType()
+class UpdateProfilePictureInput {
+  @Field()
+  @IsNotEmpty({ message: "L'URL de l'image ne peut pas être vide" })
+  @Matches(/^https?:\/\/.+/, {
+    message: "L'URL de l'image doit commencer par http:// ou https://",
+  })
+  pictureUrl: string;
+}
+
 function setCookie(ctx: Context, token: string) {
   ctx.res.setHeader(
     "Set-Cookie",
-    `eco-auth=${token};secure;httpOnly;SameSite=Strict;`
+    `eco-auth=${token};secure;httpOnly;SameSite=Strict;`,
   );
 }
 
@@ -105,17 +121,20 @@ export default class UserResolver {
 
     const hashedPassword = await argon2.hash(data.password);
     const username = data.email.split("@")[0];
-    const user = User.create({ ...data, hashedPassword, username });
+    const pictureUrl = `https://ui-avatars.com/api/?name=${username}`;
+
+    const user = User.create({ ...data, hashedPassword, username, pictureUrl });
     await user.save();
+
     const payload = createUserPayload(user);
     const token = createJwt(payload);
     setCookie(ctx, token);
 
-    //TODO : add avatar
     const publicProfile = {
       id: user.id,
       email: user.email,
       roles: user.roles,
+      pictureUrl: user.pictureUrl,
       username,
     };
 
@@ -139,16 +158,70 @@ export default class UserResolver {
       email: user.email,
       roles: user.roles,
       username: user.username,
+      pictureUrl: user.pictureUrl,
     };
 
     return JSON.stringify(publicProfile);
   }
 
-  //TODO manual test with front
   @Mutation(() => String)
   async logout(@Ctx() ctx: Context) {
     setCookie(ctx, "");
 
     return `Logged out`;
+  }
+
+  @Mutation(() => User)
+  @Authorized()
+  async updateProfilePicture(
+    @Arg("data") data: UpdateProfilePictureInput,
+    @Ctx() ctx: Context,
+  ) {
+    if (!ctx.user) throw new Error("Utilisateur non authentifié");
+
+    const input = plainToClass(UpdateProfilePictureInput, data);
+    const errors = await validate(input);
+
+    if (errors.length > 0) {
+      const messages = errors
+        .map((error) => Object.values(error.constraints || {}))
+        .flat();
+      throw new Error(messages.join(", "));
+    }
+
+    const user = await User.findOneBy({ id: ctx.user.id });
+    if (!user) throw new Error("Utilisateur non trouvé");
+
+    const oldPictureUrl = user.pictureUrl;
+
+    // If the old picture is not a default avatar, delete it from Cloudinary
+    if (
+      oldPictureUrl &&
+      isCloudinaryUrl(oldPictureUrl) &&
+      !isDefaultAvatar(oldPictureUrl)
+    ) {
+      const publicId = extractPublicIdFromUrl(oldPictureUrl);
+
+      if (publicId) {
+        console.info(
+          `Deleting old profile picture with public_id: ${publicId}`,
+        );
+
+        const deleted = await deleteImageFromCloudinary(publicId);
+
+        if (!deleted) {
+          console.warn(
+            `Failed to delete old profile picture with public_id: ${publicId}`,
+          );
+        }
+      } else {
+        console.warn(`Could not extract public_id from URL: ${oldPictureUrl}`);
+      }
+    }
+
+    user.pictureUrl = data.pictureUrl;
+    await user.save();
+
+    return user;
   }
 }

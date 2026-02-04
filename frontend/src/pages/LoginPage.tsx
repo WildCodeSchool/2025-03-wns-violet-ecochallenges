@@ -51,6 +51,7 @@ export const LoginPage = () => {
         id: profile.id,
         email: profile.email,
         username: profile.username,
+        pictureUrl: profile.pictureUrl,
       });
 
       navigate("/dashboard");

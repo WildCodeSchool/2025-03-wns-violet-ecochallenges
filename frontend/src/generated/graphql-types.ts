@@ -78,6 +78,7 @@ export type Mutation = {
   logout: Scalars['String']['output'];
   seedEcogestures: Array<Ecogesture>;
   signup: Scalars['String']['output'];
+  updateProfilePicture: User;
   validateEcogesture: UserEcogesture;
 };
 
@@ -94,6 +95,11 @@ export type MutationLoginArgs = {
 
 export type MutationSignupArgs = {
   data: NewUserInput;
+};
+
+
+export type MutationUpdateProfilePictureArgs = {
+  data: UpdateProfilePictureInput;
 };
 
 
@@ -149,12 +155,17 @@ export enum Roles {
   User = 'USER'
 }
 
+export type UpdateProfilePictureInput = {
+  pictureUrl: Scalars['String']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   challengesCreated?: Maybe<Array<Challenge>>;
   email: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   participations?: Maybe<Array<UserChallenge>>;
+  pictureUrl: Scalars['String']['output'];
   roles: Array<Roles>;
   username: Scalars['String']['output'];
 };
@@ -211,6 +222,13 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = { __typename?: 'Mutation', signup: string };
 
+export type UpdateProfilePictureMutationVariables = Exact<{
+  data: UpdateProfilePictureInput;
+}>;
+
+
+export type UpdateProfilePictureMutation = { __typename?: 'Mutation', updateProfilePicture: { __typename?: 'User', id: number, username: string, email: string, pictureUrl: string } };
+
 export type GetMyChallengesQueryVariables = Exact<{
   input?: InputMaybe<GetMyChallengesInput>;
 }>;
@@ -228,7 +246,7 @@ export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __ty
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles> } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles>, pictureUrl: string } };
 
 export type GetValidatedEcogesturesQueryVariables = Exact<{
   input: PaginationInput;
@@ -406,6 +424,42 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export const UpdateProfilePictureDocument = gql`
+    mutation UpdateProfilePicture($data: UpdateProfilePictureInput!) {
+  updateProfilePicture(data: $data) {
+    id
+    username
+    email
+    pictureUrl
+  }
+}
+    `;
+export type UpdateProfilePictureMutationFn = Apollo.MutationFunction<UpdateProfilePictureMutation, UpdateProfilePictureMutationVariables>;
+
+/**
+ * __useUpdateProfilePictureMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfilePictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfilePictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfilePictureMutation, { data, loading, error }] = useUpdateProfilePictureMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateProfilePictureMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfilePictureMutation, UpdateProfilePictureMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProfilePictureMutation, UpdateProfilePictureMutationVariables>(UpdateProfilePictureDocument, options);
+      }
+export type UpdateProfilePictureMutationHookResult = ReturnType<typeof useUpdateProfilePictureMutation>;
+export type UpdateProfilePictureMutationResult = Apollo.MutationResult<UpdateProfilePictureMutation>;
+export type UpdateProfilePictureMutationOptions = Apollo.BaseMutationOptions<UpdateProfilePictureMutation, UpdateProfilePictureMutationVariables>;
 export const GetMyChallengesDocument = gql`
     query GetMyChallenges($input: GetMyChallengesInput) {
   getMyChallenges(input: $input) {
@@ -512,6 +566,7 @@ export const GetCurrentUserDocument = gql`
     email
     username
     roles
+    pictureUrl
   }
 }
     `;
