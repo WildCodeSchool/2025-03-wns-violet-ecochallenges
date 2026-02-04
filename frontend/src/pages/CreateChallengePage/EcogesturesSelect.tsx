@@ -6,13 +6,17 @@ import { Trash2, ArrowLeft, ArrowRight, Check, ChevronsUpDown } from "lucide-rea
 import { cn } from "@/lib/utils";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "../../components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
+
+// Style spécifique pour ce composant pour forcer le fond blanc
+const ecogestureDetailStyle = {
+  backgroundColor: 'white !important',
+  borderColor: '#e5e7eb !important'
+};
 
 function EcogesturesSelect({
   value,
@@ -56,9 +60,7 @@ function EcogesturesSelect({
 
   return (
     <div className="flex flex-col md:flex-row gap-4 w-full md:max-w-4xl md:mx-auto">
-      {/* Sélecteur et détail */}
       <div className="w-full md:w-1/2">
-        {/* Combobox shadcn pour sélectionner un écogeste */}
         <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
           <PopoverTrigger asChild>
             <Button
@@ -78,7 +80,6 @@ function EcogesturesSelect({
           <PopoverContent className="w-full min-w-[200px] p-0">
             <Command>
               <CommandList>
-                {/* <CommandEmpty>Aucun écogeste trouvé.</CommandEmpty> */}
                 <CommandGroup>
                   {ecogestures.map((eco) => (
                     <CommandItem
@@ -108,7 +109,7 @@ function EcogesturesSelect({
 
         {/* Détail de l'écogeste sélectionné */}
         {selectedEco && (
-          <div className="border rounded bg-gray-50 p-3 mb-2 w-full max-w-full break-words relative">
+          <div className="border rounded bg-white p-3 mb-2 w-full max-w-full break-words relative ecogesture-detail-card" style={ecogestureDetailStyle}>
             {/* Flèches de navigation */}
             <button
               type="button"
@@ -154,12 +155,12 @@ function EcogesturesSelect({
       </div>
 
       {/* Liste des écogestes sélectionnés */}
-      <div className="w-full md:w-1/2">
-        <div className="w-full p-3 bg-white border rounded-lg shadow-sm">
+      <div className="w-full md:w-1/2 ">
+        <div className="w-full mb-2 p-3 bg-white border rounded-lg shadow-sm" style={ecogestureDetailStyle}>
           <div className="text-center font-semibold text-black">Votre sélection</div>
         </div>
         {value.length > 0 && (
-          <ul className="flex flex-col gap-2 bg-white p-2 rounded">
+          <ul className="flex flex-col gap-2 bg-white p-2 rounded" style={ecogestureDetailStyle}>
             {(showAll ? value : value.slice(0, maxSelectionToShow)).map((ecoId) => {
               const eco = ecogestures.find((e) => e.id.toString() === ecoId);
               if (!eco) return null;
