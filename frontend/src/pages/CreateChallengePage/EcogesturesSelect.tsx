@@ -12,7 +12,6 @@ import {
 } from "../../components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
 
-// Style spécifique pour ce composant pour forcer le fond blanc
 const ecogestureDetailStyle = {
   backgroundColor: 'white !important',
   borderColor: '#e5e7eb !important'
@@ -38,7 +37,6 @@ function EcogesturesSelect({
   const ecogestures = data?.getEcogestures?.ecogestures ?? [];
   const selectedEco = ecogestures.find((eco) => eco.id.toString() === selectedId);
 
-  // Navigation entre écogestes
   const currentIndex = ecogestures.findIndex((eco) => eco.id.toString() === selectedId);
   const canGoPrev = currentIndex > 0;
   const canGoNext = currentIndex >= 0 && currentIndex < ecogestures.length - 1;

@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { X, User, Upload } from "lucide-react";
 import { CalendarPopover } from "@/components/ui/calendar";
 import { type DateRange } from "react-day-picker";
@@ -31,7 +30,7 @@ function NewChallenge({
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [participants, setParticipants] = useState<string[]>([]);
   const [participantInput, setParticipantInput] = useState("");
-  const [createChallenge, { loading, error, data }] = useMutation(CREATE_CHALLENGE);
+  const [createChallenge, { loading }] = useMutation(CREATE_CHALLENGE);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -78,10 +77,7 @@ function NewChallenge({
       setParticipants([]);
       navigate("/dashboard");
     } catch (err: any) {
-      // console.error("Erreur complète:", err); 
-      // if (err.message) {
-      //   console.error("Message d'erreur:", err.message);
-      // }
+      console.error("Error:", err); 
     }
   };
 
@@ -229,7 +225,13 @@ function NewChallenge({
           </CardContent>
         </Card>
         <div className="flex justify-end gap-4 mt-2">
-          <Button type="submit" disabled={loading} size="lg">
+          <Button 
+            type="submit" 
+            disabled={loading} 
+            size="lg"
+            onClick={() => {
+            navigate("/dashboard");
+            }}>
             {loading ? "Création en cours..." : "Créer le challenge"}
           </Button>
         </div>
