@@ -19,7 +19,7 @@ const DesktopMenu = () => {
         {isConnected ? (
           <>
             <NavigationMenuItem>
-              <NavigationMenuLink>
+              <NavigationMenuLink asChild>
                 <NavLink
                   to="/dashboard"
                   className={({ isActive }) =>
@@ -41,7 +41,7 @@ const DesktopMenu = () => {
         ) : (
           <>
             <NavigationMenuItem>
-              <NavigationMenuLink>
+              <NavigationMenuLink asChild>
                 <NavLink
                   to="/signup"
                   className={({ isActive }) =>
@@ -53,7 +53,7 @@ const DesktopMenu = () => {
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink>
+              <NavigationMenuLink asChild>
                 <NavLink
                   to="/signin"
                   className={({ isActive }) =>
