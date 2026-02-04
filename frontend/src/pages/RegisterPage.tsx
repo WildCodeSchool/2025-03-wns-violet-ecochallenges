@@ -78,7 +78,7 @@ export default function RegisterPage() {
     <li
       className={cn(
         "flex items-center gap-2 text-sm",
-        ok ? "text-green-600" : "text-gray-500"
+        ok ? "text-green-600" : "text-gray-500",
       )}
     >
       <span aria-hidden>{ok ? "✓" : "○"}</span>
@@ -94,7 +94,7 @@ export default function RegisterPage() {
             onSubmit={handleSubmit}
             className={cn(
               "bg-white",
-              "w-full max-w-2xl mx-auto flex flex-col items-start gap-y-6 rounded-lg border px-10 py-12 shadow-md"
+              "w-full max-w-2xl mx-auto flex flex-col items-start gap-y-6 rounded-lg border px-10 py-12 shadow-md",
             )}
           >
             <TypographyH1 className="text-2xl font-semibold w-full text-center">
@@ -122,7 +122,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={cn(
-                  "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
+                  "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary",
                 )}
                 required
                 aria-invalid={email.length > 0 ? !emailValid : undefined}
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={cn(
-                  "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
+                  "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary",
                 )}
                 required
                 aria-describedby="password-hint"
@@ -161,7 +161,7 @@ export default function RegisterPage() {
                   {ruleItem(minLength, "Au moins 8 caractères")}
                   {ruleItem(
                     hasSpecialChar,
-                    "Au moins 1 caractère spécial (ex : ! @ # $ %)"
+                    "Au moins 1 caractère spécial (ex : ! @ # $ %)",
                   )}
                   {ruleItem(hasUpper, "Au moins 1 lettre majuscule")}
                   {ruleItem(hasLower, "Au moins 1 lettre minuscule")}
@@ -175,7 +175,9 @@ export default function RegisterPage() {
                 className="text-destructive text-sm w-full"
                 role="alert"
                 aria-live="assertive"
-              ></p>
+              >
+                {localError}
+              </p>
             )}
 
             <Button

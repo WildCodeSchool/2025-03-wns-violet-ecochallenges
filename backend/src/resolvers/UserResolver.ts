@@ -119,6 +119,9 @@ export default class UserResolver {
       throw new Error(messages.join(", "));
     }
 
+    const existingUser = await User.findOneBy({ email: data.email });
+    if (existingUser) throw new Error("Email ou mot de passe invalide.");
+
     const hashedPassword = await argon2.hash(data.password);
     const username = data.email.split("@")[0];
     const pictureUrl = `https://ui-avatars.com/api/?name=${username}`;
