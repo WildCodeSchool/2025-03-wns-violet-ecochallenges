@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
 import { TypographyH1 } from "@/components/ui/typographyH1";
-
-type Profile = { email: string; roles: string[]; username: string } | null;
+import { useAuthStore } from "@/stores/authStore";
+import type { Profile } from "@/types/User";
 
 export default function RegisterPage() {
   const [email, setEmail] = React.useState("");
@@ -24,6 +24,8 @@ export default function RegisterPage() {
   const [signup, { loading }] = useMutation(SIGNUP_MUTATION);
   const formValid = emailValid && passwordValid && !loading;
   const navigate = useNavigate();
+
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,6 +52,14 @@ export default function RegisterPage() {
       let profile: Profile | null = null;
       try {
         profile = payload ? JSON.parse(payload) : null;
+        if (profile) {
+          setUser({
+            id: profile.id,
+            email: profile.email,
+            username: profile.username,
+            pictureUrl: profile.pictureUrl,
+          });
+        }
       } catch {
         setLocalError("Format de réponse invalide");
         return;
@@ -68,7 +78,7 @@ export default function RegisterPage() {
     <li
       className={cn(
         "flex items-center gap-2 text-sm",
-        ok ? "text-green-600" : "text-gray-500"
+        ok ? "text-green-600" : "text-gray-500",
       )}
     >
       <span aria-hidden>{ok ? "✓" : "○"}</span>
@@ -77,14 +87,14 @@ export default function RegisterPage() {
   );
 
   return (
-    <div className={`flex items-center justify-center mt-10 mb-10`}>
+    <main className={`flex items-center justify-center mt-10 mb-10`}>
       <section className="flex items-center justify-center">
         <div className="w-full px-4">
           <form
             onSubmit={handleSubmit}
             className={cn(
               "bg-white",
-              "w-full max-w-2xl mx-auto flex flex-col items-start gap-y-6 rounded-lg border px-10 py-12 shadow-md"
+              "w-full max-w-2xl mx-auto flex flex-col items-start gap-y-6 rounded-lg border px-10 py-12 shadow-md",
             )}
           >
             <TypographyH1 className="text-2xl font-semibold w-full text-center">
@@ -112,7 +122,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={cn(
-                  "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
+                  "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary",
                 )}
                 required
                 aria-invalid={email.length > 0 ? !emailValid : undefined}
@@ -131,7 +141,7 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={cn(
-                  "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
+                  "block w-full rounded-md border px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary",
                 )}
                 required
                 aria-describedby="password-hint"
@@ -151,7 +161,7 @@ export default function RegisterPage() {
                   {ruleItem(minLength, "Au moins 8 caractères")}
                   {ruleItem(
                     hasSpecialChar,
-                    "Au moins 1 caractère spécial (ex : ! @ # $ %)"
+                    "Au moins 1 caractère spécial (ex : ! @ # $ %)",
                   )}
                   {ruleItem(hasUpper, "Au moins 1 lettre majuscule")}
                   {ruleItem(hasLower, "Au moins 1 lettre minuscule")}
@@ -165,7 +175,9 @@ export default function RegisterPage() {
                 className="text-destructive text-sm w-full"
                 role="alert"
                 aria-live="assertive"
-              ></p>
+              >
+                {localError}
+              </p>
             )}
 
             <Button
@@ -179,6 +191,6 @@ export default function RegisterPage() {
           </form>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

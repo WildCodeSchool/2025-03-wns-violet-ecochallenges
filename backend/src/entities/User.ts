@@ -1,5 +1,17 @@
 import { Field, ObjectType, registerEnumType } from "type-graphql";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  Relation,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { UserEcogesture } from "./UserEcogesture";
+import { Challenge } from "./Challenge";
+import { UserChallenge } from "./UserChallenge";
 
 export enum Role {
   USER = "USER",
@@ -18,8 +30,12 @@ export class User extends BaseEntity {
   id: number;
 
   @Column()
-  @Field() 
+  @Field()
   username: string;
+
+  @Column()
+  @Field()
+  pictureUrl: string;
 
   @Column({ unique: true })
   @Field()
@@ -31,4 +47,23 @@ export class User extends BaseEntity {
   @Column({ type: "enum", enum: Role, array: true, default: [Role.USER] })
   @Field(() => [Role])
   roles: Role[];
+
+  @OneToMany(() => UserEcogesture, (userEcogesture) => userEcogesture.user)
+  public UserEcogesture: UserEcogesture[];
+
+  @OneToMany(() => Challenge, (challenge) => challenge.createdBy)
+  @Field(() => [Challenge], { nullable: true })
+  challengesCreated?: Relation<Challenge[]>;
+
+  @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.user)
+  @Field(() => [UserChallenge], { nullable: true })
+  participations?: Relation<UserChallenge[]>;
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

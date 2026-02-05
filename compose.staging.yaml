@@ -1,7 +1,5 @@
 services:
   gateway-staging:
-    build:
-      context: .
     ports:
       - 8001:80
     image: nicolaschambondev/ecochallenge_gateway_staging

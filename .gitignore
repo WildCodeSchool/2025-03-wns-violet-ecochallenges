@@ -27,3 +27,6 @@ dist-ssr
 .env.prod 
 .env.staging
 .env
+
+.perso/*
+

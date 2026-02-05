@@ -5,8 +5,8 @@ import { useLoginMutation } from "@/generated/graphql-types";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { TypographyH1 } from "@/components/ui/typographyH1";
-
-// TODO : Supprimer les console.log lorsque dashboard sera créée, ils ne sont là que pour tester la connexion pour le moment.
+import { useAuthStore } from "@/stores/authStore";
+import type { Profile } from "@/types/User";
 
 export const LoginPage = () => {
   const [login] = useLoginMutation();
@@ -15,6 +15,8 @@ export const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,8 +34,26 @@ export const LoginPage = () => {
         throw new Error(" ❌ No token received");
       }
 
-      console.log(" ✅ Login successful:", data);
-      console.log("Email : ", email);
+      const payload = data?.login;
+      let profile: Profile | null = null;
+
+      try {
+        profile = payload ? JSON.parse(payload) : null;
+      } catch {
+        setErrorMessage("Format de réponse invalide");
+      }
+      if (!profile) {
+        setErrorMessage("Profil invalide");
+        return;
+      }
+
+      setUser({
+        id: profile.id,
+        email: profile.email,
+        username: profile.username,
+        pictureUrl: profile.pictureUrl,
+      });
+
       navigate("/dashboard");
     } catch (err) {
       if (err instanceof Error) {
@@ -46,7 +66,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <section className={`flex items-center justify-center my-6`}>
+    <main className={`flex items-center justify-center my-6`}>
       <div className="flex items-center justify-center">
         <div className="w-full px-4">
           <form
@@ -54,7 +74,7 @@ export const LoginPage = () => {
             className={cn(
               "max-w-2xl w-full bg-white rounded-lg border shadow-md",
               "mx-auto flex flex-col items-start",
-              "gap-y-6 px-10 py-12"
+              "gap-y-6 px-10 py-12",
             )}
           >
             <TypographyH1 className="text-2xl font-semibold w-full text-center">
@@ -71,8 +91,11 @@ export const LoginPage = () => {
             </div>
 
             <div className="w-full">
-              <label className="text-sm block mb-1">Email</label>
+              <label htmlFor="login-email" className="text-sm block mb-1">
+                Email
+              </label>
               <Input
+                id="login-email"
                 name="email"
                 type="email"
                 value={email}
@@ -81,14 +104,17 @@ export const LoginPage = () => {
                 className={cn(
                   "block w-full rounded-md border bg-transparent border-gray-300",
                   "px-3 py-2 text-sm",
-                  "focus:outline-none focus:ring-2 focus:ring-primary"
+                  "focus:outline-none focus:ring-2 focus:ring-primary",
                 )}
                 required
               />
             </div>
             <div className="w-full">
-              <label className="text-sm block mb-1">Mot de passe</label>
+              <label htmlFor="login-password" className="text-sm block mb-1">
+                Mot de passe
+              </label>
               <Input
+                id="login-password"
                 name="password"
                 type="password"
                 value={password}
@@ -97,14 +123,16 @@ export const LoginPage = () => {
                 className={cn(
                   "block w-full rounded-md border bg-transparent border-gray-300",
                   "px-3 py-2 text-sm",
-                  "focus:outline-none focus:ring-2 focus:ring-primary"
+                  "focus:outline-none focus:ring-2 focus:ring-primary",
                 )}
                 required
               />
             </div>
 
             {errorMessage && (
-              <p className="text-destructive text-sm">{errorMessage}</p>
+              <p className="text-destructive text-sm" role="alert">
+                {errorMessage}
+              </p>
             )}
 
             <Button
@@ -117,6 +145,6 @@ export const LoginPage = () => {
           </form>
         </div>
       </div>
-    </section>
+    </main>
   );
 };

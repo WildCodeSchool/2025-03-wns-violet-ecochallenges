@@ -9,11 +9,15 @@ import {
 import { DataSource } from "typeorm";
 import UserResolver from "../UserResolver";
 import { User, Role } from "../../entities/User";
+import { Challenge } from "../../entities/Challenge";
+import { UserChallenge } from "../../entities/UserChallenge";
 import { Context } from "../../types/Context";
 import {
   PostgreSqlContainer,
   StartedPostgreSqlContainer,
 } from "@testcontainers/postgresql";
+import { UserEcogesture } from "../../entities/UserEcogesture";
+import { Ecogesture } from "../../entities/Ecogesture";
 
 /**
  * UserResolver Integration Tests
@@ -61,7 +65,7 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
       username: container.getUsername(),
       password: container.getPassword(),
       database: container.getDatabase(),
-      entities: [User],
+      entities: [User, UserEcogesture, Ecogesture, Challenge, UserChallenge],
       synchronize: true,
       logging: false,
       dropSchema: true,
@@ -93,9 +97,36 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
 
   //clean between tests
   beforeEach(async () => {
-    await dataSource.getRepository(User).clear();
+    // Delete in dependency order to avoid FK constraint errors (TRUNCATE fails with FK)
+    await dataSource
+      .getRepository(UserEcogesture)
+      .createQueryBuilder()
+      .delete()
+      .where("1=1")
+      .execute();
+
+    await dataSource
+      .getRepository(Ecogesture)
+      .createQueryBuilder()
+      .delete()
+      .where("1=1")
+      .execute();
+
+    await dataSource
+      .getRepository(User)
+      .createQueryBuilder()
+      .delete()
+      .where("1=1")
+      .execute();
+
+    await dataSource
+      .getRepository(UserChallenge)
+      .createQueryBuilder()
+      .delete()
+      .where("1=1")
+      .execute();
     (mockContext.res.setHeader as jest.Mock).mockClear();
-  });
+  }, 10000);
 
   describe("signup", () => {
     it("should create a real user in PostgreSQL with hashed password", async () => {
@@ -264,11 +295,19 @@ describe("UserResolver - Integration Tests with PostgreSQL Container", () => {
         password: "CorrectPassword123!",
       };
 
-      const token = await resolver.login(loginData, mockContext);
+      const stringifiedProfile = await resolver.login(loginData, mockContext);
 
-      expect(token).toBeDefined();
-      expect(typeof token).toBe("string");
-      expect(token.split(".").length).toBe(3); // Format JWT: header.payload.signature
+      expect(stringifiedProfile).toBeDefined();
+      expect(typeof stringifiedProfile).toBe("string");
+
+      const profile = JSON.parse(stringifiedProfile);
+
+      expect(profile).toMatchObject({
+        email: "logintest@test.com",
+        username: "logintest",
+        roles: [Role.USER],
+      });
+      expect(profile.id).toBeDefined();
 
       expect(mockContext.res.setHeader).toHaveBeenCalledWith(
         "Set-Cookie",

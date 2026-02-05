@@ -183,4 +183,10 @@ export default class EcogestureResolver {
     const allEcogestures = await Ecogesture.find();
     return allEcogestures;
   }
+
+  @Mutation(() => Boolean)
+  async cleanEcogestures() {
+    await Ecogesture.clear();
+    return true;
+  }
 }

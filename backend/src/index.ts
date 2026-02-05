@@ -9,6 +9,7 @@ import EcogestureResolver from "./resolvers/EcogestureResolver";
 import * as jwt from "jsonwebtoken";
 import { authChecker } from "./lib/helpers/authChecker";
 import { UserPayload } from "./types/Context";
+import { UserEcogestureResolver } from "./resolvers/UserEcogestureResolver";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -18,7 +19,7 @@ const port = Number(process.env.API_PORT);
 async function startServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
-    resolvers: [UserResolver, EcogestureResolver, ChallengeResolver],
+    resolvers: [UserResolver, EcogestureResolver, ChallengeResolver, UserEcogestureResolver],
     validate: true,
     authChecker,
   });

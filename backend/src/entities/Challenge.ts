@@ -1,5 +1,20 @@
 import { Field, ObjectType } from "type-graphql";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  JoinTable,
+  Relation,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { User } from "./User";
+import { UserChallenge } from "./UserChallenge";
+import { Ecogesture } from "./Ecogesture";
 
 @Entity()
 @ObjectType()
@@ -23,4 +38,29 @@ export class Challenge extends BaseEntity {
   @Column()
   @Field()
   picture: string;
+
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  description: string;
+
+  @ManyToOne(() => User, (user) => user.challengesCreated)
+  @Field(() => User)
+  createdBy: User;
+
+  @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.challenge)
+  @Field(() => [UserChallenge])
+  participants: Relation<UserChallenge[]>;
+
+  @ManyToMany(() => Ecogesture, (ecogesture) => ecogesture.challenges)
+  @JoinTable()
+  @Field(() => [Ecogesture], { nullable: true })
+  ecogestures?: Ecogesture[];
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }
