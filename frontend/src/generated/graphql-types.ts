@@ -20,13 +20,17 @@ export type Scalars = {
 
 export type Challenge = {
   __typename?: 'Challenge';
+  createdAt: Scalars['DateTimeISO']['output'];
   createdBy: User;
+  description?: Maybe<Scalars['String']['output']>;
+  ecogestures?: Maybe<Array<Ecogesture>>;
   endingDate: Scalars['DateTimeISO']['output'];
   id: Scalars['Float']['output'];
   label: Scalars['String']['output'];
   participants: Array<UserChallenge>;
   picture: Scalars['String']['output'];
   startingDate: Scalars['DateTimeISO']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
 };
 
 /** Filter used on Challenge */
@@ -44,6 +48,8 @@ export type ChallengeListResponse = {
 
 export type Ecogesture = {
   __typename?: 'Ecogesture';
+  challenges?: Maybe<Array<Challenge>>;
+  createdAt: Scalars['DateTimeISO']['output'];
   description: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   label: Scalars['String']['output'];
@@ -51,6 +57,7 @@ export type Ecogesture = {
   level2Expectation: Scalars['String']['output'];
   level3Expectation: Scalars['String']['output'];
   pictureUrl: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
 };
 
 export type EcogestureListResponse = {
@@ -109,6 +116,8 @@ export type MutationValidateEcogestureArgs = {
 };
 
 export type NewChallengeInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  ecogestureIds?: InputMaybe<Array<Scalars['Float']['input']>>;
   endingDate: Scalars['DateTimeISO']['input'];
   label: Scalars['String']['input'];
   picture: Scalars['String']['input'];
@@ -162,27 +171,33 @@ export type UpdateProfilePictureInput = {
 export type User = {
   __typename?: 'User';
   challengesCreated?: Maybe<Array<Challenge>>;
+  createdAt: Scalars['DateTimeISO']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   participations?: Maybe<Array<UserChallenge>>;
   pictureUrl: Scalars['String']['output'];
   roles: Array<Roles>;
+  updatedAt: Scalars['DateTimeISO']['output'];
   username: Scalars['String']['output'];
 };
 
 export type UserChallenge = {
   __typename?: 'UserChallenge';
   challenge: Challenge;
+  createdAt: Scalars['DateTimeISO']['output'];
   hasAccepted: Scalars['Boolean']['output'];
   id: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
   user: User;
 };
 
 export type UserEcogesture = {
   __typename?: 'UserEcogesture';
+  createdAt: Scalars['DateTimeISO']['output'];
   ecogesture: Ecogesture;
   id: Scalars['Float']['output'];
   level_validated: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
   user: User;
   validated_at: Scalars['DateTimeISO']['output'];
 };
@@ -192,6 +207,13 @@ export type ValidatedEcogesturesResponse = {
   totalCount: Scalars['Int']['output'];
   userEcogestures: Array<UserEcogesture>;
 };
+
+export type CreateChallengeMutationVariables = Exact<{
+  data: NewChallengeInput;
+}>;
+
+
+export type CreateChallengeMutation = { __typename?: 'Mutation', createChallenge: { __typename?: 'Challenge', id: number, label: string, description?: string | null, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, ecogestures?: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> | null } };
 
 export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -241,7 +263,7 @@ export type GetEcogesturesQueryVariables = Exact<{
 }>;
 
 
-export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> } };
+export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> } };
 
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -264,6 +286,53 @@ export type ValidateEcogestureMutationVariables = Exact<{
 export type ValidateEcogestureMutation = { __typename?: 'Mutation', validateEcogesture: { __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } } };
 
 
+export const CreateChallengeDocument = gql`
+    mutation CreateChallenge($data: NewChallengeInput!) {
+  createChallenge(data: $data) {
+    id
+    label
+    description
+    startingDate
+    endingDate
+    picture
+    createdBy {
+      id
+      username
+    }
+    ecogestures {
+      id
+      label
+      pictureUrl
+    }
+  }
+}
+    `;
+export type CreateChallengeMutationFn = Apollo.MutationFunction<CreateChallengeMutation, CreateChallengeMutationVariables>;
+
+/**
+ * __useCreateChallengeMutation__
+ *
+ * To run a mutation, you first call `useCreateChallengeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChallengeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createChallengeMutation, { data, loading, error }] = useCreateChallengeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateChallengeMutation(baseOptions?: Apollo.MutationHookOptions<CreateChallengeMutation, CreateChallengeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateChallengeMutation, CreateChallengeMutationVariables>(CreateChallengeDocument, options);
+      }
+export type CreateChallengeMutationHookResult = ReturnType<typeof useCreateChallengeMutation>;
+export type CreateChallengeMutationResult = Apollo.MutationResult<CreateChallengeMutation>;
+export type CreateChallengeMutationOptions = Apollo.BaseMutationOptions<CreateChallengeMutation, CreateChallengeMutationVariables>;
 export const SeedEcogesturesDocument = gql`
     mutation SeedEcogestures {
   seedEcogestures {
@@ -521,7 +590,11 @@ export const GetEcogesturesDocument = gql`
     ecogestures {
       id
       label
+      description
       pictureUrl
+      level1Expectation
+      level2Expectation
+      level3Expectation
     }
   }
 }
