@@ -30,4 +30,8 @@ jobs:
           tags: nicolaschambondev/ecochallenge_gateway_prod:latest
           platforms: linux/amd64,linux/arm64
           file: ./gateway/Dockerfile.prod
+          build-args: |
+            VITE_API_URL_FROM_CLIENT=${{ secrets.VITE_API_URL_FROM_CLIENT }}
+            VITE_CLOUNDINARY_CLOUD_NAME=${{ secrets.VITE_CLOUNDINARY_CLOUD_NAME }}
+            VITE_CLOUNDINARY_UPLOAD_PRESET=${{ secrets.VITE_CLOUNDINARY_UPLOAD_PRESET }}
         name: Build and push
