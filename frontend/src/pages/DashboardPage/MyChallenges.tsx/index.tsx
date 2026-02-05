@@ -12,10 +12,9 @@ import type { ProfileLight } from "@/types/User";
 
 interface Props {
   user: ProfileLight;
-  loading: boolean;
 }
 
-const MyChallenges = ({ user, loading }: Props) => {
+const MyChallenges = ({ user }: Props) => {
   const [filter, setFilter] = useState(ChallengeFilter.InProgress);
   const { data: myChallengesData, loading: myChallengesLoading } =
     useGetMyChallengesQuery({
@@ -26,7 +25,7 @@ const MyChallenges = ({ user, loading }: Props) => {
       },
     });
 
-  if (myChallengesLoading || loading) {
+  if (myChallengesLoading) {
     return <Spinner />;
   }
 

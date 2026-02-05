@@ -12,6 +12,7 @@ import RegisterPage from "./pages/RegisterPage.tsx";
 import Error404 from "./pages/Error404.tsx";
 import DashboardPage from "./pages/DashboardPage/index.tsx";
 import XmasGiftPage from "./pages/XmasGiftPage.tsx";
+import ProfilePage from "./pages/ProfilePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/signin",
         element: <LoginPage />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
       },
       {
         path: "/dashboard",

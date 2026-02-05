@@ -2,12 +2,12 @@ import { Link } from "react-router";
 import {
   NavigationMenuItem,
   NavigationMenuLink,
-} from "../../../ui/navigation-menu";
-import { TypographyP } from "../../../ui/typographyP";
-import { cn } from "../../../../lib/utils";
+} from "@/components/ui/navigation-menu";
+import { TypographyP } from "@/components/ui/typographyP";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-const MobileMenuLink = ({
+const MenuLink = ({
   to,
   children,
   Icon,
@@ -49,4 +49,4 @@ const MobileMenuLink = ({
   );
 };
 
-export default MobileMenuLink;
+export default MenuLink;
