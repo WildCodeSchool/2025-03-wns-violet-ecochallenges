@@ -67,6 +67,7 @@ export function CommandItem({
   ...props
 }: Omit<React.ComponentProps<"div">, "onSelect"> & {
   onSelect?: (value: string | undefined) => void;
+  value?: string;
 }) {
   return (
     <div
