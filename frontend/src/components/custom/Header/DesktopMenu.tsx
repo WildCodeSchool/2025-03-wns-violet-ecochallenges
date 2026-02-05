@@ -29,7 +29,7 @@ const DesktopMenu = () => {
 
   useOnClickOutside(
     [userMenuRef, userMenuCardRef] as RefObject<HTMLElement>[],
-    () => setIsUserMenuOpen(false)
+    () => setIsUserMenuOpen(false),
   );
 
   return (
@@ -50,7 +50,7 @@ const DesktopMenu = () => {
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink>
+              <NavigationMenuLink asChild>
                 <NavLink
                   to="/dashboard"
                   className={({ isActive }) =>
@@ -92,7 +92,7 @@ const DesktopMenu = () => {
                 "transform origin-top",
                 isUserMenuOpen
                   ? "opacity-100 scale-y-100 translate-y-0"
-                  : "opacity-0 scale-y-0 -translate-y-2"
+                  : "opacity-0 scale-y-0 -translate-y-2",
               )}
             >
               <NavigationMenu className="text-background">
