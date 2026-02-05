@@ -62,7 +62,7 @@ test.describe("Login Accessibility", () => {
 
     await page.keyboard.press("Enter");
 
-    // Verify that submission took place
-    await page.waitForTimeout(1000);
+    // Verify that submission took place by checking for redirection to dashboard
+    await expect(page).not.toHaveURL("/dashboard");
   });
 });

@@ -92,7 +92,6 @@ test.describe("Register Flow", () => {
     // Wait for redirection to dashboard
     await expect(page).toHaveURL("/dashboard", { timeout: 30000 });
 
-    // Disconnect by navigating to signup page
     await page.goto("/signup");
 
     // Now, try to create the same account again

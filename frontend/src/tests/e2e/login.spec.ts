@@ -57,7 +57,7 @@ test.describe("Login Flow", () => {
     await expect(signupButton).toBeEnabled({ timeout: 5000 });
     await page.click('button[type="submit"]');
 
-    await page.waitForTimeout(2000);
+    await expect(page).toHaveURL("/dashboard");
 
     // Step 2 : Go to login page
     await page.goto("/signin");
