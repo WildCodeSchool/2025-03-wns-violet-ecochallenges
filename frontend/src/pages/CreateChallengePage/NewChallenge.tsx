@@ -171,7 +171,6 @@ function NewChallenge({
                   name="description"
                   value={form.description}
                   onChange={handleChange}
-                  required
                   placeholder="Décrivez votre challenge..."
                   className="bg-white text-black min-h-[100px] px-3 py-1"
                 />
