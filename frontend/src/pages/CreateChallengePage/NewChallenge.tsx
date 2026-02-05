@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
-import EcogesturesSelect from "@/pages/CreateChallengepage/EcogesturesSelect";
+import EcogesturesSelect from "@/pages/CreateChallengePage/EcogesturesSelect";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,7 @@ function NewChallenge({
   const [participantInput, setParticipantInput] = useState("");
   const [createChallenge, { loading }] = useMutation(CREATE_CHALLENGE);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
  
@@ -71,7 +71,7 @@ function NewChallenge({
     };
 
     try {
-      const result = await createChallenge({ variables });
+      await createChallenge({ variables });
       setForm({ label: "", description: "", startingDate: "", endingDate: "", picture: "" });
       setSelectedEcogestures([]);
       setParticipants([]);
@@ -228,10 +228,7 @@ function NewChallenge({
           <Button 
             type="submit" 
             disabled={loading} 
-            size="lg"
-            onClick={() => {
-            navigate("/dashboard");
-            }}>
+            size="lg">
             {loading ? "Création en cours..." : "Créer le challenge"}
           </Button>
         </div>

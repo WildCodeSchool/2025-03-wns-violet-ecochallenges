@@ -10,6 +10,7 @@ import {
   registerEnumType,
   Resolver,
 } from "type-graphql";
+import { In } from "typeorm"; 
 import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
 import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
@@ -25,6 +26,7 @@ export class NewChallengeInput {
   label: string;
 
   @Field({ nullable: true })
+  @IsOptional 
   description: string;
 
   @Field()
@@ -136,15 +138,6 @@ export default class ChallengeResolver {
       throw new Error("Utilisateur non authentifié");
     }
 
-    // ✅ AJOUTER CES LOGS
-    console.log("=== DATA REÇUE PAR LE RESOLVER ===");
-    console.log("Label:", data.label);
-    console.log("Description:", data.description);
-    console.log("Description type:", typeof data.description);
-    console.log("Description is undefined?", data.description === undefined);
-    console.log("Description is null?", data.description === null);
-    console.log("Full data:", JSON.stringify(data, null, 2));
-
     const input = plainToClass(NewChallengeInput, data);
 
     const errors = await validate(input);
@@ -160,17 +153,15 @@ export default class ChallengeResolver {
     // Récupère les écogestes si des IDs sont fournis
     let ecogestures: Ecogesture[] = [];
     if (data.ecogestureIds && data.ecogestureIds.length > 0) {
-      ecogestures = await Ecogesture.findByIds(data.ecogestureIds);
+      ecogestures = await Ecogesture.findBy({ id: In(data.ecogestureIds) });
       
+      const uniqueEcogestureIds = Array.from(new Set(data.ecogestureIds));
+      ecogestures = await Ecogesture.findByIds(uniqueEcogestureIds);
       // Vérifie que tous les IDs existent
-      if (ecogestures.length !== data.ecogestureIds.length) {
+      if (ecogestures.length !== uniqueEcogestureIds.length) {
         throw new Error("Un ou plusieurs écogestes n'existent pas");
       }
     }
-
-    // ✅ AJOUTER CE LOG AVANT LA CRÉATION
-    console.log("=== AVANT CRÉATION ===");
-    console.log("Description à sauvegarder:", data.description);
 
     const challenge = Challenge.create({
       label: data.label,
@@ -183,15 +174,7 @@ export default class ChallengeResolver {
       //TODO add participants
     });
 
-    // ✅ AJOUTER CE LOG APRÈS LA CRÉATION
-    console.log("=== APRÈS CRÉATION (avant save) ===");
-    console.log("Challenge.description:", challenge.description);
-
     await challenge.save();
-
-    // ✅ AJOUTER CE LOG APRÈS SAUVEGARDE
-    console.log("=== APRÈS SAUVEGARDE ===");
-    console.log("Challenge.description:", challenge.description);
     
     return challenge;
   }
