@@ -26,7 +26,6 @@ export class NewChallengeInput {
   label: string;
 
   @Field({ nullable: true })
-  @IsOptional 
   description: string;
 
   @Field()
