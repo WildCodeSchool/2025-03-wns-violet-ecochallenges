@@ -96,7 +96,7 @@ function EcogesturesSelect({
                     <CommandItem
                       key={eco.id}
                       value={eco.id.toString()}
-                      onSelect={(currentValue: string) => {
+                      onSelect={(currentValue: string | undefined) => {
                         if (currentValue) {
                           setSelectedId(currentValue);
                           setOpenCombobox(false);
