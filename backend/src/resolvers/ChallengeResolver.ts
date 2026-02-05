@@ -41,7 +41,6 @@ export class NewChallengeInput {
   @Field()
   picture: string;
 
-
   @Field(() => [Number], { nullable: true })
   ecogestureIds?: number[];
 }
