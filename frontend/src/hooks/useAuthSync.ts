@@ -16,6 +16,7 @@ export const useAuthSync = () => {
           id: data?.getCurrentUser?.id,
           email: data?.getCurrentUser?.email,
           username: data?.getCurrentUser?.username,
+          pictureUrl: data?.getCurrentUser?.pictureUrl,
         });
       }
     }
