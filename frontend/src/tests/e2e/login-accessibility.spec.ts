@@ -62,7 +62,7 @@ test.describe("Login Accessibility", () => {
 
     await page.keyboard.press("Enter");
 
-    // Verify that submission took place by checking for redirection to dashboard
+    // Shouldn't redirect to dashboard because of the weak password
     await expect(page).not.toHaveURL("/dashboard");
   });
 });
