@@ -42,13 +42,9 @@ function NewChallenge({
     refetchQueries: [
       {
         query: GET_MY_CHALLENGES,
-        variables: {
-          input: {
-            filter: ChallengeFilter.InProgress,
-          },
-        },
       },
     ],
+    awaitRefetchQueries: true,
   });
 
   const handleChange = (
