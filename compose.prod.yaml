@@ -8,6 +8,7 @@ services:
         condition: service_healthy
     environment:
       API_PORT: ${API_PORT}
+      BACKEND_SERVICE: backend-prod
 
   backend-prod:
     image: nicolaschambondev/ecochallenge_backend_prod
