@@ -4,12 +4,17 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  ManyToMany,
   ManyToOne,
   OneToMany,
+  JoinTable,
   Relation,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User";
 import { UserChallenge } from "./UserChallenge";
+import { Ecogesture } from "./Ecogesture";
 
 @Entity()
 @ObjectType()
@@ -34,6 +39,10 @@ export class Challenge extends BaseEntity {
   @Field()
   picture: string;
 
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  description: string;
+
   @ManyToOne(() => User, (user) => user.challengesCreated)
   @Field(() => User)
   createdBy: User;
@@ -41,4 +50,17 @@ export class Challenge extends BaseEntity {
   @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.challenge)
   @Field(() => [UserChallenge])
   participants: Relation<UserChallenge[]>;
+
+  @ManyToMany(() => Ecogesture, (ecogesture) => ecogesture.challenges)
+  @JoinTable()
+  @Field(() => [Ecogesture], { nullable: true })
+  ecogestures?: Ecogesture[];
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

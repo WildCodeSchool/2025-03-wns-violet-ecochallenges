@@ -51,6 +51,7 @@ export const LoginPage = () => {
         id: profile.id,
         email: profile.email,
         username: profile.username,
+        pictureUrl: profile.pictureUrl,
       });
 
       navigate("/dashboard");
@@ -65,7 +66,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <section className={`flex items-center justify-center my-6`}>
+    <main className={`flex items-center justify-center my-6`}>
       <div className="flex items-center justify-center">
         <div className="w-full px-4">
           <form
@@ -73,7 +74,7 @@ export const LoginPage = () => {
             className={cn(
               "max-w-2xl w-full bg-white rounded-lg border shadow-md",
               "mx-auto flex flex-col items-start",
-              "gap-y-6 px-10 py-12"
+              "gap-y-6 px-10 py-12",
             )}
           >
             <TypographyH1 className="text-2xl font-semibold w-full text-center">
@@ -90,8 +91,11 @@ export const LoginPage = () => {
             </div>
 
             <div className="w-full">
-              <label className="text-sm block mb-1">Email</label>
+              <label htmlFor="login-email" className="text-sm block mb-1">
+                Email
+              </label>
               <Input
+                id="login-email"
                 name="email"
                 type="email"
                 value={email}
@@ -100,14 +104,17 @@ export const LoginPage = () => {
                 className={cn(
                   "block w-full rounded-md border bg-transparent border-gray-300",
                   "px-3 py-2 text-sm",
-                  "focus:outline-none focus:ring-2 focus:ring-primary"
+                  "focus:outline-none focus:ring-2 focus:ring-primary",
                 )}
                 required
               />
             </div>
             <div className="w-full">
-              <label className="text-sm block mb-1">Mot de passe</label>
+              <label htmlFor="login-password" className="text-sm block mb-1">
+                Mot de passe
+              </label>
               <Input
+                id="login-password"
                 name="password"
                 type="password"
                 value={password}
@@ -116,14 +123,16 @@ export const LoginPage = () => {
                 className={cn(
                   "block w-full rounded-md border bg-transparent border-gray-300",
                   "px-3 py-2 text-sm",
-                  "focus:outline-none focus:ring-2 focus:ring-primary"
+                  "focus:outline-none focus:ring-2 focus:ring-primary",
                 )}
                 required
               />
             </div>
 
             {errorMessage && (
-              <p className="text-destructive text-sm">{errorMessage}</p>
+              <p className="text-destructive text-sm" role="alert">
+                {errorMessage}
+              </p>
             )}
 
             <Button
@@ -136,6 +145,6 @@ export const LoginPage = () => {
           </form>
         </div>
       </div>
-    </section>
+    </main>
   );
 };

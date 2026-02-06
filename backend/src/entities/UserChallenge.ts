@@ -1,4 +1,11 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { User } from "./User";
 import { Challenge } from "./Challenge";
 import { Field, ObjectType } from "type-graphql";
@@ -21,4 +28,12 @@ export class UserChallenge {
   @Column({ default: false })
   @Field()
   hasAccepted: boolean;
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

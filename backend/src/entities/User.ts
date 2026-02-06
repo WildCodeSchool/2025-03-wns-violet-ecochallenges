@@ -6,6 +6,8 @@ import {
   Column,
   OneToMany,
   Relation,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { UserEcogesture } from "./UserEcogesture";
 import { Challenge } from "./Challenge";
@@ -31,6 +33,10 @@ export class User extends BaseEntity {
   @Field()
   username: string;
 
+  @Column()
+  @Field()
+  pictureUrl: string;
+
   @Column({ unique: true })
   @Field()
   email: string;
@@ -52,4 +58,12 @@ export class User extends BaseEntity {
   @OneToMany(() => UserChallenge, (userChallenge) => userChallenge.user)
   @Field(() => [UserChallenge], { nullable: true })
   participations?: Relation<UserChallenge[]>;
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

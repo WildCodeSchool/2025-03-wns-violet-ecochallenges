@@ -3,10 +3,14 @@ import {
   BaseEntity,
   Column,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { UserEcogesture } from "./UserEcogesture";
+import { Challenge } from "./Challenge";
 
 @Entity()
 @ObjectType()
@@ -44,4 +48,16 @@ export class Ecogesture extends BaseEntity {
     (userEcogesture) => userEcogesture.ecogesture
   )
   public UserEcogesture: UserEcogesture[];
+
+  @ManyToMany(() => Challenge, (challenge) => challenge.ecogestures)
+  @Field(() => [Challenge], { nullable: true })
+  challenges?: Challenge[];
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

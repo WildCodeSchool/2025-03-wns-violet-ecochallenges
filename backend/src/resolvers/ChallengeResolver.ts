@@ -10,10 +10,12 @@ import {
   registerEnumType,
   Resolver,
 } from "type-graphql";
+import { In } from "typeorm"; 
 import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
 import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
 import { Context } from "../types/Context";
+import { Ecogesture } from "../entities/Ecogesture";
 import { User } from "../entities/User";
 
 @InputType()
@@ -23,8 +25,10 @@ export class NewChallengeInput {
   @MinLength(3, { message: "Le titre doit faire au moins 3 caractères" })
   label: string;
 
+  @Field({ nullable: true })
+  description: string;
+
   @Field()
-  // Converts GraphQL ISO string → JavaScript Date → PostgreSQL TIMESTAMP
   @Type(() => Date)
   @IsDate({ message: "La date de début doit être une date valide" })
   startingDate: Date;
@@ -36,6 +40,9 @@ export class NewChallengeInput {
 
   @Field()
   picture: string;
+
+  @Field(() => [Number], { nullable: true })
+  ecogestureIds?: number[];
 }
 
 @ObjectType()
@@ -141,16 +148,32 @@ export default class ChallengeResolver {
 
     const user = await User.findOneByOrFail({ id: ctx.user.id });
 
+    // Récupère les écogestes si des IDs sont fournis
+    let ecogestures: Ecogesture[] = [];
+    if (data.ecogestureIds && data.ecogestureIds.length > 0) {
+      ecogestures = await Ecogesture.findBy({ id: In(data.ecogestureIds) });
+      
+      const uniqueEcogestureIds = Array.from(new Set(data.ecogestureIds));
+      ecogestures = await Ecogesture.findByIds(uniqueEcogestureIds);
+      // Vérifie que tous les IDs existent
+      if (ecogestures.length !== uniqueEcogestureIds.length) {
+        throw new Error("Un ou plusieurs écogestes n'existent pas");
+      }
+    }
+
     const challenge = Challenge.create({
       label: data.label,
       startingDate: data.startingDate,
       endingDate: data.endingDate,
       picture: data.picture,
+      description : data.description,
       createdBy: user,
+      ecogestures: ecogestures,
       //TODO add participants
     });
 
     await challenge.save();
+    
     return challenge;
   }
 }

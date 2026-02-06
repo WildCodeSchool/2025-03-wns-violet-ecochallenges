@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { TypographyP } from "../ui/typographyP";
-import { TypographyH3 } from "../ui/typographyH3";
 import { cn } from "../../lib/utils";
+import { TypographyH2 } from "../ui/typographyH2";
 
 const Footer = () => {
   const menuItems = [
@@ -48,9 +48,9 @@ const Footer = () => {
           <div className="col-span-1 lg:col-span-4 grid grid-cols-2 gap-8 ">
             {menuItems.map((section, sectionIdx) => (
               <div key={sectionIdx} className="text-left">
-                <TypographyH3 className="mb-4 font-bold text-background">
+                <TypographyH2 className="mb-4 font-bold text-background">
                   {section.title}
-                </TypographyH3>
+                </TypographyH2>
                 <ul className="space-y-4">
                   {section.links.map((link, linkIdx) => (
                     <li

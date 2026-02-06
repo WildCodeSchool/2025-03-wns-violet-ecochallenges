@@ -7,6 +7,7 @@ export function useAuthMenuActions() {
   const navigate = useNavigate();
   const isConnected = useAuthStore((state) => state.isConnected);
   const logoutStore = useAuthStore((state) => state.logout);
+  const userPictureUrl = useAuthStore((state) => state.user?.pictureUrl);
 
   const handleLogout = async () => {
     await logout();
@@ -14,5 +15,5 @@ export function useAuthMenuActions() {
     navigate("/");
   };
 
-  return { isConnected, handleLogout };
+  return { isConnected, handleLogout, userPictureUrl };
 }
