@@ -43,12 +43,12 @@ function ProfilePage() {
         console.error("Error updating profile picture:", error);
       }
     },
-    [updateProfilePicture]
+    [updateProfilePicture],
   );
 
   const { openWidget } = useCloudinaryWidget({
-    cloudName: import.meta.env.VITE_CLOUNDINARY_CLOUD_NAME,
-    uploadPreset: import.meta.env.VITE_CLOUNDINARY_UPLOAD_PRESET,
+    cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+    uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
     onSuccess: handleUploadSuccess,
     onError: (error) => {
       console.error("Erreur du widget Cloudinary :", error);
@@ -95,7 +95,7 @@ function ProfilePage() {
                         "absolute top-0 left-0 h-40 w-40 m-0 p-0 flex items-center justify-center rounded-full text-white bg-primary",
                         "opacity-0 group-hover:opacity-80 pointer-events-none group-hover:pointer-events-auto",
                         "transition-opacity duration-200",
-                        updatingPicture && "cursor-wait"
+                        updatingPicture && "cursor-wait",
                       )}
                     >
                       {updatingPicture ? (
