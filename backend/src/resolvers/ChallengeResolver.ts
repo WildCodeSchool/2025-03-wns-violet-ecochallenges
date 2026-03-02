@@ -199,7 +199,7 @@ export default class ChallengeResolver {
           userChallengeRepo.insert({
             user: { id: participant.id },
             challenge: { id: challenge.id },
-            hasAccepted: false,
+            hasAccepted: true,
           }),
         ),
       );
