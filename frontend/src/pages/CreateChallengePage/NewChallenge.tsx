@@ -3,12 +3,21 @@ import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
 import EcogesturesSelect from "@/pages/CreateChallengePage/EcogesturesSelect";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { X, User, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
+import AddParticipants, {
+  type Participant,
+} from "@/pages/CreateChallengePage/AddParticipants";
 import { CalendarPopover } from "@/components/ui/calendar";
 import { type DateRange } from "react-day-picker";
 
@@ -25,17 +34,18 @@ function NewChallenge({
     description: "",
     startingDate: "",
     endingDate: "",
-    picture: ""
+    picture: "",
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const [participants, setParticipants] = useState<string[]>([]);
-  const [participantInput, setParticipantInput] = useState("");
+  const [participants, setParticipants] = useState<Participant[]>([]);
   const [createChallenge, { loading }] = useMutation(CREATE_CHALLENGE);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
- 
+
   // // Upload image (placeholder)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -43,18 +53,6 @@ function NewChallenge({
       const url = URL.createObjectURL(e.target.files[0]);
       setForm({ ...form, picture: url });
     }
-  };
-
-  // // Ajout participant
-  const handleAddParticipant = () => {
-    if (participantInput && !participants.includes(participantInput)) {
-      setParticipants([...participants, participantInput]);
-      setParticipantInput("");
-    }
-  };
-  // // Suppression participant
-  const handleRemoveParticipant = (name: string) => {
-    setParticipants(participants.filter((p) => p !== name));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,34 +65,44 @@ function NewChallenge({
         endingDate: new Date(form.endingDate).toISOString(),
         picture: form.picture,
         ecogestureIds: selectedEcogestures.map(Number),
+        participantIds: participants.map((p: Participant) => p.id),
       },
     };
 
     try {
       await createChallenge({ variables });
-      setForm({ label: "", description: "", startingDate: "", endingDate: "", picture: "" });
+      setForm({
+        label: "",
+        description: "",
+        startingDate: "",
+        endingDate: "",
+        picture: "",
+      });
       setSelectedEcogestures([]);
       setParticipants([]);
       navigate("/dashboard");
-    } catch (err: any) {
-      console.error("Error:", err); 
+    } catch (err: unknown) {
+      console.error("Error:", err);
     }
   };
 
   return (
     <div className="container max-w-4xl mx-auto py-6 px-2">
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-
         <Card className="overflow-hidden p-0 bg-primary-foreground w-full">
           <div className="w-full h-40 sm:h-56 md:h-72 relative flex items-center justify-center">
             <img
-              src={form.picture || 'https://picsum.photos/600/400'}
+              src={form.picture || "https://picsum.photos/600/400"}
               alt="Challenge preview"
               className="object-cover w-full h-full"
             />
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
               <label htmlFor="picture-upload">
-                <Button type="button" variant="secondary" className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="flex items-center gap-2"
+                >
                   <Upload size={18} />
                   Charger une photo
                 </Button>
@@ -111,13 +119,16 @@ function NewChallenge({
         </Card>
         <Card className="bg-secondary-foreground  w-full">
           <CardHeader>
-            <CardTitle className="text-black">Informations du challenge</CardTitle>
+            <CardTitle className="text-black">
+              Informations du challenge
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="label" className="text-black">
-                  Titre du challenge <span className="text-red-600 italic">*</span>
+                  Titre du challenge{" "}
+                  <span className="text-red-600 italic">*</span>
                 </Label>
                 <Input
                   id="label"
@@ -130,7 +141,9 @@ function NewChallenge({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description" className="text-black">Description</Label>
+                <Label htmlFor="description" className="text-black">
+                  Description
+                </Label>
                 <Textarea
                   id="description"
                   name="description"
@@ -143,7 +156,8 @@ function NewChallenge({
               </div>
               <div className="space-y-2">
                 <Label className="text-black">
-                  Période du Challenge <span className="text-red-600 italic">*</span>
+                  Période du Challenge{" "}
+                  <span className="text-red-600 italic">*</span>
                 </Label>
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                   <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full">
@@ -155,7 +169,9 @@ function NewChallenge({
                           setDateRange(range);
                           setForm((prev) => ({
                             ...prev,
-                            startingDate: range?.from ? range.from.toISOString() : "",
+                            startingDate: range?.from
+                              ? range.from.toISOString()
+                              : "",
                             endingDate: range?.to ? range.to.toISOString() : "",
                           }));
                         }}
@@ -165,8 +181,13 @@ function NewChallenge({
                     </div>
                     <div className="w-full sm:w-1/2 min-w-[180px] p-3 bg-white border rounded-lg shadow-sm">
                       <div className="text-sm text-gray-700">
-                        {dateRange?.from ? `Début : ${dateRange.from.toLocaleDateString()}` : "Date de début : non renseignée"}<br />
-                        {dateRange?.to ? `Fin : ${dateRange.to.toLocaleDateString()}` : "Date de fin : non renseignée"}
+                        {dateRange?.from
+                          ? `Début : ${dateRange.from.toLocaleDateString()}`
+                          : "Date de début : non renseignée"}
+                        <br />
+                        {dateRange?.to
+                          ? `Fin : ${dateRange.to.toLocaleDateString()}`
+                          : "Date de fin : non renseignée"}
                       </div>
                     </div>
                   </div>
@@ -181,8 +202,12 @@ function NewChallenge({
 
         <Card className="bg-secondary-foreground  w-full">
           <CardHeader>
-            <CardTitle className="text-black">Ajouter des écogestes à votre challenge</CardTitle>
-            <CardDescription className="text-black">Sélectionnez les écogestes dans la liste déroulante</CardDescription>
+            <CardTitle className="text-black">
+              Ajouter des écogestes à votre challenge
+            </CardTitle>
+            <CardDescription className="text-black">
+              Sélectionnez les écogestes dans la liste déroulante
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <EcogesturesSelect
@@ -192,43 +217,13 @@ function NewChallenge({
           </CardContent>
         </Card>
 
-        <Card className="bg-secondary-foreground  w-full">
-          <CardHeader>
-            <CardTitle className="text-black">Inviter un participant</CardTitle>
-            <CardDescription className="text-black">Ajoutez des participants au challenge</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-2 mb-2">
-              <Input
-                type="text"
-                placeholder="Saisissez un nom ou email"
-                value={participantInput}
-                onChange={e => setParticipantInput(e.target.value)}
-                className="bg-white"
-              />
-              <Button type="button" onClick={handleAddParticipant}>
-                Ajouter
-              </Button>
-            </div>
-            {/* Liste des participants */}
-            <ul className="flex flex-col gap-2">
-              {participants.map((name) => (
-                <li key={name} className="flex items-center gap-2 bg-gray-100 rounded px-3 py-2">
-                  <User size={16} className="text-gray-600" />
-                  <span className="flex-1 text-black text-sm">{name}</span>
-                  <Button type="button" size="icon" variant="ghost" onClick={() => handleRemoveParticipant(name)}>
-                    <X size={16} />
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+        <AddParticipants
+          participants={participants}
+          setParticipants={setParticipants}
+        />
+
         <div className="flex justify-end gap-4 mt-2">
-          <Button 
-            type="submit" 
-            disabled={loading} 
-            size="lg">
+          <Button type="submit" disabled={loading} size="lg">
             {loading ? "Création en cours..." : "Créer le challenge"}
           </Button>
         </div>

@@ -40,7 +40,7 @@ export class UserEcogestureResolver {
   async getValidatedEcogestures(
     @Arg("input", () => PaginationInput, { nullable: true })
     input: PaginationInput,
-    @Ctx() ctx: Context
+    @Ctx() ctx: Context,
   ): Promise<ValidatedEcogesturesResponse> {
     const userId = ctx.user?.id;
     if (!userId) throw new Error("Utilisateur non connecté");
@@ -68,7 +68,7 @@ export class UserEcogestureResolver {
   async validateEcogesture(
     @Arg("ecogestureId", () => Int) ecogestureId: number,
     @Arg("level_validated", () => Int) level_validated: number,
-    @Ctx() ctx: Context
+    @Ctx() ctx: Context,
   ): Promise<UserEcogesture> {
     const userId = ctx.user?.id;
     if (!userId) throw new Error("Utilisateur non connecté");

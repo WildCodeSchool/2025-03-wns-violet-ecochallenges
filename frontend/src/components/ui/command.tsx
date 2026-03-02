@@ -44,7 +44,7 @@ export function CommandGroup({ className, ...props }: React.ComponentProps<"div"
     )
 }
 
-export function CommandItem({ className, onSelect, onClick, ...props }: React.ComponentProps<"div"> & { onSelect?: (value: string | undefined) => void }) {
+export function CommandItem({ className, onSelect, onClick, value, ...props }: Omit<React.ComponentProps<"div">, "onSelect" | "value"> & { onSelect?: (value: string | undefined) => void; value?: string }) {
     return (
         <div
             className={cn(
@@ -56,7 +56,7 @@ export function CommandItem({ className, onSelect, onClick, ...props }: React.Co
             onMouseDown={(e) => {
                 e.preventDefault();
                 if (onSelect) {
-                    onSelect(props.value);
+                    onSelect(value);
                 } else if (onClick) {
                     onClick(e);
                 }

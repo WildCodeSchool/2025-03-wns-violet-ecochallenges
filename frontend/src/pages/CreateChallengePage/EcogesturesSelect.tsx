@@ -1,20 +1,29 @@
-
-import { useState } from "react";
-import { useGetEcogesturesQuery } from "@/generated/graphql-types";
-import { Button } from "@/components/ui/button";
-import { Trash2, ArrowLeft, ArrowRight, Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {useState} from "react";
+import {useGetEcogesturesQuery} from "@/generated/graphql-types";
+import {Button} from "@/components/ui/button";
+import {
+  Trash2,
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  ChevronsUpDown,
+} from "lucide-react";
+import {cn} from "@/lib/utils";
 import {
   Command,
   CommandGroup,
   CommandItem,
   CommandList,
 } from "../../components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../components/ui/popover";
 
 const ecogestureDetailStyle = {
-  backgroundColor: 'white !important',
-  borderColor: '#e5e7eb !important'
+  backgroundColor: "white !important",
+  borderColor: "#e5e7eb !important",
 };
 
 function EcogesturesSelect({
@@ -24,20 +33,23 @@ function EcogesturesSelect({
   value: string[];
   onChange: (value: string[]) => void;
 }) {
-  const { data, loading, error } = useGetEcogesturesQuery();
+  const {data, loading, error} = useGetEcogesturesQuery();
   const [selectedId, setSelectedId] = useState<string>("");
   const [openCombobox, setOpenCombobox] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const maxSelectionToShow = 4;
 
-
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Erreur lors du chargement</p>;
 
   const ecogestures = data?.getEcogestures?.ecogestures ?? [];
-  const selectedEco = ecogestures.find((eco) => eco.id.toString() === selectedId);
+  const selectedEco = ecogestures.find(
+    (eco) => eco.id.toString() === selectedId,
+  );
 
-  const currentIndex = ecogestures.findIndex((eco) => eco.id.toString() === selectedId);
+  const currentIndex = ecogestures.findIndex(
+    (eco) => eco.id.toString() === selectedId,
+  );
   const canGoPrev = currentIndex > 0;
   const canGoNext = currentIndex >= 0 && currentIndex < ecogestures.length - 1;
   const goPrev = () => {
@@ -70,7 +82,8 @@ function EcogesturesSelect({
               onClick={() => setOpenCombobox((prev) => !prev)}
             >
               {selectedId
-                ? ecogestures.find((eco) => eco.id.toString() === selectedId)?.label
+                ? ecogestures.find((eco) => eco.id.toString() === selectedId)
+                    ?.label
                 : "Sélectionner un écogeste..."}
               <ChevronsUpDown className="opacity-50" />
             </Button>
@@ -83,18 +96,18 @@ function EcogesturesSelect({
                     <CommandItem
                       key={eco.id}
                       value={eco.id.toString()}
-                      onSelect={(currentValue: string | undefined) => {
-                        if (currentValue) {
-                          setSelectedId(currentValue);
-                          setOpenCombobox(false);
-                        }
+                      onSelect={(currentValue) => {
+                        if (currentValue) setSelectedId(currentValue);
+                        setOpenCombobox(false);
                       }}
                     >
                       {eco.label}
                       <Check
                         className={cn(
                           "ml-auto",
-                          selectedId === eco.id.toString() ? "opacity-100" : "opacity-0"
+                          selectedId === eco.id.toString()
+                            ? "opacity-100"
+                            : "opacity-0",
                         )}
                       />
                     </CommandItem>
@@ -107,7 +120,10 @@ function EcogesturesSelect({
 
         {/* Détail de l'écogeste sélectionné */}
         {selectedEco && (
-          <div className="border rounded bg-white p-3 mb-2 w-full max-w-full break-words relative ecogesture-detail-card" style={ecogestureDetailStyle}>
+          <div
+            className="border rounded bg-white p-3 mb-2 w-full max-w-full break-words relative ecogesture-detail-card"
+            style={ecogestureDetailStyle}
+          >
             {/* Flèches de navigation */}
             <button
               type="button"
@@ -116,7 +132,10 @@ function EcogesturesSelect({
               disabled={!canGoPrev}
               aria-label="Précédent"
             >
-              <ArrowLeft size={20} className={canGoPrev ? "text-gray-700" : "text-gray-300"} />
+              <ArrowLeft
+                size={20}
+                className={canGoPrev ? "text-gray-700" : "text-gray-300"}
+              />
             </button>
             <button
               type="button"
@@ -125,15 +144,26 @@ function EcogesturesSelect({
               disabled={!canGoNext}
               aria-label="Suivant"
             >
-              <ArrowRight size={20} className={canGoNext ? "text-gray-700" : "text-gray-300"} />
+              <ArrowRight
+                size={20}
+                className={canGoNext ? "text-gray-700" : "text-gray-300"}
+              />
             </button>
             <div className="flex items-center gap-3 mb-2">
               {selectedEco.pictureUrl && (
-                <img src={selectedEco.pictureUrl} alt={selectedEco.label} className="w-10 h-10 object-contain" />
+                <img
+                  src={selectedEco.pictureUrl}
+                  alt={selectedEco.label}
+                  className="w-10 h-10 object-contain"
+                />
               )}
-              <span className="font-semibold text-lg text-black">{selectedEco.label}</span>
+              <span className="font-semibold text-lg text-black">
+                {selectedEco.label}
+              </span>
             </div>
-            <p className="text-sm text-gray-700 mb-2">{selectedEco.description}</p>
+            <p className="text-sm text-gray-700 mb-2">
+              {selectedEco.description}
+            </p>
             <ul className="text-xs text-gray-600 list-disc ml-5">
               <li>Niveau 1 : {selectedEco.level1Expectation}</li>
               <li>Niveau 2 : {selectedEco.level2Expectation}</li>
@@ -145,7 +175,9 @@ function EcogesturesSelect({
                 disabled={value.includes(selectedEco.id.toString())}
                 onClick={handleAdd}
               >
-                {value.includes(selectedEco.id.toString()) ? "Déjà sélectionné" : "Ajouter à la liste"}
+                {value.includes(selectedEco.id.toString())
+                  ? "Déjà sélectionné"
+                  : "Ajouter à la liste"}
               </Button>
             </div>
           </div>
@@ -154,29 +186,55 @@ function EcogesturesSelect({
 
       {/* Liste des écogestes sélectionnés */}
       <div className="w-full md:w-1/2 ">
-        <div className="w-full mb-2 p-3 bg-white border rounded-lg shadow-sm" style={ecogestureDetailStyle}>
-          <div className="text-center font-semibold text-black">Votre sélection</div>
+        <div
+          className="w-full mb-2 p-3 bg-white border rounded-lg shadow-sm"
+          style={ecogestureDetailStyle}
+        >
+          <div className="text-center font-semibold text-black">
+            Votre sélection
+          </div>
         </div>
         {value.length > 0 && (
-          <ul className="flex flex-col gap-2 bg-white p-2 rounded" style={ecogestureDetailStyle}>
-            {(showAll ? value : value.slice(0, maxSelectionToShow)).map((ecoId) => {
-              const eco = ecogestures.find((e) => e.id.toString() === ecoId);
-              if (!eco) return null;
-              return (
-                <li key={ecoId} className="flex items-center gap-2 bg-gray-100 rounded px-3 py-2 text-black hover:bg-gray-200">
-                  <span className="flex-1 text-black text-sm">{eco.label}</span>
-                  <Button type="button" size="icon" variant="ghost" onClick={() => handleRemove(ecoId)}>
-                    <Trash2 size={18} className="text-red-500" />
-                  </Button>
-                </li>
-              );
-            })}
+          <ul
+            className="flex flex-col gap-2 bg-white p-2 rounded"
+            style={ecogestureDetailStyle}
+          >
+            {(showAll ? value : value.slice(0, maxSelectionToShow)).map(
+              (ecoId) => {
+                const eco = ecogestures.find((e) => e.id.toString() === ecoId);
+                if (!eco) return null;
+                return (
+                  <li
+                    key={ecoId}
+                    className="flex items-center gap-2 bg-gray-100 rounded px-3 py-2 text-black hover:bg-gray-200"
+                  >
+                    <span className="flex-1 text-black text-sm">
+                      {eco.label}
+                    </span>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => handleRemove(ecoId)}
+                    >
+                      <Trash2 size={18} className="text-red-500" />
+                    </Button>
+                  </li>
+                );
+              },
+            )}
           </ul>
         )}
         {value.length > maxSelectionToShow && (
           <div className="flex justify-center mt-2">
-            <Button size="sm" type="button" onClick={() => setShowAll(!showAll)}>
-              {showAll ? "Voir moins" : `Voir plus (${value.length - maxSelectionToShow})`}
+            <Button
+              size="sm"
+              type="button"
+              onClick={() => setShowAll(!showAll)}
+            >
+              {showAll
+                ? "Voir moins"
+                : `Voir plus (${value.length - maxSelectionToShow})`}
             </Button>
           </div>
         )}
