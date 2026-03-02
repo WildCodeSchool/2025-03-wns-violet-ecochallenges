@@ -10,7 +10,7 @@ import {
   registerEnumType,
   Resolver,
 } from "type-graphql";
-import { In } from "typeorm"; 
+import { In } from "typeorm";
 import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
 import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
@@ -39,7 +39,7 @@ export class NewChallengeInput {
   endingDate: Date;
 
   @Field()
-  picture: string;
+  pictureUrl: string;
 
   @Field(() => [Number], { nullable: true })
   ecogestureIds?: number[];
@@ -91,7 +91,7 @@ export default class ChallengeResolver {
   async getMyChallenges(
     @Ctx() ctx: Context,
     @Arg("input", () => GetMyChallengesInput, { nullable: true })
-    input?: GetMyChallengesInput
+    input?: GetMyChallengesInput,
   ): Promise<ChallengeListResponse> {
     if (!ctx.user) {
       throw new Error("Utilisateur non authentifié");
@@ -130,7 +130,7 @@ export default class ChallengeResolver {
   @Mutation(() => Challenge)
   async createChallenge(
     @Arg("data") data: NewChallengeInput,
-    @Ctx() ctx: Context
+    @Ctx() ctx: Context,
   ) {
     if (!ctx.user) {
       throw new Error("Utilisateur non authentifié");
@@ -152,7 +152,7 @@ export default class ChallengeResolver {
     let ecogestures: Ecogesture[] = [];
     if (data.ecogestureIds && data.ecogestureIds.length > 0) {
       ecogestures = await Ecogesture.findBy({ id: In(data.ecogestureIds) });
-      
+
       const uniqueEcogestureIds = Array.from(new Set(data.ecogestureIds));
       ecogestures = await Ecogesture.findByIds(uniqueEcogestureIds);
       // Vérifie que tous les IDs existent
@@ -165,15 +165,15 @@ export default class ChallengeResolver {
       label: data.label,
       startingDate: data.startingDate,
       endingDate: data.endingDate,
-      picture: data.picture,
-      description : data.description,
+      pictureUrl: data.pictureUrl,
+      description: data.description,
       createdBy: user,
       ecogestures: ecogestures,
       //TODO add participants
     });
 
     await challenge.save();
-    
+
     return challenge;
   }
 }

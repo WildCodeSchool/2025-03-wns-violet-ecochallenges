@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { X, User, Upload } from "lucide-react";
 import { CalendarPopover } from "@/components/ui/calendar";
 import { type DateRange } from "react-day-picker";
+import { useCloudinaryWidget } from "@/hooks/useCloudinaryWidget";
 
 function NewChallenge({
   selectedEcogestures,
@@ -33,7 +34,7 @@ function NewChallenge({
     description: "",
     startingDate: "",
     endingDate: "",
-    picture: "",
+    pictureUrl: "",
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [participants, setParticipants] = useState<string[]>([]);
@@ -57,23 +58,30 @@ function NewChallenge({
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // // Upload image (placeholder)
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      // Pour l'instant, on utilise un preview local
-      const url = URL.createObjectURL(e.target.files[0]);
-      setForm({ ...form, picture: url });
-    }
-  };
+  const handleUploadSuccess = useCallback((pictureUrl: string) => {
+    setForm((prev) => ({ ...prev, pictureUrl }));
+  }, []);
 
-  // // Ajout participant
+  const { openWidget } = useCloudinaryWidget({
+    cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+    uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+    folder: "challenge_pictures", // Dedicated folder for challenge images in Cloudinary
+    croppingAspectRatio: 16 / 9,
+    onSuccess: handleUploadSuccess,
+    onError: (error) => {
+      console.error("Cloudinary upload error:", error);
+      alert("Erreur lors du téléchargement de l'image. Veuillez réessayer.");
+    },
+  });
+
+  // Add participant
   const handleAddParticipant = () => {
     if (participantInput && !participants.includes(participantInput)) {
       setParticipants([...participants, participantInput]);
       setParticipantInput("");
     }
   };
-  // // Suppression participant
+  // Remove participant
   const handleRemoveParticipant = (name: string) => {
     setParticipants(participants.filter((p) => p !== name));
   };
@@ -86,7 +94,7 @@ function NewChallenge({
         description: form.description,
         startingDate: new Date(form.startingDate).toISOString(),
         endingDate: new Date(form.endingDate).toISOString(),
-        picture: form.picture,
+        pictureUrl: form.pictureUrl,
         ecogestureIds: selectedEcogestures.map(Number),
       },
     };
@@ -98,12 +106,13 @@ function NewChallenge({
         description: "",
         startingDate: "",
         endingDate: "",
-        picture: "",
+        pictureUrl: "",
       });
       setSelectedEcogestures([]);
       setParticipants([]);
       navigate("/dashboard");
     } catch (err: any) {
+      // TODO: Handle err any type properly
       console.error("Error:", err);
     }
   };
@@ -114,28 +123,20 @@ function NewChallenge({
         <Card className="overflow-hidden p-0 bg-primary-foreground w-full">
           <div className="w-full h-40 sm:h-56 md:h-72 relative flex items-center justify-center">
             <img
-              src={form.picture || "https://picsum.photos/600/400"}
+              src={form.pictureUrl || "https://picsum.photos/600/400"}
               alt="Challenge preview"
               className="object-cover w-full h-full"
             />
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-              <label htmlFor="picture-upload">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="flex items-center gap-2"
-                >
-                  <Upload size={18} />
-                  Charger une photo
-                </Button>
-                <input
-                  id="picture-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-              </label>
+              <Button
+                type="button"
+                variant="secondary"
+                className="flex items-center gap-2"
+                onClick={openWidget}
+              >
+                <Upload size={18} />
+                Charger une photo
+              </Button>
             </div>
           </div>
         </Card>
