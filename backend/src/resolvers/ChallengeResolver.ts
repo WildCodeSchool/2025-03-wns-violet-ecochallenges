@@ -122,9 +122,12 @@ export default class ChallengeResolver {
     } else if (filter === ChallengeFilter.IN_PROGRESS) {
       queryBuilder
         .where("challenge.startingDate <= :now", { now })
-        .andWhere("challenge.endingDate >= :now", { now });
+        .andWhere("challenge.endingDate >= :now", { now })
+        .andWhere("participants.userId = :userId", { userId: ctx.user.id });
     } else if (filter === ChallengeFilter.FINISHED) {
-      queryBuilder.where("challenge.endingDate < :now", { now });
+      queryBuilder
+        .where("challenge.endingDate < :now", { now })
+        .andWhere("participants.userId = :userId", { userId: ctx.user.id });
     }
     const [challenges, totalCount] = await queryBuilder.getManyAndCount();
 
