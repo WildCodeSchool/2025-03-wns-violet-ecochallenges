@@ -1,5 +1,5 @@
 import React from "react";
-import { useMutation } from "@apollo/client";
+import { ApolloError, useMutation } from "@apollo/client";
 import { SIGNUP_MUTATION } from "@/graphql/mutations/signup";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -69,8 +69,12 @@ export default function RegisterPage() {
         return;
       }
       navigate("/dashboard", { replace: true });
-    } catch (err: any) {
-      setLocalError(err?.message || "Erreur réseau");
+    } catch (err: unknown) {
+      if (err instanceof ApolloError) {
+        setLocalError(err.message);
+      } else {
+        setLocalError("Erreur réseau");
+      }
     }
   };
 

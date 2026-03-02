@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useMutation } from "@apollo/client";
+import { ApolloError, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
 import { GET_MY_CHALLENGES } from "@/graphql/queries/challenge";
@@ -111,9 +111,12 @@ function NewChallenge({
       setSelectedEcogestures([]);
       setParticipants([]);
       navigate("/dashboard");
-    } catch (err: any) {
-      // TODO: Handle err any type properly
-      console.error("Error:", err);
+    } catch (err) {
+      if (err instanceof ApolloError) {
+        console.error("Apollo error:", err.graphQLErrors, err.networkError);
+      } else if (err instanceof Error) {
+        console.error("Error:", err.message);
+      }
     }
   };
 
