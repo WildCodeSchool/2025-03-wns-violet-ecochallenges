@@ -1,6 +1,6 @@
-import {useState} from "react";
-import {useGetEcogesturesQuery} from "@/generated/graphql-types";
-import {Button} from "@/components/ui/button";
+import { useState } from "react";
+import { useGetEcogesturesQuery } from "@/generated/graphql-types";
+import { Button } from "@/components/ui/button";
 import {
   Trash2,
   ArrowLeft,
@@ -8,7 +8,7 @@ import {
   Check,
   ChevronsUpDown,
 } from "lucide-react";
-import {cn} from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   Command,
   CommandGroup,

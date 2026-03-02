@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
+import { GET_MY_CHALLENGES } from "@/graphql/queries/challenge";
+import { ChallengeFilter } from "@/generated/graphql-types";
 import EcogesturesSelect from "@/pages/CreateChallengePage/EcogesturesSelect";
 import {
   Card,
@@ -37,8 +39,20 @@ function NewChallenge({
     picture: "",
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const [createChallenge, { loading }] = useMutation(CREATE_CHALLENGE);
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [participantInput, setParticipantInput] = useState("");
+  const [createChallenge, { loading }] = useMutation(CREATE_CHALLENGE, {
+    refetchQueries: [
+      {
+        query: GET_MY_CHALLENGES,
+        variables: {
+          input: {
+            filter: ChallengeFilter.InProgress,
+          },
+        },
+      },
+    ],
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -81,7 +95,7 @@ function NewChallenge({
       setSelectedEcogestures([]);
       setParticipants([]);
       navigate("/dashboard");
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error("Error:", err);
     }
   };
@@ -149,7 +163,6 @@ function NewChallenge({
                   name="description"
                   value={form.description}
                   onChange={handleChange}
-                  required
                   placeholder="Décrivez votre challenge..."
                   className="bg-white text-black min-h-[100px] px-3 py-1"
                 />
@@ -217,11 +230,48 @@ function NewChallenge({
           </CardContent>
         </Card>
 
-        <AddParticipants
-          participants={participants}
-          setParticipants={setParticipants}
-        />
-
+        <Card className="bg-secondary-foreground  w-full">
+          <CardHeader>
+            <CardTitle className="text-black">Inviter un participant</CardTitle>
+            <CardDescription className="text-black">
+              Ajoutez des participants au challenge
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2 mb-2">
+              <Input
+                type="text"
+                placeholder="Saisissez un nom ou email"
+                value={participantInput}
+                onChange={(e) => setParticipantInput(e.target.value)}
+                className="bg-white"
+              />
+              <Button type="button" onClick={handleAddParticipant}>
+                Ajouter
+              </Button>
+            </div>
+            {/* Liste des participants */}
+            <ul className="flex flex-col gap-2">
+              {participants.map((name) => (
+                <li
+                  key={name}
+                  className="flex items-center gap-2 bg-gray-100 rounded px-3 py-2"
+                >
+                  <User size={16} className="text-gray-600" />
+                  <span className="flex-1 text-black text-sm">{name}</span>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => handleRemoveParticipant(name)}
+                  >
+                    <X size={16} />
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
         <div className="flex justify-end gap-4 mt-2">
           <Button type="submit" disabled={loading} size="lg">
             {loading ? "Création en cours..." : "Créer le challenge"}

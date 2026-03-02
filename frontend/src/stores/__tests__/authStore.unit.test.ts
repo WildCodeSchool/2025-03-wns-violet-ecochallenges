@@ -14,6 +14,7 @@ describe("authStore - Unit Tests", () => {
         id: 1,
         email: "test@example.com",
         username: "testuser",
+        pictureUrl: "",
       };
 
       useAuthStore.getState().setUser(mockUser);
@@ -39,6 +40,7 @@ describe("authStore - Unit Tests", () => {
         id: 1,
         email: "test@example.com",
         username: "testuser",
+        pictureUrl: "",
       });
 
       // Log out
@@ -68,6 +70,7 @@ describe("authStore - Unit Tests", () => {
         id: 1,
         email: "test@example.com",
         username: "testuser",
+        pictureUrl: "",
       };
       useAuthStore.getState().setUser(mockUser);
       useAuthStore.getState().setAuthLoading(false);
