@@ -20,12 +20,7 @@ import {
   validate,
 } from "class-validator";
 import { plainToClass } from "class-transformer";
-import {
-  deleteImageFromCloudinary,
-  extractPublicIdFromUrl,
-  isCloudinaryUrl,
-  isDefaultAvatar,
-} from "../lib/cloudinary";
+import { tryDeleteCloudinaryImage } from "../lib/cloudinary";
 
 @InputType()
 class NewUserInput {
@@ -198,29 +193,7 @@ export default class UserResolver {
     const oldPictureUrl = user.pictureUrl;
 
     // If the old picture is not a default avatar, delete it from Cloudinary
-    if (
-      oldPictureUrl &&
-      isCloudinaryUrl(oldPictureUrl) &&
-      !isDefaultAvatar(oldPictureUrl)
-    ) {
-      const publicId = extractPublicIdFromUrl(oldPictureUrl);
-
-      if (publicId) {
-        console.info(
-          `Deleting old profile picture with public_id: ${publicId}`,
-        );
-
-        const deleted = await deleteImageFromCloudinary(publicId);
-
-        if (!deleted) {
-          console.warn(
-            `Failed to delete old profile picture with public_id: ${publicId}`,
-          );
-        }
-      } else {
-        console.warn(`Could not extract public_id from URL: ${oldPictureUrl}`);
-      }
-    }
+    await tryDeleteCloudinaryImage(oldPictureUrl, { keepDefaultAvatars: true });
 
     user.pictureUrl = data.pictureUrl;
     await user.save();

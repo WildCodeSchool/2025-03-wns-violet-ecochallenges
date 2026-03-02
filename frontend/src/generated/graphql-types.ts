@@ -28,7 +28,7 @@ export type Challenge = {
   id: Scalars['Float']['output'];
   label: Scalars['String']['output'];
   participants: Array<UserChallenge>;
-  picture: Scalars['String']['output'];
+  pictureUrl: Scalars['String']['output'];
   startingDate: Scalars['DateTimeISO']['output'];
   updatedAt: Scalars['DateTimeISO']['output'];
 };
@@ -120,7 +120,7 @@ export type NewChallengeInput = {
   ecogestureIds?: InputMaybe<Array<Scalars['Float']['input']>>;
   endingDate: Scalars['DateTimeISO']['input'];
   label: Scalars['String']['input'];
-  picture: Scalars['String']['input'];
+  pictureUrl: Scalars['String']['input'];
   startingDate: Scalars['DateTimeISO']['input'];
 };
 
@@ -213,7 +213,7 @@ export type CreateChallengeMutationVariables = Exact<{
 }>;
 
 
-export type CreateChallengeMutation = { __typename?: 'Mutation', createChallenge: { __typename?: 'Challenge', id: number, label: string, description?: string | null, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, ecogestures?: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> | null } };
+export type CreateChallengeMutation = { __typename?: 'Mutation', createChallenge: { __typename?: 'Challenge', id: number, label: string, description?: string | null, startingDate: any, endingDate: any, pictureUrl: string, createdBy: { __typename?: 'User', id: number, username: string }, ecogestures?: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> | null } };
 
 export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -256,7 +256,7 @@ export type GetMyChallengesQueryVariables = Exact<{
 }>;
 
 
-export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
+export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, pictureUrl: string, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
 
 export type GetEcogesturesQueryVariables = Exact<{
   input?: InputMaybe<GetEcogesturesInput>;
@@ -294,7 +294,7 @@ export const CreateChallengeDocument = gql`
     description
     startingDate
     endingDate
-    picture
+    pictureUrl
     createdBy {
       id
       username
@@ -537,7 +537,7 @@ export const GetMyChallengesDocument = gql`
       label
       startingDate
       endingDate
-      picture
+      pictureUrl
       createdBy {
         id
         username

@@ -76,4 +76,30 @@ export function isDefaultAvatar(url: string): boolean {
   return url.includes("ui-avatars.com");
 }
 
+/**
+ * Attempts to delete an image from Cloudinary given its URL.
+ * Skips silently if the URL is not a Cloudinary URL.
+ * @param url - The Cloudinary image URL to delete.
+ * @param options.keepDefaultAvatars - If true, skip deletion when the URL is a default avatar.
+ */
+export async function tryDeleteCloudinaryImage(
+  url: string | null | undefined,
+  options: { keepDefaultAvatars?: boolean } = {},
+): Promise<void> {
+  if (!url || !isCloudinaryUrl(url)) return;
+  if (options.keepDefaultAvatars && isDefaultAvatar(url)) return;
+
+  const publicId = extractPublicIdFromUrl(url);
+
+  if (publicId) {
+    console.info(`Deleting old picture with public_id: ${publicId}`);
+    const deleted = await deleteImageFromCloudinary(publicId);
+    if (!deleted) {
+      console.warn(`Failed to delete old picture with public_id: ${publicId}`);
+    }
+  } else {
+    console.warn(`Could not extract public_id from URL: ${url}`);
+  }
+}
+
 export default cloudinary;

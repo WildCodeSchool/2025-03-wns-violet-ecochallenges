@@ -11,12 +11,19 @@ import {
   Resolver,
 } from "type-graphql";
 import { In } from "typeorm";
-import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
+import {
+  IsDate,
+  IsNotEmpty,
+  Matches,
+  MinLength,
+  validate,
+} from "class-validator";
 import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
 import { Context } from "../types/Context";
 import { Ecogesture } from "../entities/Ecogesture";
 import { User } from "../entities/User";
+import { tryDeleteCloudinaryImage } from "../lib/cloudinary";
 
 @InputType()
 export class NewChallengeInput {
@@ -64,6 +71,19 @@ class GetMyChallengesInput {
 
   @Field(() => ChallengeFilter, { nullable: true })
   filter?: ChallengeFilter;
+}
+
+@InputType()
+class UpdateChallengePictureInput {
+  @Field()
+  id: number;
+
+  @Field()
+  @IsNotEmpty({ message: "L'URL de l'image ne peut pas être vide" })
+  @Matches(/^https?:\/\/.+/, {
+    message: "L'URL de l'image doit commencer par http:// ou https://",
+  })
+  pictureUrl: string;
 }
 
 // Filter for getMyChallenges (user point of view)
@@ -172,6 +192,41 @@ export default class ChallengeResolver {
       //TODO add participants
     });
 
+    await challenge.save();
+
+    return challenge;
+  }
+
+  @Authorized()
+  @Mutation(() => Challenge)
+  async updateChallengePicture(
+    @Arg("data") data: UpdateChallengePictureInput,
+    @Ctx() ctx: Context,
+  ) {
+    if (!ctx.user) {
+      throw new Error("Utilisateur non authentifié");
+    }
+
+    const challenge = await Challenge.findOne({
+      where: { id: data.id },
+      relations: ["createdBy"],
+    });
+
+    if (!challenge) {
+      throw new Error("Challenge non trouvé");
+    }
+
+    // Only the creator of the challenge can update its picture
+    if (challenge.createdBy.id !== ctx.user.id) {
+      throw new Error("Vous n'êtes pas autorisé à modifier ce challenge");
+    }
+
+    const oldPictureUrl = challenge.pictureUrl;
+
+    // If the old picture is stocked on Cloudinary, delete it from Cloudinary
+    await tryDeleteCloudinaryImage(oldPictureUrl);
+
+    challenge.pictureUrl = data.pictureUrl;
     await challenge.save();
 
     return challenge;

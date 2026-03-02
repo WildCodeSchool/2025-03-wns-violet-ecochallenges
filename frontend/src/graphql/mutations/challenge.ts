@@ -21,3 +21,13 @@ export const CREATE_CHALLENGE = gql`
     }
   }
 `;
+
+export const UPDATE_CHALLENGE_PICTURE = gql`
+  mutation UpdateChallengePicture($data: UpdateChallengePictureInput!) {
+    updateChallengePicture(data: $data) {
+      id
+      label
+      pictureUrl
+    }
+  }
+`;
