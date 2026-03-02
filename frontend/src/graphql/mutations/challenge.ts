@@ -9,6 +9,7 @@ export const CREATE_CHALLENGE = gql`
       startingDate
       endingDate
       pictureUrl
+      progressPercentage
       createdBy {
         id
         username

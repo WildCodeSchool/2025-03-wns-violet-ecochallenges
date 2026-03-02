@@ -3,12 +3,14 @@ import {
   Authorized,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
   Mutation,
   ObjectType,
   Query,
   registerEnumType,
   Resolver,
+  Root,
 } from "type-graphql";
 import { In } from "typeorm";
 import {
@@ -26,6 +28,7 @@ import { User } from "../entities/User";
 import { tryDeleteCloudinaryImage } from "../lib/cloudinary";
 import { UserChallenge } from "../entities/UserChallenge";
 import dataSource from "../config/db";
+import { UserEcogesture } from "../entities/UserEcogesture";
 
 @InputType()
 export class NewChallengeInput {
@@ -105,6 +108,43 @@ registerEnumType(ChallengeFilter, {
 
 @Resolver(Challenge)
 export default class ChallengeResolver {
+  @FieldResolver(() => Number) // ← Ajoute un champ virtuel
+  async progressPercentage(@Root() challenge: Challenge): Promise<number> {
+    //nb ecogeste validé
+
+    const fullChallenge = await Challenge.findOne({
+      where: { id: challenge.id },
+      relations: ["participants", "ecogestures"],
+    });
+
+    if (!fullChallenge) {
+      throw new Error("Challenge non trouvé");
+    }
+
+    const totalEcogestures = fullChallenge.ecogestures?.length || 0;
+    const totalParticipants = fullChallenge.participants?.length || 0;
+
+    if (totalEcogestures === 0 || totalParticipants === 0) {
+      return 0; // Évite la division par zéro
+    }
+
+    const ecogestureIds = fullChallenge.ecogestures?.map((e) => e.id) || [];
+    const participantIds =
+      fullChallenge.participants?.map((p) => p.user.id) || [];
+
+    // Compter combien de fois les participants ont validé les écogestes du challenge
+    const totalValidations = await UserEcogesture.count({
+      where: {
+        user: { id: In(participantIds) },
+        ecogesture: { id: In(ecogestureIds) },
+      },
+    });
+
+    const maxPossibleValidations = totalEcogestures * totalParticipants;
+
+    return Math.round((totalValidations / maxPossibleValidations) * 100);
+  }
+
   @Query(() => [Challenge])
   async getAllChallenges() {
     const challenges = await Challenge.find();
