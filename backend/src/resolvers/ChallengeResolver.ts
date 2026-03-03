@@ -10,13 +10,15 @@ import {
   registerEnumType,
   Resolver,
 } from "type-graphql";
-import { In } from "typeorm"; 
+import { In } from "typeorm";
 import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
 import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
 import { Context } from "../types/Context";
 import { Ecogesture } from "../entities/Ecogesture";
 import { User } from "../entities/User";
+import { UserChallenge } from "../entities/UserChallenge";
+import dataSource from "../config/db";
 
 @InputType()
 export class NewChallengeInput {
@@ -43,6 +45,9 @@ export class NewChallengeInput {
 
   @Field(() => [Number], { nullable: true })
   ecogestureIds?: number[];
+
+  @Field(() => [Number], { nullable: true })
+  participantIds?: number[];
 }
 
 @ObjectType()
@@ -91,7 +96,7 @@ export default class ChallengeResolver {
   async getMyChallenges(
     @Ctx() ctx: Context,
     @Arg("input", () => GetMyChallengesInput, { nullable: true })
-    input?: GetMyChallengesInput
+    input?: GetMyChallengesInput,
   ): Promise<ChallengeListResponse> {
     if (!ctx.user) {
       throw new Error("Utilisateur non authentifié");
@@ -130,7 +135,7 @@ export default class ChallengeResolver {
   @Mutation(() => Challenge)
   async createChallenge(
     @Arg("data") data: NewChallengeInput,
-    @Ctx() ctx: Context
+    @Ctx() ctx: Context,
   ) {
     if (!ctx.user) {
       throw new Error("Utilisateur non authentifié");
@@ -152,7 +157,7 @@ export default class ChallengeResolver {
     let ecogestures: Ecogesture[] = [];
     if (data.ecogestureIds && data.ecogestureIds.length > 0) {
       ecogestures = await Ecogesture.findBy({ id: In(data.ecogestureIds) });
-      
+
       const uniqueEcogestureIds = Array.from(new Set(data.ecogestureIds));
       ecogestures = await Ecogesture.findByIds(uniqueEcogestureIds);
       // Vérifie que tous les IDs existent
@@ -166,14 +171,40 @@ export default class ChallengeResolver {
       startingDate: data.startingDate,
       endingDate: data.endingDate,
       picture: data.picture,
-      description : data.description,
+      description: data.description,
       createdBy: user,
       ecogestures: ecogestures,
-      //TODO add participants
     });
 
     await challenge.save();
-    
+
+    const userChallengeRepo = dataSource.getRepository(UserChallenge);
+
+    // Associer le créateur au challenge (accepté par defaut)
+    await userChallengeRepo.insert({
+      user: { id: user.id },
+      challenge: { id: challenge.id },
+      hasAccepted: true,
+    });
+
+    // Associer les participants invités (en attente d'acceptation)
+    // On exclut le créateur : il est déjà associé avec hasAccepted: true
+    const invitedIds = (data.participantIds ?? []).filter(
+      (id) => id !== user.id,
+    );
+    if (invitedIds.length > 0) {
+      const participants = await User.findBy({ id: In(invitedIds) });
+      await Promise.all(
+        participants.map((participant: User) =>
+          userChallengeRepo.insert({
+            user: { id: participant.id },
+            challenge: { id: challenge.id },
+            hasAccepted: true,
+          }),
+        ),
+      );
+    }
+
     return challenge;
   }
 }
