@@ -2,7 +2,8 @@ import { useAuthStore } from "@/stores/authStore";
 import UnauthorizedPage from "../UnauthorizedPage";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyP } from "@/components/ui/typographyP";
-import EcogesturesChallenge from "./EcogesturesChallenge";
+import Protected from "@/components/auth/Protected";
+import ChallengeDetails from "./ChallengeDetails";
 
 function ChallengePage() {
   const user = useAuthStore((state) => state.user);
@@ -23,7 +24,7 @@ function ChallengePage() {
   }
   return (
     <main>
-      <EcogesturesChallenge />
+      <Protected>{() => <ChallengeDetails />}</Protected>
     </main>
   );
 }

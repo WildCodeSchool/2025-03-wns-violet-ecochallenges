@@ -111,6 +111,7 @@ export type MutationUpdateProfilePictureArgs = {
 
 
 export type MutationValidateEcogestureArgs = {
+  challengeId?: InputMaybe<Scalars['Int']['input']>;
   ecogestureId: Scalars['Int']['input'];
   level_validated: Scalars['Int']['input'];
 };
@@ -138,10 +139,16 @@ export type Query = {
   __typename?: 'Query';
   getAllChallenges: Array<Challenge>;
   getAllUsers: Array<User>;
+  getChallengeById: Challenge;
   getCurrentUser: User;
   getEcogestures: EcogestureListResponse;
   getMyChallenges: ChallengeListResponse;
   getValidatedEcogestures: ValidatedEcogesturesResponse;
+};
+
+
+export type QueryGetChallengeByIdArgs = {
+  id: Scalars['Float']['input'];
 };
 
 
@@ -193,6 +200,7 @@ export type UserChallenge = {
 
 export type UserEcogesture = {
   __typename?: 'UserEcogesture';
+  challenge?: Maybe<Challenge>;
   createdAt: Scalars['DateTimeISO']['output'];
   ecogesture: Ecogesture;
   id: Scalars['Float']['output'];
@@ -258,6 +266,13 @@ export type GetMyChallengesQueryVariables = Exact<{
 
 export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
 
+export type GetChallengeByIdQueryVariables = Exact<{
+  getChallengeById: Scalars['Float']['input'];
+}>;
+
+
+export type GetChallengeByIdQuery = { __typename?: 'Query', getChallengeById: { __typename?: 'Challenge', id: number, label: string, description?: string | null, picture: string, startingDate: any, endingDate: any, ecogestures?: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> | null, participants: Array<{ __typename?: 'UserChallenge', id: number }>, createdBy: { __typename?: 'User', id: number } } };
+
 export type GetEcogesturesQueryVariables = Exact<{
   input?: InputMaybe<GetEcogesturesInput>;
 }>;
@@ -275,15 +290,16 @@ export type GetValidatedEcogesturesQueryVariables = Exact<{
 }>;
 
 
-export type GetValidatedEcogesturesQuery = { __typename?: 'Query', getValidatedEcogestures: { __typename?: 'ValidatedEcogesturesResponse', totalCount: number, userEcogestures: Array<{ __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } }> } };
+export type GetValidatedEcogesturesQuery = { __typename?: 'Query', getValidatedEcogestures: { __typename?: 'ValidatedEcogesturesResponse', totalCount: number, userEcogestures: Array<{ __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number }, challenge?: { __typename?: 'Challenge', id: number } | null }> } };
 
 export type ValidateEcogestureMutationVariables = Exact<{
   ecogestureId: Scalars['Int']['input'];
   level_validated: Scalars['Int']['input'];
+  challengeId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type ValidateEcogestureMutation = { __typename?: 'Mutation', validateEcogesture: { __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } } };
+export type ValidateEcogestureMutation = { __typename?: 'Mutation', validateEcogesture: { __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number }, challenge?: { __typename?: 'Challenge', id: number } | null } };
 
 
 export const CreateChallengeDocument = gql`
@@ -583,6 +599,66 @@ export type GetMyChallengesQueryHookResult = ReturnType<typeof useGetMyChallenge
 export type GetMyChallengesLazyQueryHookResult = ReturnType<typeof useGetMyChallengesLazyQuery>;
 export type GetMyChallengesSuspenseQueryHookResult = ReturnType<typeof useGetMyChallengesSuspenseQuery>;
 export type GetMyChallengesQueryResult = Apollo.QueryResult<GetMyChallengesQuery, GetMyChallengesQueryVariables>;
+export const GetChallengeByIdDocument = gql`
+    query getChallengeById($getChallengeById: Float!) {
+  getChallengeById(id: $getChallengeById) {
+    id
+    label
+    description
+    picture
+    startingDate
+    endingDate
+    ecogestures {
+      id
+      label
+      description
+      pictureUrl
+      level1Expectation
+      level2Expectation
+      level3Expectation
+    }
+    participants {
+      id
+    }
+    createdBy {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetChallengeByIdQuery__
+ *
+ * To run a query within a React component, call `useGetChallengeByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChallengeByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChallengeByIdQuery({
+ *   variables: {
+ *      getChallengeById: // value for 'getChallengeById'
+ *   },
+ * });
+ */
+export function useGetChallengeByIdQuery(baseOptions: Apollo.QueryHookOptions<GetChallengeByIdQuery, GetChallengeByIdQueryVariables> & ({ variables: GetChallengeByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChallengeByIdQuery, GetChallengeByIdQueryVariables>(GetChallengeByIdDocument, options);
+      }
+export function useGetChallengeByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChallengeByIdQuery, GetChallengeByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChallengeByIdQuery, GetChallengeByIdQueryVariables>(GetChallengeByIdDocument, options);
+        }
+export function useGetChallengeByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetChallengeByIdQuery, GetChallengeByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetChallengeByIdQuery, GetChallengeByIdQueryVariables>(GetChallengeByIdDocument, options);
+        }
+export type GetChallengeByIdQueryHookResult = ReturnType<typeof useGetChallengeByIdQuery>;
+export type GetChallengeByIdLazyQueryHookResult = ReturnType<typeof useGetChallengeByIdLazyQuery>;
+export type GetChallengeByIdSuspenseQueryHookResult = ReturnType<typeof useGetChallengeByIdSuspenseQuery>;
+export type GetChallengeByIdQueryResult = Apollo.QueryResult<GetChallengeByIdQuery, GetChallengeByIdQueryVariables>;
 export const GetEcogesturesDocument = gql`
     query GetEcogestures($input: GetEcogesturesInput) {
   getEcogestures(input: $input) {
@@ -690,6 +766,9 @@ export const GetValidatedEcogesturesDocument = gql`
       user {
         id
       }
+      challenge {
+        id
+      }
     }
     totalCount
   }
@@ -729,10 +808,11 @@ export type GetValidatedEcogesturesLazyQueryHookResult = ReturnType<typeof useGe
 export type GetValidatedEcogesturesSuspenseQueryHookResult = ReturnType<typeof useGetValidatedEcogesturesSuspenseQuery>;
 export type GetValidatedEcogesturesQueryResult = Apollo.QueryResult<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>;
 export const ValidateEcogestureDocument = gql`
-    mutation ValidateEcogesture($ecogestureId: Int!, $level_validated: Int!) {
+    mutation ValidateEcogesture($ecogestureId: Int!, $level_validated: Int!, $challengeId: Int) {
   validateEcogesture(
     ecogestureId: $ecogestureId
     level_validated: $level_validated
+    challengeId: $challengeId
   ) {
     id
     validated_at
@@ -743,6 +823,9 @@ export const ValidateEcogestureDocument = gql`
       pictureUrl
     }
     user {
+      id
+    }
+    challenge {
       id
     }
   }
@@ -765,6 +848,7 @@ export type ValidateEcogestureMutationFn = Apollo.MutationFunction<ValidateEcoge
  *   variables: {
  *      ecogestureId: // value for 'ecogestureId'
  *      level_validated: // value for 'level_validated'
+ *      challengeId: // value for 'challengeId'
  *   },
  * });
  */

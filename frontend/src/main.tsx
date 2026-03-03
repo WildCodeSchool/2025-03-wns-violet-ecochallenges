@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/new-challenge",
-        element: <CreateChallengePage />
+        element: <CreateChallengePage />,
       },
       {
         path: "/signin",
@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: "/challenge",
+        path: "/challenge/:id",
         element: <ChallengePage />,
       },
       {

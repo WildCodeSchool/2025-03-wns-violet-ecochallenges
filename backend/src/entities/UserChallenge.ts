@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from "typeorm";
 import { User } from "./User";
 import { Challenge } from "./Challenge";
@@ -12,7 +13,7 @@ import { Field, ObjectType } from "type-graphql";
 
 @Entity()
 @ObjectType()
-export class UserChallenge {
+export class UserChallenge extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field()
   id: number;
