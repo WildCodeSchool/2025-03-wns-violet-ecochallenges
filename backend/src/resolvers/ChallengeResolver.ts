@@ -108,31 +108,28 @@ registerEnumType(ChallengeFilter, {
 
 @Resolver(Challenge)
 export default class ChallengeResolver {
-  @FieldResolver(() => Number) // ← Ajoute un champ virtuel
+  @FieldResolver(() => Number)
   async progressPercentage(@Root() challenge: Challenge): Promise<number> {
-    //nb ecogeste validé
-
-    const fullChallenge = await Challenge.findOne({
-      where: { id: challenge.id },
-      relations: ["participants", "ecogestures"],
-    });
-
-    if (!fullChallenge) {
-      throw new Error("Challenge non trouvé");
+    if (!challenge.participants || !challenge.ecogestures) {
+      return 0;
     }
 
-    const totalEcogestures = fullChallenge.ecogestures?.length || 0;
-    const totalParticipants = fullChallenge.participants?.length || 0;
+    const totalEcogestures = challenge.ecogestures?.length || 0;
+    const totalParticipants = challenge.participants?.length || 0;
 
     if (totalEcogestures === 0 || totalParticipants === 0) {
-      return 0; // Évite la division par zéro
+      return 0;
     }
 
-    const ecogestureIds = fullChallenge.ecogestures?.map((e) => e.id) || [];
+    const ecogestureIds = challenge.ecogestures?.map((e) => e.id) || [];
     const participantIds =
-      fullChallenge.participants?.map((p) => p.user.id) || [];
+      challenge.participants?.filter((p) => p.user)?.map((p) => p.user.id) ||
+      [];
 
-    // Compter combien de fois les participants ont validé les écogestes du challenge
+    if (participantIds.length === 0) {
+      return 0;
+    }
+
     const totalValidations = await UserEcogesture.count({
       where: {
         user: { id: In(participantIds) },
