@@ -49,6 +49,7 @@ export class UserEcogestureResolver {
     @Arg("input", () => PaginationInput, { nullable: true })
     input: PaginationInput,
     @Ctx() ctx: Context,
+    @Ctx() ctx: Context,
   ): Promise<ValidatedEcogesturesResponse> {
     const userId = ctx.user?.id;
     if (!userId) throw new Error("Utilisateur non connecté");

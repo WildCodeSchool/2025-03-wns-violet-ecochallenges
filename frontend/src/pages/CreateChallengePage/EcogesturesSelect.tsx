@@ -33,7 +33,7 @@ function EcogesturesSelect({
   value: string[];
   onChange: (value: string[]) => void;
 }) {
-  const { data, loading, error } = useGetEcogesturesQuery();
+  const {data, loading, error} = useGetEcogesturesQuery();
   const [selectedId, setSelectedId] = useState<string>("");
   const [openCombobox, setOpenCombobox] = useState(false);
   const [showAll, setShowAll] = useState(false);
@@ -96,11 +96,9 @@ function EcogesturesSelect({
                     <CommandItem
                       key={eco.id}
                       value={eco.id.toString()}
-                      onSelect={(currentValue: string | undefined) => {
-                        if (currentValue) {
-                          setSelectedId(currentValue);
-                          setOpenCombobox(false);
-                        }
+                      onSelect={(currentValue) => {
+                        if (currentValue) setSelectedId(currentValue);
+                        setOpenCombobox(false);
                       }}
                     >
                       {eco.label}

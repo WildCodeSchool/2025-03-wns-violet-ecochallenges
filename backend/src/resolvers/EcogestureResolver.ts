@@ -33,7 +33,7 @@ export default class EcogestureResolver {
   @Query(() => EcogestureListResponse)
   async getEcogestures(
     @Arg("input", () => GetEcogesturesInput, { nullable: true })
-    input?: GetEcogesturesInput
+    input?: GetEcogesturesInput,
   ): Promise<EcogestureListResponse> {
     const page = input?.page ?? 1;
     const limit = input?.limit ?? 5;

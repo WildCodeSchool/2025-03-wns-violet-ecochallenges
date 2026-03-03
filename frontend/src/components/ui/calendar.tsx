@@ -19,16 +19,17 @@ export function Calendar(props: CalendarProps) {
 export function CalendarPopover(props: CalendarProps & { triggerLabel?: string; selected?: any }) {
     const [open, setOpen] = React.useState(false);
     // Ferme le popover si une plage complète et différente est sélectionnée
+    const selected = (props as any).selected;
     React.useEffect(() => {
         if (
-            props.selected &&
-            (props.selected as any).from &&
-            (props.selected as any).to &&
-            (props.selected as any).from.getTime() !== (props.selected as any).to.getTime()
+            selected &&
+            selected.from &&
+            selected.to &&
+            selected.from.getTime() !== selected.to.getTime()
         ) {
             setOpen(false);
         }
-    }, [props.selected]);
+    }, [selected]);
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>

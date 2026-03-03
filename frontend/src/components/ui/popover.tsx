@@ -41,34 +41,31 @@ export function Popover({
   );
 }
 
-export function PopoverTrigger({
-  asChild,
-  ...props
-}: { asChild?: boolean } & React.ComponentProps<"button">) {
-  const context = React.useContext(PopoverContext);
-  if (!context) throw new Error("PopoverTrigger must be used within a Popover");
-  const { open, setOpen } = context;
-  if (asChild && React.isValidElement(props.children)) {
-    // Inject onClick to child
-    const childProps = (props.children as React.ReactElement<any>).props;
-    return React.cloneElement(props.children as React.ReactElement<any>, {
-      onClick: (e: React.MouseEvent) => {
-        childProps?.onClick?.(e);
-        setOpen(!open);
-      },
-      "aria-expanded": open,
-    });
-  }
-  return (
-    <button
-      {...props}
-      onClick={(e) => {
-        props.onClick?.(e);
-        setOpen(!open);
-      }}
-      aria-expanded={open}
-    />
-  );
+export function PopoverTrigger({ asChild, ...props }: { asChild?: boolean } & React.ComponentProps<"button">) {
+    const context = React.useContext(PopoverContext);
+    if (!context) throw new Error("PopoverTrigger must be used within a Popover");
+    const { open, setOpen } = context;
+    if (asChild && React.isValidElement(props.children)) {
+        // Inject onClick to child
+        const child = props.children as React.ReactElement<any>;
+        return React.cloneElement(child, {
+            onClick: (e: React.MouseEvent) => {
+                child.props.onClick?.(e);
+                setOpen(!open);
+            },
+            'aria-expanded': open,
+        });
+    }
+    return (
+        <button
+            {...props}
+            onClick={(e) => {
+                props.onClick?.(e);
+                setOpen(!open);
+            }}
+            aria-expanded={open}
+        />
+    );
 }
 
 export function PopoverContent({

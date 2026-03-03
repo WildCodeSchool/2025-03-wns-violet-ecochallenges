@@ -2,7 +2,7 @@ import { useState } from "react";
 import NewChallenge from "@/pages/CreateChallengePage/NewChallenge";
 
 function CreateChallengePage() {
-const [selectedEcogestures, setSelectedEcogestures] = useState<string[]>([]);
+  const [selectedEcogestures, setSelectedEcogestures] = useState<string[]>([]);
   return (
     <main>
       <NewChallenge
