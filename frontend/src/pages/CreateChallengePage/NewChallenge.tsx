@@ -39,8 +39,7 @@ function NewChallenge({
     picture: "",
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const [participants, setParticipants] = useState<string[]>([]);
-  const [participantInput, setParticipantInput] = useState("");
+  const [participants, setParticipants] = useState<Participant[]>([]);
   const [createChallenge, { loading }] = useMutation(CREATE_CHALLENGE, {
     refetchQueries: [
       {
@@ -230,48 +229,10 @@ function NewChallenge({
           </CardContent>
         </Card>
 
-        <Card className="bg-secondary-foreground  w-full">
-          <CardHeader>
-            <CardTitle className="text-black">Inviter un participant</CardTitle>
-            <CardDescription className="text-black">
-              Ajoutez des participants au challenge
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-2 mb-2">
-              <Input
-                type="text"
-                placeholder="Saisissez un nom ou email"
-                value={participantInput}
-                onChange={(e) => setParticipantInput(e.target.value)}
-                className="bg-white"
-              />
-              <Button type="button" onClick={handleAddParticipant}>
-                Ajouter
-              </Button>
-            </div>
-            {/* Liste des participants */}
-            <ul className="flex flex-col gap-2">
-              {participants.map((name) => (
-                <li
-                  key={name}
-                  className="flex items-center gap-2 bg-gray-100 rounded px-3 py-2"
-                >
-                  <User size={16} className="text-gray-600" />
-                  <span className="flex-1 text-black text-sm">{name}</span>
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => handleRemoveParticipant(name)}
-                  >
-                    <X size={16} />
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+        <AddParticipants
+          participants={participants}
+          setParticipants={setParticipants}
+        />
         <div className="flex justify-end gap-4 mt-2">
           <Button type="submit" disabled={loading} size="lg">
             {loading ? "Création en cours..." : "Créer le challenge"}
