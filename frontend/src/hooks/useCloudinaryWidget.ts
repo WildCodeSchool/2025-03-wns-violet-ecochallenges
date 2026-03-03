@@ -105,8 +105,13 @@ export function useCloudinaryWidget({
             const [coords] = coordinates.custom;
             const { public_id } = result.info;
 
+            const dimensions = {
+              width: croppingAspectRatio === 1 ? 400 : 600,
+              height: croppingAspectRatio === 1 ? 400 : 300,
+            };
+
             // Build URL with crop transformation applied
-            const croppedUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_crop,x_${coords[0]},y_${coords[1]},w_${coords[2]},h_${coords[3]}/c_fill,w_400,h_400,g_auto/${public_id}`;
+            const croppedUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_crop,x_${coords[0]},y_${coords[1]},w_${coords[2]},h_${coords[3]}/c_fill,w_${dimensions.width},h_${dimensions.height},g_auto/${public_id}`;
             onSuccess(croppedUrl);
           } else {
             // Fallback to original URL if no crop coordinates
@@ -119,7 +124,14 @@ export function useCloudinaryWidget({
     );
 
     widget.open();
-  }, [cloudName, uploadPreset, onSuccess, onError]);
+  }, [
+    cloudName,
+    uploadPreset,
+    onSuccess,
+    onError,
+    folder,
+    croppingAspectRatio,
+  ]);
 
   return { openWidget };
 }
