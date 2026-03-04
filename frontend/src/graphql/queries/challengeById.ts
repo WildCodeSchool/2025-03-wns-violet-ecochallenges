@@ -6,7 +6,7 @@ export const GET_CHALLENGE_BY_ID = gql`
       id
       label
       description
-      picture
+      pictureUrl
       startingDate
       endingDate
       ecogestures {
