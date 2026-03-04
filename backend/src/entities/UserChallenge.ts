@@ -6,7 +6,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  BaseEntity,
 } from "typeorm";
 import { User } from "./User";
 import { Challenge } from "./Challenge";

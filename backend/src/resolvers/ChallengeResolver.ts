@@ -96,7 +96,7 @@ export default class ChallengeResolver {
   async getMyChallenges(
     @Ctx() ctx: Context,
     @Arg("input", () => GetMyChallengesInput, { nullable: true })
-    input?: GetMyChallengesInput,,
+    input?: GetMyChallengesInput,
   ): Promise<ChallengeListResponse> {
     if (!ctx.user) {
       throw new Error("Utilisateur non authentifié");
