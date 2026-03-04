@@ -4,13 +4,16 @@ import {
   Ctx,
   Field,
   InputType,
+  Int,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
 } from "type-graphql";
 import argon2 from "argon2";
 import { Context, UserPayload } from "../types/Context";
 import * as jwt from "jsonwebtoken";
+import { ILike } from "typeorm";
 import { User } from "../entities/User";
 import {
   IsEmail,
@@ -82,6 +85,15 @@ export function createUserPayload(user: User): UserPayload {
   return userPayload;
 }
 
+@ObjectType()
+class SearchUsersResponse {
+  @Field(() => [User])
+  users: User[];
+
+  @Field(() => Int)
+  totalCount: number;
+}
+
 @Resolver(User)
 export default class UserResolver {
   @Query(() => User)
@@ -97,6 +109,25 @@ export default class UserResolver {
   async getAllUsers() {
     const users = await User.find();
     return users;
+  }
+
+  @Query(() => SearchUsersResponse)
+  @Authorized()
+  async searchUsers(
+    @Arg("search") search: string,
+    @Arg("page", () => Int, { nullable: true }) page: number = 1,
+    @Arg("limit", () => Int, { nullable: true }) limit: number = 5,
+  ): Promise<SearchUsersResponse> {
+    const skip = (page - 1) * limit;
+    const [users, totalCount] = await User.findAndCount({
+      where: [
+        { username: ILike(`%${search}%`) },
+        { email: ILike(`%${search}%`) },
+      ],
+      skip,
+      take: limit,
+    });
+    return { users, totalCount };
   }
 
   @Mutation(() => String)

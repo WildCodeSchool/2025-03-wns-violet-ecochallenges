@@ -24,6 +24,8 @@ import { Context } from "../types/Context";
 import { Ecogesture } from "../entities/Ecogesture";
 import { User } from "../entities/User";
 import { tryDeleteCloudinaryImage } from "../lib/cloudinary";
+import { UserChallenge } from "../entities/UserChallenge";
+import dataSource from "../config/db";
 
 @InputType()
 export class NewChallengeInput {
@@ -50,6 +52,9 @@ export class NewChallengeInput {
 
   @Field(() => [Number], { nullable: true })
   ecogestureIds?: number[];
+
+  @Field(() => [Number], { nullable: true })
+  participantIds?: number[];
 }
 
 @ObjectType()
@@ -189,10 +194,36 @@ export default class ChallengeResolver {
       description: data.description,
       createdBy: user,
       ecogestures: ecogestures,
-      //TODO add participants
     });
 
     await challenge.save();
+
+    const userChallengeRepo = dataSource.getRepository(UserChallenge);
+
+    // Associate challenge creator to the challenge (accepted by default)
+    await userChallengeRepo.insert({
+      user: { id: user.id },
+      challenge: { id: challenge.id },
+      hasAccepted: true,
+    });
+
+    // Associate invited participants to the challenge (pending acceptance)
+    // We exclude the creator: they are already associated with hasAccepted: true
+    const invitedIds = (data.participantIds ?? []).filter(
+      (id) => id !== user.id,
+    );
+    if (invitedIds.length > 0) {
+      const participants = await User.findBy({ id: In(invitedIds) });
+      await Promise.all(
+        participants.map((participant: User) =>
+          userChallengeRepo.insert({
+            user: { id: participant.id },
+            challenge: { id: challenge.id },
+            hasAccepted: true,
+          }),
+        ),
+      );
+    }
 
     return challenge;
   }
