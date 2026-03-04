@@ -5,7 +5,6 @@ import { TypographyP } from "@/components/ui/typographyP";
 import { VALIDATE_ECOGESTURE } from "@/graphql/queries/validateEcogesture";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@apollo/client";
-import { CheckCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type GetValidatedEcogesturesQuery } from "@/generated/graphql-types";
 
@@ -79,19 +78,6 @@ function EcogestureChallengeCard({
     }
   };
 
-  const getLevelExpectations = (level: number) => {
-    switch (level) {
-      case 1:
-        return ecogesture.level1Expectation;
-      case 2:
-        return ecogesture.level2Expectation;
-      case 3:
-        return ecogesture.level3Expectation;
-      default:
-        return "";
-    }
-  };
-
   const nextLevel = currentLevel + 1;
   const isCompleted = currentLevel === 3;
 
@@ -109,19 +95,23 @@ function EcogestureChallengeCard({
       />
       {currentLevel > 0 && (
         <div className="absolute top-2 right-2 bg-white rounded-full p-1">
-          <CheckCircle className="w-6 h-6 text-green-500" />
         </div>
       )}
       <CardContent className="p-4">
         <TypographyH3 className="mb-2 text-black">
           {ecogesture.label}
         </TypographyH3>
-        <TypographyP className="text-sm text-black">
+        <TypographyP className="text-sm text-black p-4">
           {ecogesture.description}
         </TypographyP>
         <div className="space-y-3 mb-4">
           <div>
-            <TypographyP className="text-sm font-semibold mb-1">
+            <TypographyP
+              className={cn(
+                "text-sm font-semibold mb-1 text-black",
+                `${currentLevel >= 1 ? "text-green-600" : "text-black"}`,
+              )}
+            >
               Niveau 1 {currentLevel >= 1 && "✓"}
             </TypographyP>
             <TypographyP className="text-xs text-gray-600">
@@ -130,7 +120,12 @@ function EcogestureChallengeCard({
           </div>
 
           <div>
-            <TypographyP className="text-sm font-semibold mb-1">
+            <TypographyP
+              className={cn(
+                "text-sm font-semibold mb-1 text-black",
+                `${currentLevel >= 2 ? "text-green-600" : "text-black"}`,
+              )}
+            >
               Niveau 2 {currentLevel >= 2 && "✓"}
             </TypographyP>
             <TypographyP className="text-xs text-gray-600">
@@ -139,7 +134,12 @@ function EcogestureChallengeCard({
           </div>
 
           <div>
-            <TypographyP className="text-sm font-semibold mb-1">
+            <TypographyP
+              className={cn(
+                "text-sm font-semibold mb-1 text-black",
+                `${currentLevel >= 3 ? "text-green-700" : "text-black"}`,
+              )}
+            >
               Niveau 3 {currentLevel >= 3 && "✓"}
             </TypographyP>
             <TypographyP className="text-xs text-gray-600">
@@ -150,16 +150,13 @@ function EcogestureChallengeCard({
 
         {!isCompleted && (
           <>
-            <TypographyP className="text-sm font-semibold mb-2">
-              Niveau {nextLevel} :
-            </TypographyP>
-            <TypographyP className="text-sm text-gray-600 mb-4">
-              {getLevelExpectations(nextLevel)}
-            </TypographyP>
             <Button
               onClick={handleValidate}
-              // disabled={loading}
-              className="w-full"
+              disabled={loading}
+              className={cn(
+                "w-15 flex justify-self-center",
+                "transition-transform duration-500 ease-in-out hover:scale-105 ",
+              )}
             >
               {loading ? "Validation..." : `Valider le niveau ${nextLevel}`}
             </Button>
@@ -167,9 +164,9 @@ function EcogestureChallengeCard({
         )}
 
         {isCompleted && (
-          <div className="text-center p-4 bg-green-50 rounded">
+          <div className="text-center p-4 rounded">
             <TypographyP className="text-green-700 font-semibold">
-              ✅ Écogeste terminé !
+              ✅ Félictations, l'écogeste est terminé !
             </TypographyP>
           </div>
         )}
