@@ -131,16 +131,6 @@ export class UserEcogestureResolver {
         throw new Error("Ecogesture or User not found");
       }
 
-      // const newUserEcogesture = dataSource.getRepository(UserEcogesture).insert({
-      //   user: userEntity,
-      //   ecogesture: ecogestureEntity,
-      //   challenge: challengeEntity || undefined,
-      //   level_validated,
-      //   validated_at: new Date(),
-      // });
-
-      // return await newUserEcogesture.save();
-
       const userEcogestureRepo = dataSource.getRepository(UserEcogesture);
       const insertResult = await userEcogestureRepo.insert({
         user: userEntity,
