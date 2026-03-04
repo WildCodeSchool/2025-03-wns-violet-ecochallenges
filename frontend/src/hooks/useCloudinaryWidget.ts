@@ -29,6 +29,8 @@ interface UseCloudinaryWidgetOptions {
   uploadPreset: string;
   onSuccess: (url: string) => void;
   onError?: (error: Error) => void;
+  folder: string;
+  croppingAspectRatio: number;
 }
 
 // Extend the Window interface for Typescript to include Cloudinary
@@ -61,6 +63,8 @@ export function useCloudinaryWidget({
   uploadPreset,
   onSuccess,
   onError,
+  folder,
+  croppingAspectRatio,
 }: UseCloudinaryWidgetOptions) {
   // useCallback to memoize the openWidget function and avoid unnecessary re-creations
   const openWidget = useCallback(() => {
@@ -78,9 +82,9 @@ export function useCloudinaryWidget({
         sources: ["local", "camera"], // Allow uploads from local files and camera
         multiple: false, // Only one file accepted
         maxFiles: 1,
-        folder: "profile_pictures", // Organize uploads in a specific folder of Cloudinary
+        folder, // Organize uploads in a specific folder of Cloudinary
         cropping: true, // Active cropping editor in the widget
-        croppingAspectRatio: 1, // Force square aspect ratio for profile pictures
+        croppingAspectRatio, // Force square aspect ratio for profile pictures
         croppingShowDimensions: true, // Show dimensions while cropping
         croppingCoordinatesMode: "custom", // Use custom coordinates for cropping
         showSkipCropButton: false, // Don't allow skipping the crop step
@@ -101,8 +105,13 @@ export function useCloudinaryWidget({
             const [coords] = coordinates.custom;
             const { public_id } = result.info;
 
+            const dimensions = {
+              width: croppingAspectRatio === 1 ? 400 : 600,
+              height: croppingAspectRatio === 1 ? 400 : 300,
+            };
+
             // Build URL with crop transformation applied
-            const croppedUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_crop,x_${coords[0]},y_${coords[1]},w_${coords[2]},h_${coords[3]}/c_fill,w_400,h_400,g_auto/${public_id}`;
+            const croppedUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_crop,x_${coords[0]},y_${coords[1]},w_${coords[2]},h_${coords[3]}/c_fill,w_${dimensions.width},h_${dimensions.height},g_auto/${public_id}`;
             onSuccess(croppedUrl);
           } else {
             // Fallback to original URL if no crop coordinates
@@ -115,7 +124,14 @@ export function useCloudinaryWidget({
     );
 
     widget.open();
-  }, [cloudName, uploadPreset, onSuccess, onError]);
+  }, [
+    cloudName,
+    uploadPreset,
+    onSuccess,
+    onError,
+    folder,
+    croppingAspectRatio,
+  ]);
 
   return { openWidget };
 }

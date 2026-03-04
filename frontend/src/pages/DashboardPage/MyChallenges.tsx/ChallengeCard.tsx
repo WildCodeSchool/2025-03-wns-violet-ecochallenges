@@ -34,12 +34,12 @@ const ChallengeCard = ({ challenge, userId }: ChallengeCardProps) => {
       <Card
         className={cn(
           "w-full overflow-hidden pt-0",
-          "bg-secondary-foreground border-none shadow-2xl",
+          "bg-secondary-foreground border-none shadow-2xl",,
         )}
       >
         <div className="relative h-48 overflow-hidden">
           <img
-            src={challenge.picture}
+            src={challenge.pictureUrl}
             alt="Photo du challenge"
             className="w-full h-full object-cover"
           />
@@ -47,7 +47,7 @@ const ChallengeCard = ({ challenge, userId }: ChallengeCardProps) => {
             className={cn(
               "absolute top-3 right-3",
               "bg-white/90 p-2 rounded-lg shadow-md",
-              "flex gap-2",
+              "flex gap-2",,
             )}
           >
             {challenge.createdBy.id === userId && (
