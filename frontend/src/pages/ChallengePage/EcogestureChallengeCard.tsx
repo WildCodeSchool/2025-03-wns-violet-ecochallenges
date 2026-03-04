@@ -40,17 +40,12 @@ function EcogestureChallengeCard({
     refetchQueries: ["GetValidatedEcogestures"],
     awaitRefetchQueries: true,
     onCompleted: (data) => {
-      console.log("✅ Mutation completed:", data);
       setCurrentLevel(data.validateEcogesture.level_validated);
+      setLoading(false);
     },
     onError: (error) => {
-      console.error("❌ Erreur lors de la validation:", error);
       console.error("Erreur lors de la validation de l'écogeste: ", error);
-    },
-    update: (cache, { data }) => {
-      if (data?.validatedEcogesture) {
-        setCurrentLevel(data.validatedEcogesture.level_validated);
-      }
+      setLoading(false);
     },
   });
 
@@ -61,7 +56,6 @@ function EcogestureChallengeCard({
           userEco.ecogesture.id === ecogesture.id &&
           userEco.challenge?.id === challengeId,
       );
-      console.log("🎯 Found userEcogesture:", userEcogesture);
 
       if (userEcogesture) {
         setCurrentLevel(userEcogesture.level_validated);
@@ -164,7 +158,7 @@ function EcogestureChallengeCard({
             </TypographyP>
             <Button
               onClick={handleValidate}
-              disabled={loading}
+              // disabled={loading}
               className="w-full"
             >
               {loading ? "Validation..." : `Valider le niveau ${nextLevel}`}

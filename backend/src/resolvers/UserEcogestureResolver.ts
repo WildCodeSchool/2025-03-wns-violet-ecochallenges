@@ -16,6 +16,7 @@ import { Ecogesture } from "../entities/Ecogesture";
 import { Context } from "../types/Context";
 import { UserChallenge } from "../entities/UserChallenge";
 import { Challenge } from "../entities/Challenge";
+import dataSource from "../config/db";
 
 @InputType()
 class PaginationInput {
@@ -61,7 +62,7 @@ export class UserEcogestureResolver {
       where: { user: { id: userId } },
       skip,
       take: limit,
-      relations: ["ecogesture", "user"],
+      relations: ["ecogesture", "user", "challenge"],
       order: { validated_at: "DESC" },
     });
 
@@ -130,7 +131,18 @@ export class UserEcogestureResolver {
         throw new Error("Ecogesture or User not found");
       }
 
-      const newUserEcogesture = UserEcogesture.create({
+      // const newUserEcogesture = dataSource.getRepository(UserEcogesture).insert({
+      //   user: userEntity,
+      //   ecogesture: ecogestureEntity,
+      //   challenge: challengeEntity || undefined,
+      //   level_validated,
+      //   validated_at: new Date(),
+      // });
+
+      // return await newUserEcogesture.save();
+
+      const userEcogestureRepo = dataSource.getRepository(UserEcogesture);
+      const insertResult = await userEcogestureRepo.insert({
         user: userEntity,
         ecogesture: ecogestureEntity,
         challenge: challengeEntity || undefined,
@@ -138,7 +150,16 @@ export class UserEcogestureResolver {
         validated_at: new Date(),
       });
 
-      return await newUserEcogesture.save();
+      const newUserEcogesture = await UserEcogesture.findOne({
+        where: { id: insertResult.identifiers[0].id },
+        relations: ["ecogesture", "user", "challenge"],
+      });
+
+      if (!newUserEcogesture) {
+        throw new Error("Failed to create UserEcogesture");
+      }
+
+      return newUserEcogesture;
     }
   }
 }
