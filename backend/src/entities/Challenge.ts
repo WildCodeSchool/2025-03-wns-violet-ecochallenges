@@ -37,7 +37,7 @@ export class Challenge extends BaseEntity {
 
   @Column()
   @Field()
-  picture: string;
+  pictureUrl: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })

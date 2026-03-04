@@ -11,12 +11,19 @@ import {
   Resolver,
 } from "type-graphql";
 import { In } from "typeorm";
-import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
+import {
+  IsDate,
+  IsNotEmpty,
+  Matches,
+  MinLength,
+  validate,
+} from "class-validator";
 import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
 import { Context } from "../types/Context";
 import { Ecogesture } from "../entities/Ecogesture";
 import { User } from "../entities/User";
+import { tryDeleteCloudinaryImage } from "../lib/cloudinary";
 import { UserChallenge } from "../entities/UserChallenge";
 import dataSource from "../config/db";
 
@@ -41,7 +48,7 @@ export class NewChallengeInput {
   endingDate: Date;
 
   @Field()
-  picture: string;
+  pictureUrl: string;
 
   @Field(() => [Number], { nullable: true })
   ecogestureIds?: number[];
@@ -69,6 +76,19 @@ class GetMyChallengesInput {
 
   @Field(() => ChallengeFilter, { nullable: true })
   filter?: ChallengeFilter;
+}
+
+@InputType()
+class UpdateChallengePictureInput {
+  @Field()
+  id: number;
+
+  @Field()
+  @IsNotEmpty({ message: "L'URL de l'image ne peut pas être vide" })
+  @Matches(/^https?:\/\/.+/, {
+    message: "L'URL de l'image doit commencer par http:// ou https://",
+  })
+  pictureUrl: string;
 }
 
 // Filter for getMyChallenges (user point of view)
@@ -170,7 +190,7 @@ export default class ChallengeResolver {
       label: data.label,
       startingDate: data.startingDate,
       endingDate: data.endingDate,
-      picture: data.picture,
+      pictureUrl: data.pictureUrl,
       description: data.description,
       createdBy: user,
       ecogestures: ecogestures,
@@ -180,15 +200,15 @@ export default class ChallengeResolver {
 
     const userChallengeRepo = dataSource.getRepository(UserChallenge);
 
-    // Associer le créateur au challenge (accepté par defaut)
+    // Associate challenge creator to the challenge (accepted by default)
     await userChallengeRepo.insert({
       user: { id: user.id },
       challenge: { id: challenge.id },
       hasAccepted: true,
     });
 
-    // Associer les participants invités (en attente d'acceptation)
-    // On exclut le créateur : il est déjà associé avec hasAccepted: true
+    // Associate invited participants to the challenge (pending acceptance)
+    // We exclude the creator: they are already associated with hasAccepted: true
     const invitedIds = (data.participantIds ?? []).filter(
       (id) => id !== user.id,
     );
@@ -204,6 +224,41 @@ export default class ChallengeResolver {
         ),
       );
     }
+
+    return challenge;
+  }
+
+  @Authorized()
+  @Mutation(() => Challenge)
+  async updateChallengePicture(
+    @Arg("data") data: UpdateChallengePictureInput,
+    @Ctx() ctx: Context,
+  ) {
+    if (!ctx.user) {
+      throw new Error("Utilisateur non authentifié");
+    }
+
+    const challenge = await Challenge.findOne({
+      where: { id: data.id },
+      relations: ["createdBy"],
+    });
+
+    if (!challenge) {
+      throw new Error("Challenge non trouvé");
+    }
+
+    // Only the creator of the challenge can update its picture
+    if (challenge.createdBy.id !== ctx.user.id) {
+      throw new Error("Vous n'êtes pas autorisé à modifier ce challenge");
+    }
+
+    const oldPictureUrl = challenge.pictureUrl;
+
+    // If the old picture is stocked on Cloudinary, delete it from Cloudinary
+    await tryDeleteCloudinaryImage(oldPictureUrl);
+
+    challenge.pictureUrl = data.pictureUrl;
+    await challenge.save();
 
     return challenge;
   }
