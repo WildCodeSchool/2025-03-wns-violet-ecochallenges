@@ -3,14 +3,12 @@ import {
   Authorized,
   Ctx,
   Field,
-  FieldResolver,
   InputType,
   Mutation,
   ObjectType,
   Query,
   registerEnumType,
   Resolver,
-  Root,
 } from "type-graphql";
 import { In } from "typeorm";
 import {
@@ -108,8 +106,9 @@ registerEnumType(ChallengeFilter, {
 
 @Resolver(Challenge)
 export default class ChallengeResolver {
-  @FieldResolver(() => Number)
-  async progressPercentage(@Root() challenge: Challenge): Promise<number> {
+  private async calculateProgressPercentage(
+    challenge: Challenge,
+  ): Promise<number> {
     if (!challenge.participants || !challenge.ecogestures) {
       return 0;
     }
@@ -134,6 +133,7 @@ export default class ChallengeResolver {
       where: {
         user: { id: In(participantIds) },
         ecogesture: { id: In(ecogestureIds) },
+        challenge: { id: challenge.id },
       },
     });
 
@@ -167,6 +167,8 @@ export default class ChallengeResolver {
     const queryBuilder = Challenge.createQueryBuilder("challenge")
       .leftJoinAndSelect("challenge.createdBy", "createdBy")
       .leftJoinAndSelect("challenge.participants", "participants")
+      .leftJoinAndSelect("challenge.ecogestures", "ecogestures")
+      .leftJoinAndSelect("participants.user", "user")
       .skip(skip)
       .take(limit);
 
@@ -187,6 +189,12 @@ export default class ChallengeResolver {
         .andWhere("participants.userId = :userId", { userId: ctx.user.id });
     }
     const [challenges, totalCount] = await queryBuilder.getManyAndCount();
+
+    // Calculate progressPercentage for each challenge
+    for (const challenge of challenges) {
+      challenge.progressPercentage =
+        await this.calculateProgressPercentage(challenge);
+    }
 
     return { totalCount, challenges };
   }
@@ -307,12 +315,21 @@ export default class ChallengeResolver {
   async getChallengeById(@Arg("id") id: number): Promise<Challenge> {
     const challenge = await Challenge.findOne({
       where: { id },
-      relations: ["ecogestures", "participants", "createdBy"],
+      relations: [
+        "ecogestures",
+        "participants",
+        "participants.user",
+        "createdBy",
+      ],
     });
 
     if (!challenge) {
       throw new Error("Challenge non trouvé");
     }
+
+    challenge.progressPercentage =
+      await this.calculateProgressPercentage(challenge);
+
     return challenge;
   }
 }

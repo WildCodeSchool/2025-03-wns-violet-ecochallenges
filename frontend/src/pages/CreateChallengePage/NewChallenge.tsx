@@ -3,7 +3,6 @@ import { ApolloError, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
 import { GET_MY_CHALLENGES } from "@/graphql/queries/challenge";
-import { ChallengeFilter } from "@/generated/graphql-types";
 import EcogesturesSelect from "@/pages/CreateChallengePage/EcogesturesSelect";
 import {
   Card,
