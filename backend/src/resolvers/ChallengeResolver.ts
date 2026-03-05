@@ -26,6 +26,7 @@ import { User } from "../entities/User";
 import { tryDeleteCloudinaryImage } from "../lib/cloudinary";
 import { UserChallenge } from "../entities/UserChallenge";
 import dataSource from "../config/db";
+import { UserEcogesture } from "../entities/UserEcogesture";
 
 @InputType()
 export class NewChallengeInput {
@@ -105,6 +106,42 @@ registerEnumType(ChallengeFilter, {
 
 @Resolver(Challenge)
 export default class ChallengeResolver {
+  private async calculateProgressPercentage(
+    challenge: Challenge,
+  ): Promise<number> {
+    if (!challenge.participants || !challenge.ecogestures) {
+      return 0;
+    }
+
+    const totalEcogestures = challenge.ecogestures?.length || 0;
+    const totalParticipants = challenge.participants?.length || 0;
+
+    if (totalEcogestures === 0 || totalParticipants === 0) {
+      return 0;
+    }
+
+    const ecogestureIds = challenge.ecogestures?.map((e) => e.id) || [];
+    const participantIds =
+      challenge.participants?.filter((p) => p.user)?.map((p) => p.user.id) ||
+      [];
+
+    if (participantIds.length === 0) {
+      return 0;
+    }
+
+    const totalValidations = await UserEcogesture.count({
+      where: {
+        user: { id: In(participantIds) },
+        ecogesture: { id: In(ecogestureIds) },
+        challenge: { id: challenge.id },
+      },
+    });
+
+    const maxPossibleValidations = totalEcogestures * totalParticipants;
+
+    return Math.round((totalValidations / maxPossibleValidations) * 100);
+  }
+
   @Query(() => [Challenge])
   async getAllChallenges() {
     const challenges = await Challenge.find();
@@ -130,6 +167,8 @@ export default class ChallengeResolver {
     const queryBuilder = Challenge.createQueryBuilder("challenge")
       .leftJoinAndSelect("challenge.createdBy", "createdBy")
       .leftJoinAndSelect("challenge.participants", "participants")
+      .leftJoinAndSelect("challenge.ecogestures", "ecogestures")
+      .leftJoinAndSelect("participants.user", "user")
       .skip(skip)
       .take(limit);
 
@@ -141,15 +180,26 @@ export default class ChallengeResolver {
       });
     } else if (filter === ChallengeFilter.IN_PROGRESS) {
       queryBuilder
+        .innerJoin("challenge.participants", "participantFilter")
         .where("challenge.startingDate <= :now", { now })
         .andWhere("challenge.endingDate >= :now", { now })
-        .andWhere("participants.userId = :userId", { userId: ctx.user.id });
+        .andWhere("participantFilter.userId = :userId", {
+          userId: ctx.user.id,
+        });
     } else if (filter === ChallengeFilter.FINISHED) {
       queryBuilder
+        .innerJoin("challenge.participants", "participantFilter")
         .where("challenge.endingDate < :now", { now })
-        .andWhere("participants.userId = :userId", { userId: ctx.user.id });
+        .andWhere("participantFilter.userId = :userId", {
+          userId: ctx.user.id,
+        });
     }
     const [challenges, totalCount] = await queryBuilder.getManyAndCount();
+
+    for (const challenge of challenges) {
+      challenge.progressPercentage =
+        await this.calculateProgressPercentage(challenge);
+    }
 
     return { totalCount, challenges };
   }
@@ -270,12 +320,21 @@ export default class ChallengeResolver {
   async getChallengeById(@Arg("id") id: number): Promise<Challenge> {
     const challenge = await Challenge.findOne({
       where: { id },
-      relations: ["ecogestures", "participants", "createdBy"],
+      relations: [
+        "ecogestures",
+        "participants",
+        "participants.user",
+        "createdBy",
+      ],
     });
 
     if (!challenge) {
       throw new Error("Challenge non trouvé");
     }
+
+    challenge.progressPercentage =
+      await this.calculateProgressPercentage(challenge);
+
     return challenge;
   }
 }

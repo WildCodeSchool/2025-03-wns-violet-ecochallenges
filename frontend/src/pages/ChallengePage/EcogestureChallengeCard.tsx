@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TypographyH3 } from "@/components/ui/typographyH3";
 import { TypographyP } from "@/components/ui/typographyP";
 import { VALIDATE_ECOGESTURE } from "@/graphql/queries/validateEcogesture";
+import { GET_MY_CHALLENGES } from "@/graphql/queries/challenge";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
@@ -36,7 +37,12 @@ function EcogestureChallengeCard({
   const [loading, setLoading] = useState(false);
 
   const [validateEcogesture] = useMutation(VALIDATE_ECOGESTURE, {
-    refetchQueries: ["GetValidatedEcogestures"],
+    refetchQueries: [
+      "GetValidatedEcogestures",
+      {
+        query: GET_MY_CHALLENGES,
+      },
+    ],
     awaitRefetchQueries: true,
     onCompleted: (data) => {
       setCurrentLevel(data.validateEcogesture.level_validated);
@@ -94,8 +100,7 @@ function EcogestureChallengeCard({
         className="h-[8rem]"
       />
       {currentLevel > 0 && (
-        <div className="absolute top-2 right-2 bg-white rounded-full p-1">
-        </div>
+        <div className="absolute top-2 right-2 bg-white rounded-full p-1"></div>
       )}
       <CardContent className="p-4">
         <TypographyH3 className="mb-2 text-black">

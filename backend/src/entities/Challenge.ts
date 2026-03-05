@@ -15,6 +15,7 @@ import {
 import { User } from "./User";
 import { UserChallenge } from "./UserChallenge";
 import { Ecogesture } from "./Ecogesture";
+import { Expose } from "class-transformer";
 
 @Entity()
 @ObjectType()
@@ -63,4 +64,8 @@ export class Challenge extends BaseEntity {
   @UpdateDateColumn()
   @Field()
   updatedAt: Date;
+
+  @Field(() => Number, { nullable: true })
+  @Expose()
+  progressPercentage: number = 0;
 }

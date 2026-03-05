@@ -45,6 +45,19 @@ function NewChallenge({
     refetchQueries: [
       {
         query: GET_MY_CHALLENGES,
+        variables: {
+          input: {
+            filter: ChallengeFilter.InProgress,
+          },
+        },
+      },
+      {
+        query: GET_MY_CHALLENGES,
+        variables: {
+          input: {
+            filter: ChallengeFilter.CreatedByMe,
+          },
+        },
       },
     ],
     awaitRefetchQueries: true,

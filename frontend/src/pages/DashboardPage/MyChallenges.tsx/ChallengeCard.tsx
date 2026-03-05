@@ -112,15 +112,16 @@ const ChallengeCard = ({ challenge, userId }: ChallengeCardProps) => {
             </div>
           </div>
 
-          {/* TODO wait for ecogeste validation to calculate the challenge progress and change the aria value with result */}
           <div className="space-y-2">
             <div className="flex justify-end">
-              <span className="text-sm font-bold text-slate-900">85%</span>
+              <span className="text-sm font-bold text-slate-900">
+                {challenge.progressPercentage}%
+              </span>
             </div>
             <Progress
-              value={85}
+              value={challenge.progressPercentage}
               className="h-3 bg-white/60"
-              aria-label={`Progression : ${85}%`}
+              aria-label={`Progression : ${challenge.progressPercentage}%`}
             />
           </div>
         </CardContent>
