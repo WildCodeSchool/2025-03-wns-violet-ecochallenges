@@ -265,4 +265,17 @@ export default class ChallengeResolver {
 
     return challenge;
   }
+
+  @Query(() => Challenge)
+  async getChallengeById(@Arg("id") id: number): Promise<Challenge> {
+    const challenge = await Challenge.findOne({
+      where: { id },
+      relations: ["ecogestures", "participants", "createdBy"],
+    });
+
+    if (!challenge) {
+      throw new Error("Challenge non trouvé");
+    }
+    return challenge;
+  }
 }

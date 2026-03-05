@@ -15,6 +15,9 @@ export const GET_VALIDATED_ECOGESTURES = gql`
         user {
           id
         }
+        challenge {
+          id
+        }
       }
       totalCount
     }

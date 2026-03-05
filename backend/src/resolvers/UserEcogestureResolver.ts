@@ -14,6 +14,9 @@ import { UserEcogesture } from "../entities/UserEcogesture";
 import { User } from "../entities/User";
 import { Ecogesture } from "../entities/Ecogesture";
 import { Context } from "../types/Context";
+import { UserChallenge } from "../entities/UserChallenge";
+import { Challenge } from "../entities/Challenge";
+import dataSource from "../config/db";
 
 @InputType()
 class PaginationInput {
@@ -22,6 +25,12 @@ class PaginationInput {
 
   @Field(() => Number, { nullable: true })
   limit?: number;
+}
+
+interface UserEcogestureWhereCondition {
+  user: { id: number };
+  ecogesture: { id: number };
+  challenge?: { id: number };
 }
 
 @ObjectType()
@@ -53,7 +62,7 @@ export class UserEcogestureResolver {
       where: { user: { id: userId } },
       skip,
       take: limit,
-      relations: ["ecogesture", "user"],
+      relations: ["ecogesture", "user", "challenge"],
       order: { validated_at: "DESC" },
     });
 
@@ -69,30 +78,78 @@ export class UserEcogestureResolver {
     @Arg("ecogestureId", () => Int) ecogestureId: number,
     @Arg("level_validated", () => Int) level_validated: number,
     @Ctx() ctx: Context,
+    @Arg("challengeId", () => Int, { nullable: true }) challengeId?: number,
   ): Promise<UserEcogesture> {
     const userId = ctx.user?.id;
-    if (!userId) throw new Error("Utilisateur non connecté");
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
 
-    const user = await User.findOne({ where: { id: userId } });
-    const ecogesture = await Ecogesture.findOne({
-      where: { id: ecogestureId },
+    // Check if the user is participating in the challenge
+    if (challengeId) {
+      const userChallenge = await UserChallenge.findOne({
+        where: {
+          user: { id: userId },
+          challenge: { id: challengeId },
+        },
+      });
+
+      if (!userChallenge) {
+        throw new Error("You are not participating in this challenge");
+      }
+    }
+
+    const whereCondition: UserEcogestureWhereCondition = {
+      user: { id: userId },
+      ecogesture: { id: ecogestureId },
+    };
+
+    if (challengeId) {
+      whereCondition.challenge = { id: challengeId };
+    }
+
+    // Check if a validation already exists for this user
+    const existingUserEcogesture = await UserEcogesture.findOne({
+      where: whereCondition,
+      relations: ["ecogesture", "user", "challenge"],
     });
 
-    if (!user) throw new Error("Utilisateur introuvable");
-    if (!ecogesture) throw new Error("Écogeste introuvable");
+    if (existingUserEcogesture) {
+      // Update existing validation
+      existingUserEcogesture.level_validated = level_validated;
+      existingUserEcogesture.validated_at = new Date();
+      return await existingUserEcogesture.save();
+    } else {
+      // Create a new validation
+      const ecogestureEntity = await Ecogesture.findOneBy({ id: ecogestureId });
+      const userEntity = await User.findOneBy({ id: userId });
+      const challengeEntity = challengeId
+        ? await Challenge.findOneBy({ id: challengeId })
+        : null;
 
-    const userEcogesture = UserEcogesture.create({
-      user,
-      ecogesture,
-      validated_at: new Date(),
-      level_validated,
-    });
+      if (!ecogestureEntity || !userEntity) {
+        throw new Error("Ecogesture or User not found");
+      }
 
-    await userEcogesture.save();
+      const userEcogestureRepo = dataSource.getRepository(UserEcogesture);
+      const insertResult = await userEcogestureRepo.insert({
+        user: userEntity,
+        ecogesture: ecogestureEntity,
+        challenge: challengeEntity || undefined,
+        level_validated,
+        validated_at: new Date(),
+      });
 
-    return (await UserEcogesture.findOne({
-      where: { id: userEcogesture.id },
-      relations: ["ecogesture", "user"],
-    })) as UserEcogesture;
+      const newUserEcogesture = await UserEcogesture.findOne({
+        where: { id: insertResult.identifiers[0].id },
+        relations: ["ecogesture", "user", "challenge"],
+      });
+
+      if (!newUserEcogesture) {
+        throw new Error("Failed to create UserEcogesture");
+      }
+
+      return newUserEcogesture;
+    }
   }
 }

@@ -12,6 +12,7 @@ import RegisterPage from "./pages/RegisterPage.tsx";
 import Error404 from "./pages/Error404.tsx";
 import DashboardPage from "./pages/DashboardPage/index.tsx";
 import XmasGiftPage from "./pages/XmasGiftPage.tsx";
+import ChallengePage from "./pages/ChallengePage/index.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 
 const router = createBrowserRouter([
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/new-challenge",
-        element: <CreateChallengePage />
+        element: <CreateChallengePage />,
       },
       {
         path: "/signin",
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <DashboardPage />,
+      },
+      {
+        path: "/challenge/:id",
+        element: <ChallengePage />,
       },
       {
         path: "*",
