@@ -3,6 +3,7 @@ import { ApolloError, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
 import { GET_MY_CHALLENGES } from "@/graphql/queries/challenge";
+import { ChallengeFilter } from "@/generated/graphql-types";
 import EcogesturesSelect from "@/pages/CreateChallengePage/EcogesturesSelect";
 import {
   Card,
@@ -44,6 +45,19 @@ function NewChallenge({
     refetchQueries: [
       {
         query: GET_MY_CHALLENGES,
+        variables: {
+          input: {
+            filter: ChallengeFilter.InProgress,
+          },
+        },
+      },
+      {
+        query: GET_MY_CHALLENGES,
+        variables: {
+          input: {
+            filter: ChallengeFilter.CreatedByMe,
+          },
+        },
       },
     ],
     awaitRefetchQueries: true,
