@@ -8,7 +8,8 @@ export const GET_MY_CHALLENGES = gql`
         label
         startingDate
         endingDate
-        picture
+        pictureUrl
+        progressPercentage
         createdBy {
           id
           username

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useCallback, useState } from "react";
+import { ApolloError, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { CREATE_CHALLENGE } from "@/graphql/mutations/challenge";
 import { GET_MY_CHALLENGES } from "@/graphql/queries/challenge";
@@ -16,9 +16,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { X, User, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
+import AddParticipants, {
+  type Participant,
+} from "@/pages/CreateChallengePage/AddParticipants";
 import { CalendarPopover } from "@/components/ui/calendar";
 import { type DateRange } from "react-day-picker";
+import { useCloudinaryWidget } from "@/hooks/useCloudinaryWidget";
 
 function NewChallenge({
   selectedEcogestures,
@@ -33,11 +37,10 @@ function NewChallenge({
     description: "",
     startingDate: "",
     endingDate: "",
-    picture: "",
+    pictureUrl: "",
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const [participants, setParticipants] = useState<string[]>([]);
-  const [participantInput, setParticipantInput] = useState("");
+  const [participants, setParticipants] = useState<Participant[]>([]);
   const [createChallenge, { loading }] = useMutation(CREATE_CHALLENGE, {
     refetchQueries: [
       {
@@ -48,7 +51,16 @@ function NewChallenge({
           },
         },
       },
+      {
+        query: GET_MY_CHALLENGES,
+        variables: {
+          input: {
+            filter: ChallengeFilter.CreatedByMe,
+          },
+        },
+      },
     ],
+    awaitRefetchQueries: true,
   });
 
   const handleChange = (
@@ -57,26 +69,21 @@ function NewChallenge({
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // // Upload image (placeholder)
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      // Pour l'instant, on utilise un preview local
-      const url = URL.createObjectURL(e.target.files[0]);
-      setForm({ ...form, picture: url });
-    }
-  };
+  const handleUploadSuccess = useCallback((pictureUrl: string) => {
+    setForm((prev) => ({ ...prev, pictureUrl }));
+  }, []);
 
-  // // Ajout participant
-  const handleAddParticipant = () => {
-    if (participantInput && !participants.includes(participantInput)) {
-      setParticipants([...participants, participantInput]);
-      setParticipantInput("");
-    }
-  };
-  // // Suppression participant
-  const handleRemoveParticipant = (name: string) => {
-    setParticipants(participants.filter((p) => p !== name));
-  };
+  const { openWidget } = useCloudinaryWidget({
+    cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+    uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+    folder: "challenge_pictures", // Dedicated folder for challenge images in Cloudinary
+    croppingAspectRatio: 16 / 9,
+    onSuccess: handleUploadSuccess,
+    onError: (error) => {
+      console.error("Cloudinary upload error:", error);
+      alert("Erreur lors du téléchargement de l'image. Veuillez réessayer.");
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,8 +93,9 @@ function NewChallenge({
         description: form.description,
         startingDate: new Date(form.startingDate).toISOString(),
         endingDate: new Date(form.endingDate).toISOString(),
-        picture: form.picture,
+        pictureUrl: form.pictureUrl,
         ecogestureIds: selectedEcogestures.map(Number),
+        participantIds: participants.map((p: Participant) => p.id),
       },
     };
 
@@ -98,13 +106,17 @@ function NewChallenge({
         description: "",
         startingDate: "",
         endingDate: "",
-        picture: "",
+        pictureUrl: "",
       });
       setSelectedEcogestures([]);
       setParticipants([]);
       navigate("/dashboard");
-    } catch (err: any) {
-      console.error("Error:", err);
+    } catch (err) {
+      if (err instanceof ApolloError) {
+        console.error("Apollo error:", err.graphQLErrors, err.networkError);
+      } else if (err instanceof Error) {
+        console.error("Error:", err.message);
+      }
     }
   };
 
@@ -114,28 +126,20 @@ function NewChallenge({
         <Card className="overflow-hidden p-0 bg-primary-foreground w-full">
           <div className="w-full h-40 sm:h-56 md:h-72 relative flex items-center justify-center">
             <img
-              src={form.picture || "https://picsum.photos/600/400"}
+              src={form.pictureUrl || "https://picsum.photos/600/400"}
               alt="Challenge preview"
               className="object-cover w-full h-full"
             />
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-              <label htmlFor="picture-upload">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="flex items-center gap-2"
-                >
-                  <Upload size={18} />
-                  Charger une photo
-                </Button>
-                <input
-                  id="picture-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-              </label>
+              <Button
+                type="button"
+                variant="secondary"
+                className="flex items-center gap-2"
+                onClick={openWidget}
+              >
+                <Upload size={18} />
+                Charger une photo
+              </Button>
             </div>
           </div>
         </Card>
@@ -238,48 +242,10 @@ function NewChallenge({
           </CardContent>
         </Card>
 
-        <Card className="bg-secondary-foreground  w-full">
-          <CardHeader>
-            <CardTitle className="text-black">Inviter un participant</CardTitle>
-            <CardDescription className="text-black">
-              Ajoutez des participants au challenge
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-2 mb-2">
-              <Input
-                type="text"
-                placeholder="Saisissez un nom ou email"
-                value={participantInput}
-                onChange={(e) => setParticipantInput(e.target.value)}
-                className="bg-white"
-              />
-              <Button type="button" onClick={handleAddParticipant}>
-                Ajouter
-              </Button>
-            </div>
-            {/* Liste des participants */}
-            <ul className="flex flex-col gap-2">
-              {participants.map((name) => (
-                <li
-                  key={name}
-                  className="flex items-center gap-2 bg-gray-100 rounded px-3 py-2"
-                >
-                  <User size={16} className="text-gray-600" />
-                  <span className="flex-1 text-black text-sm">{name}</span>
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => handleRemoveParticipant(name)}
-                  >
-                    <X size={16} />
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+        <AddParticipants
+          participants={participants}
+          setParticipants={setParticipants}
+        />
         <div className="flex justify-end gap-4 mt-2">
           <Button type="submit" disabled={loading} size="lg">
             {loading ? "Création en cours..." : "Créer le challenge"}

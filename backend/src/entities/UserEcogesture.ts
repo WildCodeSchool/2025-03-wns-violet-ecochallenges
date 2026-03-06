@@ -10,6 +10,7 @@ import {
 import { Ecogesture } from "./Ecogesture";
 import { Field, ObjectType } from "type-graphql";
 import { User } from "./User";
+import { Challenge } from "./Challenge";
 
 @ObjectType()
 @Entity()
@@ -33,6 +34,10 @@ export class UserEcogesture extends BaseEntity {
   @ManyToOne(() => Ecogesture, (ecogesture) => ecogesture.UserEcogesture)
   @Field(() => Ecogesture)
   public ecogesture: Ecogesture;
+
+  @ManyToOne(() =>  Challenge, { nullable: true })
+  @Field(() => Challenge, { nullable: true })
+  public challenge: Challenge;
 
   @CreateDateColumn()
   @Field()

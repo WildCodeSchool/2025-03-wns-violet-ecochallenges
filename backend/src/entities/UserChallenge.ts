@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -12,7 +13,7 @@ import { Field, ObjectType } from "type-graphql";
 
 @Entity()
 @ObjectType()
-export class UserChallenge {
+export class UserChallenge extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field()
   id: number;

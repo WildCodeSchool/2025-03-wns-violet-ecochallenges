@@ -4,13 +4,16 @@ import {
   Ctx,
   Field,
   InputType,
+  Int,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
 } from "type-graphql";
 import argon2 from "argon2";
 import { Context, UserPayload } from "../types/Context";
 import * as jwt from "jsonwebtoken";
+import { ILike } from "typeorm";
 import { User } from "../entities/User";
 import {
   IsEmail,
@@ -20,12 +23,7 @@ import {
   validate,
 } from "class-validator";
 import { plainToClass } from "class-transformer";
-import {
-  deleteImageFromCloudinary,
-  extractPublicIdFromUrl,
-  isCloudinaryUrl,
-  isDefaultAvatar,
-} from "../lib/cloudinary";
+import { tryDeleteCloudinaryImage } from "../lib/cloudinary";
 
 @InputType()
 class NewUserInput {
@@ -87,6 +85,15 @@ export function createUserPayload(user: User): UserPayload {
   return userPayload;
 }
 
+@ObjectType()
+class SearchUsersResponse {
+  @Field(() => [User])
+  users: User[];
+
+  @Field(() => Int)
+  totalCount: number;
+}
+
 @Resolver(User)
 export default class UserResolver {
   @Query(() => User)
@@ -102,6 +109,25 @@ export default class UserResolver {
   async getAllUsers() {
     const users = await User.find();
     return users;
+  }
+
+  @Query(() => SearchUsersResponse)
+  @Authorized()
+  async searchUsers(
+    @Arg("search") search: string,
+    @Arg("page", () => Int, { nullable: true }) page: number = 1,
+    @Arg("limit", () => Int, { nullable: true }) limit: number = 5,
+  ): Promise<SearchUsersResponse> {
+    const skip = (page - 1) * limit;
+    const [users, totalCount] = await User.findAndCount({
+      where: [
+        { username: ILike(`%${search}%`) },
+        { email: ILike(`%${search}%`) },
+      ],
+      skip,
+      take: limit,
+    });
+    return { users, totalCount };
   }
 
   @Mutation(() => String)
@@ -198,29 +224,7 @@ export default class UserResolver {
     const oldPictureUrl = user.pictureUrl;
 
     // If the old picture is not a default avatar, delete it from Cloudinary
-    if (
-      oldPictureUrl &&
-      isCloudinaryUrl(oldPictureUrl) &&
-      !isDefaultAvatar(oldPictureUrl)
-    ) {
-      const publicId = extractPublicIdFromUrl(oldPictureUrl);
-
-      if (publicId) {
-        console.info(
-          `Deleting old profile picture with public_id: ${publicId}`,
-        );
-
-        const deleted = await deleteImageFromCloudinary(publicId);
-
-        if (!deleted) {
-          console.warn(
-            `Failed to delete old profile picture with public_id: ${publicId}`,
-          );
-        }
-      } else {
-        console.warn(`Could not extract public_id from URL: ${oldPictureUrl}`);
-      }
-    }
+    await tryDeleteCloudinaryImage(oldPictureUrl, { keepDefaultAvatars: true });
 
     user.pictureUrl = data.pictureUrl;
     await user.save();

@@ -1,210 +1,247 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
+    };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTimeISO: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTimeISO: { input: any; output: any };
 };
 
 export type Challenge = {
-  __typename?: 'Challenge';
-  createdAt: Scalars['DateTimeISO']['output'];
+  __typename?: "Challenge";
+  createdAt: Scalars["DateTimeISO"]["output"];
   createdBy: User;
-  description?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars["String"]["output"]>;
   ecogestures?: Maybe<Array<Ecogesture>>;
-  endingDate: Scalars['DateTimeISO']['output'];
-  id: Scalars['Float']['output'];
-  label: Scalars['String']['output'];
+  endingDate: Scalars["DateTimeISO"]["output"];
+  id: Scalars["Float"]["output"];
+  label: Scalars["String"]["output"];
   participants: Array<UserChallenge>;
-  picture: Scalars['String']['output'];
-  startingDate: Scalars['DateTimeISO']['output'];
-  updatedAt: Scalars['DateTimeISO']['output'];
+  pictureUrl: Scalars["String"]["output"];
+  progressPercentage: Scalars["Float"]["output"];
+  startingDate: Scalars["DateTimeISO"]["output"];
+  updatedAt: Scalars["DateTimeISO"]["output"];
 };
 
 /** Filter used on Challenge */
 export enum ChallengeFilter {
-  CreatedByMe = 'CREATED_BY_ME',
-  Finished = 'FINISHED',
-  InProgress = 'IN_PROGRESS'
+  CreatedByMe = "CREATED_BY_ME",
+  Finished = "FINISHED",
+  InProgress = "IN_PROGRESS",
 }
 
 export type ChallengeListResponse = {
-  __typename?: 'ChallengeListResponse';
+  __typename?: "ChallengeListResponse";
   challenges: Array<Challenge>;
-  totalCount: Scalars['Float']['output'];
+  totalCount: Scalars["Float"]["output"];
 };
 
 export type Ecogesture = {
-  __typename?: 'Ecogesture';
+  __typename?: "Ecogesture";
   challenges?: Maybe<Array<Challenge>>;
-  createdAt: Scalars['DateTimeISO']['output'];
-  description: Scalars['String']['output'];
-  id: Scalars['Float']['output'];
-  label: Scalars['String']['output'];
-  level1Expectation: Scalars['String']['output'];
-  level2Expectation: Scalars['String']['output'];
-  level3Expectation: Scalars['String']['output'];
-  pictureUrl: Scalars['String']['output'];
-  updatedAt: Scalars['DateTimeISO']['output'];
+  createdAt: Scalars["DateTimeISO"]["output"];
+  description: Scalars["String"]["output"];
+  id: Scalars["Float"]["output"];
+  label: Scalars["String"]["output"];
+  level1Expectation: Scalars["String"]["output"];
+  level2Expectation: Scalars["String"]["output"];
+  level3Expectation: Scalars["String"]["output"];
+  pictureUrl: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTimeISO"]["output"];
 };
 
 export type EcogestureListResponse = {
-  __typename?: 'EcogestureListResponse';
+  __typename?: "EcogestureListResponse";
   ecogestures: Array<Ecogesture>;
-  totalCount: Scalars['Float']['output'];
+  totalCount: Scalars["Float"]["output"];
 };
 
 export type GetEcogesturesInput = {
-  limit?: InputMaybe<Scalars['Float']['input']>;
-  page?: InputMaybe<Scalars['Float']['input']>;
+  limit?: InputMaybe<Scalars["Float"]["input"]>;
+  page?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 export type GetMyChallengesInput = {
   filter?: InputMaybe<ChallengeFilter>;
-  limit?: InputMaybe<Scalars['Float']['input']>;
-  page?: InputMaybe<Scalars['Float']['input']>;
+  limit?: InputMaybe<Scalars["Float"]["input"]>;
+  page?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 export type Mutation = {
-  __typename?: 'Mutation';
-  cleanEcogestures: Scalars['Boolean']['output'];
+  __typename?: "Mutation";
+  cleanEcogestures: Scalars["Boolean"]["output"];
   createChallenge: Challenge;
-  login: Scalars['String']['output'];
-  logout: Scalars['String']['output'];
+  login: Scalars["String"]["output"];
+  logout: Scalars["String"]["output"];
   seedEcogestures: Array<Ecogesture>;
-  signup: Scalars['String']['output'];
+  signup: Scalars["String"]["output"];
+  updateChallengePicture: Challenge;
   updateProfilePicture: User;
   validateEcogesture: UserEcogesture;
 };
-
 
 export type MutationCreateChallengeArgs = {
   data: NewChallengeInput;
 };
 
-
 export type MutationLoginArgs = {
   data: NewUserInput;
 };
-
 
 export type MutationSignupArgs = {
   data: NewUserInput;
 };
 
+export type MutationUpdateChallengePictureArgs = {
+  data: UpdateChallengePictureInput;
+};
 
 export type MutationUpdateProfilePictureArgs = {
   data: UpdateProfilePictureInput;
 };
 
-
 export type MutationValidateEcogestureArgs = {
-  ecogestureId: Scalars['Int']['input'];
-  level_validated: Scalars['Int']['input'];
+  challengeId?: InputMaybe<Scalars["Int"]["input"]>;
+  ecogestureId: Scalars["Int"]["input"];
+  level_validated: Scalars["Int"]["input"];
 };
 
 export type NewChallengeInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  ecogestureIds?: InputMaybe<Array<Scalars['Float']['input']>>;
-  endingDate: Scalars['DateTimeISO']['input'];
-  label: Scalars['String']['input'];
-  picture: Scalars['String']['input'];
-  startingDate: Scalars['DateTimeISO']['input'];
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  ecogestureIds?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  endingDate: Scalars["DateTimeISO"]["input"];
+  label: Scalars["String"]["input"];
+  participantIds?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  pictureUrl: Scalars["String"]["input"];
+  startingDate: Scalars["DateTimeISO"]["input"];
 };
 
 export type NewUserInput = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  email: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
 };
 
 export type PaginationInput = {
-  limit?: InputMaybe<Scalars['Float']['input']>;
-  page?: InputMaybe<Scalars['Float']['input']>;
+  limit?: InputMaybe<Scalars["Float"]["input"]>;
+  page?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 export type Query = {
-  __typename?: 'Query';
+  __typename?: "Query";
   getAllChallenges: Array<Challenge>;
   getAllUsers: Array<User>;
+  getChallengeById: Challenge;
   getCurrentUser: User;
   getEcogestures: EcogestureListResponse;
   getMyChallenges: ChallengeListResponse;
   getValidatedEcogestures: ValidatedEcogesturesResponse;
+  searchUsers: SearchUsersResponse;
 };
 
+export type QueryGetChallengeByIdArgs = {
+  id: Scalars["Float"]["input"];
+};
 
 export type QueryGetEcogesturesArgs = {
   input?: InputMaybe<GetEcogesturesInput>;
 };
 
-
 export type QueryGetMyChallengesArgs = {
   input?: InputMaybe<GetMyChallengesInput>;
 };
-
 
 export type QueryGetValidatedEcogesturesArgs = {
   input?: InputMaybe<PaginationInput>;
 };
 
+export type QuerySearchUsersArgs = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
+  search: Scalars["String"]["input"];
+};
+
 /** Roles for users in this app */
 export enum Roles {
-  User = 'USER'
+  User = "USER",
 }
 
+export type SearchUsersResponse = {
+  __typename?: "SearchUsersResponse";
+  totalCount: Scalars["Int"]["output"];
+  users: Array<User>;
+};
+
+export type UpdateChallengePictureInput = {
+  id: Scalars["Float"]["input"];
+  pictureUrl: Scalars["String"]["input"];
+};
+
 export type UpdateProfilePictureInput = {
-  pictureUrl: Scalars['String']['input'];
+  pictureUrl: Scalars["String"]["input"];
 };
 
 export type User = {
-  __typename?: 'User';
+  __typename?: "User";
   challengesCreated?: Maybe<Array<Challenge>>;
-  createdAt: Scalars['DateTimeISO']['output'];
-  email: Scalars['String']['output'];
-  id: Scalars['Float']['output'];
+  createdAt: Scalars["DateTimeISO"]["output"];
+  email: Scalars["String"]["output"];
+  id: Scalars["Float"]["output"];
   participations?: Maybe<Array<UserChallenge>>;
-  pictureUrl: Scalars['String']['output'];
+  pictureUrl: Scalars["String"]["output"];
   roles: Array<Roles>;
-  updatedAt: Scalars['DateTimeISO']['output'];
-  username: Scalars['String']['output'];
+  updatedAt: Scalars["DateTimeISO"]["output"];
+  username: Scalars["String"]["output"];
 };
 
 export type UserChallenge = {
-  __typename?: 'UserChallenge';
+  __typename?: "UserChallenge";
   challenge: Challenge;
-  createdAt: Scalars['DateTimeISO']['output'];
-  hasAccepted: Scalars['Boolean']['output'];
-  id: Scalars['Float']['output'];
-  updatedAt: Scalars['DateTimeISO']['output'];
+  createdAt: Scalars["DateTimeISO"]["output"];
+  hasAccepted: Scalars["Boolean"]["output"];
+  id: Scalars["Float"]["output"];
+  updatedAt: Scalars["DateTimeISO"]["output"];
   user: User;
 };
 
 export type UserEcogesture = {
-  __typename?: 'UserEcogesture';
-  createdAt: Scalars['DateTimeISO']['output'];
+  __typename?: "UserEcogesture";
+  challenge?: Maybe<Challenge>;
+  createdAt: Scalars["DateTimeISO"]["output"];
   ecogesture: Ecogesture;
-  id: Scalars['Float']['output'];
-  level_validated: Scalars['Float']['output'];
-  updatedAt: Scalars['DateTimeISO']['output'];
+  id: Scalars["Float"]["output"];
+  level_validated: Scalars["Float"]["output"];
+  updatedAt: Scalars["DateTimeISO"]["output"];
   user: User;
-  validated_at: Scalars['DateTimeISO']['output'];
+  validated_at: Scalars["DateTimeISO"]["output"];
 };
 
 export type ValidatedEcogesturesResponse = {
-  __typename?: 'ValidatedEcogesturesResponse';
-  totalCount: Scalars['Int']['output'];
+  __typename?: "ValidatedEcogesturesResponse";
+  totalCount: Scalars["Int"]["output"];
   userEcogestures: Array<UserEcogesture>;
 };
 
@@ -212,102 +249,280 @@ export type CreateChallengeMutationVariables = Exact<{
   data: NewChallengeInput;
 }>;
 
+export type CreateChallengeMutation = {
+  __typename?: "Mutation";
+  createChallenge: {
+    __typename?: "Challenge";
+    id: number;
+    label: string;
+    description?: string | null;
+    startingDate: any;
+    endingDate: any;
+    pictureUrl: string;
+    progressPercentage: number;
+    createdBy: { __typename?: "User"; id: number; username: string };
+    ecogestures?: Array<{
+      __typename?: "Ecogesture";
+      id: number;
+      label: string;
+      pictureUrl: string;
+    }> | null;
+  };
+};
 
-export type CreateChallengeMutation = { __typename?: 'Mutation', createChallenge: { __typename?: 'Challenge', id: number, label: string, description?: string | null, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, ecogestures?: Array<{ __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }> | null } };
+export type UpdateChallengePictureMutationVariables = Exact<{
+  data: UpdateChallengePictureInput;
+}>;
 
-export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
+export type UpdateChallengePictureMutation = {
+  __typename?: "Mutation";
+  updateChallengePicture: {
+    __typename?: "Challenge";
+    id: number;
+    label: string;
+    pictureUrl: string;
+  };
+};
 
+export type SeedEcogesturesMutationVariables = Exact<{ [key: string]: never }>;
 
-export type SeedEcogesturesMutation = { __typename?: 'Mutation', seedEcogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> };
+export type SeedEcogesturesMutation = {
+  __typename?: "Mutation";
+  seedEcogestures: Array<{
+    __typename?: "Ecogesture";
+    id: number;
+    label: string;
+    description: string;
+    pictureUrl: string;
+    level1Expectation: string;
+    level2Expectation: string;
+    level3Expectation: string;
+  }>;
+};
 
-export type CleanEcogesturesMutationVariables = Exact<{ [key: string]: never; }>;
+export type CleanEcogesturesMutationVariables = Exact<{ [key: string]: never }>;
 
-
-export type CleanEcogesturesMutation = { __typename?: 'Mutation', cleanEcogestures: boolean };
+export type CleanEcogesturesMutation = {
+  __typename?: "Mutation";
+  cleanEcogestures: boolean;
+};
 
 export type LoginMutationVariables = Exact<{
   data: NewUserInput;
 }>;
 
+export type LoginMutation = { __typename?: "Mutation"; login: string };
 
-export type LoginMutation = { __typename?: 'Mutation', login: string };
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
 
-export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type LogoutMutation = { __typename?: 'Mutation', logout: string };
+export type LogoutMutation = { __typename?: "Mutation"; logout: string };
 
 export type SignupMutationVariables = Exact<{
   data: NewUserInput;
 }>;
 
-
-export type SignupMutation = { __typename?: 'Mutation', signup: string };
+export type SignupMutation = { __typename?: "Mutation"; signup: string };
 
 export type UpdateProfilePictureMutationVariables = Exact<{
   data: UpdateProfilePictureInput;
 }>;
 
-
-export type UpdateProfilePictureMutation = { __typename?: 'Mutation', updateProfilePicture: { __typename?: 'User', id: number, username: string, email: string, pictureUrl: string } };
+export type UpdateProfilePictureMutation = {
+  __typename?: "Mutation";
+  updateProfilePicture: {
+    __typename?: "User";
+    id: number;
+    username: string;
+    email: string;
+    pictureUrl: string;
+  };
+};
 
 export type GetMyChallengesQueryVariables = Exact<{
   input?: InputMaybe<GetMyChallengesInput>;
 }>;
 
+export type GetMyChallengesQuery = {
+  __typename?: "Query";
+  getMyChallenges: {
+    __typename?: "ChallengeListResponse";
+    totalCount: number;
+    challenges: Array<{
+      __typename?: "Challenge";
+      id: number;
+      label: string;
+      startingDate: any;
+      endingDate: any;
+      pictureUrl: string;
+      progressPercentage: number;
+      createdBy: { __typename?: "User"; id: number; username: string };
+      participants: Array<{ __typename?: "UserChallenge"; id: number }>;
+    }>;
+  };
+};
 
-export type GetMyChallengesQuery = { __typename?: 'Query', getMyChallenges: { __typename?: 'ChallengeListResponse', totalCount: number, challenges: Array<{ __typename?: 'Challenge', id: number, label: string, startingDate: any, endingDate: any, picture: string, createdBy: { __typename?: 'User', id: number, username: string }, participants: Array<{ __typename?: 'UserChallenge', id: number }> }> } };
+export type GetChallengeByIdQueryVariables = Exact<{
+  getChallengeById: Scalars["Float"]["input"];
+}>;
+
+export type GetChallengeByIdQuery = {
+  __typename?: "Query";
+  getChallengeById: {
+    __typename?: "Challenge";
+    id: number;
+    label: string;
+    description?: string | null;
+    pictureUrl: string;
+    startingDate: any;
+    endingDate: any;
+    ecogestures?: Array<{
+      __typename?: "Ecogesture";
+      id: number;
+      label: string;
+      description: string;
+      pictureUrl: string;
+      level1Expectation: string;
+      level2Expectation: string;
+      level3Expectation: string;
+    }> | null;
+    participants: Array<{ __typename?: "UserChallenge"; id: number }>;
+    createdBy: { __typename?: "User"; id: number };
+  };
+};
 
 export type GetEcogesturesQueryVariables = Exact<{
   input?: InputMaybe<GetEcogesturesInput>;
 }>;
 
+export type GetEcogesturesQuery = {
+  __typename?: "Query";
+  getEcogestures: {
+    __typename?: "EcogestureListResponse";
+    totalCount: number;
+    ecogestures: Array<{
+      __typename?: "Ecogesture";
+      id: number;
+      label: string;
+      description: string;
+      pictureUrl: string;
+      level1Expectation: string;
+      level2Expectation: string;
+      level3Expectation: string;
+    }>;
+  };
+};
 
-export type GetEcogesturesQuery = { __typename?: 'Query', getEcogestures: { __typename?: 'EcogestureListResponse', totalCount: number, ecogestures: Array<{ __typename?: 'Ecogesture', id: number, label: string, description: string, pictureUrl: string, level1Expectation: string, level2Expectation: string, level3Expectation: string }> } };
+export type SearchUsersQueryVariables = Exact<{
+  search: Scalars["String"]["input"];
+  page?: InputMaybe<Scalars["Int"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
 
-export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+export type SearchUsersQuery = {
+  __typename?: "Query";
+  searchUsers: {
+    __typename?: "SearchUsersResponse";
+    totalCount: number;
+    users: Array<{
+      __typename?: "User";
+      id: number;
+      username: string;
+      email: string;
+      pictureUrl: string;
+    }>;
+  };
+};
 
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, email: string, username: string, roles: Array<Roles>, pictureUrl: string } };
+export type GetCurrentUserQuery = {
+  __typename?: "Query";
+  getCurrentUser: {
+    __typename?: "User";
+    id: number;
+    email: string;
+    username: string;
+    roles: Array<Roles>;
+    pictureUrl: string;
+  };
+};
 
 export type GetValidatedEcogesturesQueryVariables = Exact<{
   input: PaginationInput;
 }>;
 
-
-export type GetValidatedEcogesturesQuery = { __typename?: 'Query', getValidatedEcogestures: { __typename?: 'ValidatedEcogesturesResponse', totalCount: number, userEcogestures: Array<{ __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } }> } };
+export type GetValidatedEcogesturesQuery = {
+  __typename?: "Query";
+  getValidatedEcogestures: {
+    __typename?: "ValidatedEcogesturesResponse";
+    totalCount: number;
+    userEcogestures: Array<{
+      __typename?: "UserEcogesture";
+      id: number;
+      validated_at: any;
+      level_validated: number;
+      ecogesture: {
+        __typename?: "Ecogesture";
+        id: number;
+        label: string;
+        pictureUrl: string;
+      };
+      user: { __typename?: "User"; id: number };
+      challenge?: { __typename?: "Challenge"; id: number } | null;
+    }>;
+  };
+};
 
 export type ValidateEcogestureMutationVariables = Exact<{
-  ecogestureId: Scalars['Int']['input'];
-  level_validated: Scalars['Int']['input'];
+  ecogestureId: Scalars["Int"]["input"];
+  level_validated: Scalars["Int"]["input"];
+  challengeId?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
-
-export type ValidateEcogestureMutation = { __typename?: 'Mutation', validateEcogesture: { __typename?: 'UserEcogesture', id: number, validated_at: any, level_validated: number, ecogesture: { __typename?: 'Ecogesture', id: number, label: string, pictureUrl: string }, user: { __typename?: 'User', id: number } } };
-
+export type ValidateEcogestureMutation = {
+  __typename?: "Mutation";
+  validateEcogesture: {
+    __typename?: "UserEcogesture";
+    id: number;
+    validated_at: any;
+    level_validated: number;
+    ecogesture: {
+      __typename?: "Ecogesture";
+      id: number;
+      label: string;
+      pictureUrl: string;
+    };
+    user: { __typename?: "User"; id: number };
+    challenge?: { __typename?: "Challenge"; id: number } | null;
+  };
+};
 
 export const CreateChallengeDocument = gql`
-    mutation CreateChallenge($data: NewChallengeInput!) {
-  createChallenge(data: $data) {
-    id
-    label
-    description
-    startingDate
-    endingDate
-    picture
-    createdBy {
-      id
-      username
-    }
-    ecogestures {
+  mutation CreateChallenge($data: NewChallengeInput!) {
+    createChallenge(data: $data) {
       id
       label
+      description
+      startingDate
+      endingDate
       pictureUrl
+      progressPercentage
+      createdBy {
+        id
+        username
+      }
+      ecogestures {
+        id
+        label
+        pictureUrl
+      }
     }
   }
-}
-    `;
-export type CreateChallengeMutationFn = Apollo.MutationFunction<CreateChallengeMutation, CreateChallengeMutationVariables>;
+`;
+export type CreateChallengeMutationFn = Apollo.MutationFunction<
+  CreateChallengeMutation,
+  CreateChallengeMutationVariables
+>;
 
 /**
  * __useCreateChallengeMutation__
@@ -326,27 +541,96 @@ export type CreateChallengeMutationFn = Apollo.MutationFunction<CreateChallengeM
  *   },
  * });
  */
-export function useCreateChallengeMutation(baseOptions?: Apollo.MutationHookOptions<CreateChallengeMutation, CreateChallengeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateChallengeMutation, CreateChallengeMutationVariables>(CreateChallengeDocument, options);
-      }
-export type CreateChallengeMutationHookResult = ReturnType<typeof useCreateChallengeMutation>;
-export type CreateChallengeMutationResult = Apollo.MutationResult<CreateChallengeMutation>;
-export type CreateChallengeMutationOptions = Apollo.BaseMutationOptions<CreateChallengeMutation, CreateChallengeMutationVariables>;
-export const SeedEcogesturesDocument = gql`
-    mutation SeedEcogestures {
-  seedEcogestures {
-    id
-    label
-    description
-    pictureUrl
-    level1Expectation
-    level2Expectation
-    level3Expectation
-  }
+export function useCreateChallengeMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateChallengeMutation,
+    CreateChallengeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateChallengeMutation,
+    CreateChallengeMutationVariables
+  >(CreateChallengeDocument, options);
 }
-    `;
-export type SeedEcogesturesMutationFn = Apollo.MutationFunction<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>;
+export type CreateChallengeMutationHookResult = ReturnType<
+  typeof useCreateChallengeMutation
+>;
+export type CreateChallengeMutationResult =
+  Apollo.MutationResult<CreateChallengeMutation>;
+export type CreateChallengeMutationOptions = Apollo.BaseMutationOptions<
+  CreateChallengeMutation,
+  CreateChallengeMutationVariables
+>;
+export const UpdateChallengePictureDocument = gql`
+  mutation UpdateChallengePicture($data: UpdateChallengePictureInput!) {
+    updateChallengePicture(data: $data) {
+      id
+      label
+      pictureUrl
+    }
+  }
+`;
+export type UpdateChallengePictureMutationFn = Apollo.MutationFunction<
+  UpdateChallengePictureMutation,
+  UpdateChallengePictureMutationVariables
+>;
+
+/**
+ * __useUpdateChallengePictureMutation__
+ *
+ * To run a mutation, you first call `useUpdateChallengePictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateChallengePictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateChallengePictureMutation, { data, loading, error }] = useUpdateChallengePictureMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateChallengePictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateChallengePictureMutation,
+    UpdateChallengePictureMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateChallengePictureMutation,
+    UpdateChallengePictureMutationVariables
+  >(UpdateChallengePictureDocument, options);
+}
+export type UpdateChallengePictureMutationHookResult = ReturnType<
+  typeof useUpdateChallengePictureMutation
+>;
+export type UpdateChallengePictureMutationResult =
+  Apollo.MutationResult<UpdateChallengePictureMutation>;
+export type UpdateChallengePictureMutationOptions = Apollo.BaseMutationOptions<
+  UpdateChallengePictureMutation,
+  UpdateChallengePictureMutationVariables
+>;
+export const SeedEcogesturesDocument = gql`
+  mutation SeedEcogestures {
+    seedEcogestures {
+      id
+      label
+      description
+      pictureUrl
+      level1Expectation
+      level2Expectation
+      level3Expectation
+    }
+  }
+`;
+export type SeedEcogesturesMutationFn = Apollo.MutationFunction<
+  SeedEcogesturesMutation,
+  SeedEcogesturesMutationVariables
+>;
 
 /**
  * __useSeedEcogesturesMutation__
@@ -364,19 +648,36 @@ export type SeedEcogesturesMutationFn = Apollo.MutationFunction<SeedEcogesturesM
  *   },
  * });
  */
-export function useSeedEcogesturesMutation(baseOptions?: Apollo.MutationHookOptions<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>(SeedEcogesturesDocument, options);
-      }
-export type SeedEcogesturesMutationHookResult = ReturnType<typeof useSeedEcogesturesMutation>;
-export type SeedEcogesturesMutationResult = Apollo.MutationResult<SeedEcogesturesMutation>;
-export type SeedEcogesturesMutationOptions = Apollo.BaseMutationOptions<SeedEcogesturesMutation, SeedEcogesturesMutationVariables>;
-export const CleanEcogesturesDocument = gql`
-    mutation CleanEcogestures {
-  cleanEcogestures
+export function useSeedEcogesturesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SeedEcogesturesMutation,
+    SeedEcogesturesMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    SeedEcogesturesMutation,
+    SeedEcogesturesMutationVariables
+  >(SeedEcogesturesDocument, options);
 }
-    `;
-export type CleanEcogesturesMutationFn = Apollo.MutationFunction<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>;
+export type SeedEcogesturesMutationHookResult = ReturnType<
+  typeof useSeedEcogesturesMutation
+>;
+export type SeedEcogesturesMutationResult =
+  Apollo.MutationResult<SeedEcogesturesMutation>;
+export type SeedEcogesturesMutationOptions = Apollo.BaseMutationOptions<
+  SeedEcogesturesMutation,
+  SeedEcogesturesMutationVariables
+>;
+export const CleanEcogesturesDocument = gql`
+  mutation CleanEcogestures {
+    cleanEcogestures
+  }
+`;
+export type CleanEcogesturesMutationFn = Apollo.MutationFunction<
+  CleanEcogesturesMutation,
+  CleanEcogesturesMutationVariables
+>;
 
 /**
  * __useCleanEcogesturesMutation__
@@ -394,19 +695,36 @@ export type CleanEcogesturesMutationFn = Apollo.MutationFunction<CleanEcogesture
  *   },
  * });
  */
-export function useCleanEcogesturesMutation(baseOptions?: Apollo.MutationHookOptions<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>(CleanEcogesturesDocument, options);
-      }
-export type CleanEcogesturesMutationHookResult = ReturnType<typeof useCleanEcogesturesMutation>;
-export type CleanEcogesturesMutationResult = Apollo.MutationResult<CleanEcogesturesMutation>;
-export type CleanEcogesturesMutationOptions = Apollo.BaseMutationOptions<CleanEcogesturesMutation, CleanEcogesturesMutationVariables>;
-export const LoginDocument = gql`
-    mutation login($data: NewUserInput!) {
-  login(data: $data)
+export function useCleanEcogesturesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CleanEcogesturesMutation,
+    CleanEcogesturesMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CleanEcogesturesMutation,
+    CleanEcogesturesMutationVariables
+  >(CleanEcogesturesDocument, options);
 }
-    `;
-export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+export type CleanEcogesturesMutationHookResult = ReturnType<
+  typeof useCleanEcogesturesMutation
+>;
+export type CleanEcogesturesMutationResult =
+  Apollo.MutationResult<CleanEcogesturesMutation>;
+export type CleanEcogesturesMutationOptions = Apollo.BaseMutationOptions<
+  CleanEcogesturesMutation,
+  CleanEcogesturesMutationVariables
+>;
+export const LoginDocument = gql`
+  mutation login($data: NewUserInput!) {
+    login(data: $data)
+  }
+`;
+export type LoginMutationFn = Apollo.MutationFunction<
+  LoginMutation,
+  LoginMutationVariables
+>;
 
 /**
  * __useLoginMutation__
@@ -425,19 +743,33 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  *   },
  * });
  */
-export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
-      }
+export function useLoginMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LoginMutation,
+    LoginMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
+    LoginDocument,
+    options,
+  );
+}
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
+>;
 export const LogoutDocument = gql`
-    mutation Logout {
-  logout
-}
-    `;
-export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+  mutation Logout {
+    logout
+  }
+`;
+export type LogoutMutationFn = Apollo.MutationFunction<
+  LogoutMutation,
+  LogoutMutationVariables
+>;
 
 /**
  * __useLogoutMutation__
@@ -455,19 +787,33 @@ export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMut
  *   },
  * });
  */
-export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
-      }
+export function useLogoutMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LogoutMutation,
+    LogoutMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
+    LogoutDocument,
+    options,
+  );
+}
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<
+  LogoutMutation,
+  LogoutMutationVariables
+>;
 export const SignupDocument = gql`
-    mutation Signup($data: NewUserInput!) {
-  signup(data: $data)
-}
-    `;
-export type SignupMutationFn = Apollo.MutationFunction<SignupMutation, SignupMutationVariables>;
+  mutation Signup($data: NewUserInput!) {
+    signup(data: $data)
+  }
+`;
+export type SignupMutationFn = Apollo.MutationFunction<
+  SignupMutation,
+  SignupMutationVariables
+>;
 
 /**
  * __useSignupMutation__
@@ -486,24 +832,38 @@ export type SignupMutationFn = Apollo.MutationFunction<SignupMutation, SignupMut
  *   },
  * });
  */
-export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<SignupMutation, SignupMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, options);
-      }
+export function useSignupMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SignupMutation,
+    SignupMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SignupMutation, SignupMutationVariables>(
+    SignupDocument,
+    options,
+  );
+}
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
-export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export type SignupMutationOptions = Apollo.BaseMutationOptions<
+  SignupMutation,
+  SignupMutationVariables
+>;
 export const UpdateProfilePictureDocument = gql`
-    mutation UpdateProfilePicture($data: UpdateProfilePictureInput!) {
-  updateProfilePicture(data: $data) {
-    id
-    username
-    email
-    pictureUrl
+  mutation UpdateProfilePicture($data: UpdateProfilePictureInput!) {
+    updateProfilePicture(data: $data) {
+      id
+      username
+      email
+      pictureUrl
+    }
   }
-}
-    `;
-export type UpdateProfilePictureMutationFn = Apollo.MutationFunction<UpdateProfilePictureMutation, UpdateProfilePictureMutationVariables>;
+`;
+export type UpdateProfilePictureMutationFn = Apollo.MutationFunction<
+  UpdateProfilePictureMutation,
+  UpdateProfilePictureMutationVariables
+>;
 
 /**
  * __useUpdateProfilePictureMutation__
@@ -522,34 +882,49 @@ export type UpdateProfilePictureMutationFn = Apollo.MutationFunction<UpdateProfi
  *   },
  * });
  */
-export function useUpdateProfilePictureMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfilePictureMutation, UpdateProfilePictureMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateProfilePictureMutation, UpdateProfilePictureMutationVariables>(UpdateProfilePictureDocument, options);
-      }
-export type UpdateProfilePictureMutationHookResult = ReturnType<typeof useUpdateProfilePictureMutation>;
-export type UpdateProfilePictureMutationResult = Apollo.MutationResult<UpdateProfilePictureMutation>;
-export type UpdateProfilePictureMutationOptions = Apollo.BaseMutationOptions<UpdateProfilePictureMutation, UpdateProfilePictureMutationVariables>;
-export const GetMyChallengesDocument = gql`
-    query GetMyChallenges($input: GetMyChallengesInput) {
-  getMyChallenges(input: $input) {
-    challenges {
-      id
-      label
-      startingDate
-      endingDate
-      picture
-      createdBy {
-        id
-        username
-      }
-      participants {
-        id
-      }
-    }
-    totalCount
-  }
+export function useUpdateProfilePictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateProfilePictureMutation,
+    UpdateProfilePictureMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateProfilePictureMutation,
+    UpdateProfilePictureMutationVariables
+  >(UpdateProfilePictureDocument, options);
 }
-    `;
+export type UpdateProfilePictureMutationHookResult = ReturnType<
+  typeof useUpdateProfilePictureMutation
+>;
+export type UpdateProfilePictureMutationResult =
+  Apollo.MutationResult<UpdateProfilePictureMutation>;
+export type UpdateProfilePictureMutationOptions = Apollo.BaseMutationOptions<
+  UpdateProfilePictureMutation,
+  UpdateProfilePictureMutationVariables
+>;
+export const GetMyChallengesDocument = gql`
+  query GetMyChallenges($input: GetMyChallengesInput) {
+    getMyChallenges(input: $input) {
+      challenges {
+        id
+        label
+        startingDate
+        endingDate
+        pictureUrl
+        progressPercentage
+        createdBy {
+          id
+          username
+        }
+        participants {
+          id
+        }
+      }
+      totalCount
+    }
+  }
+`;
 
 /**
  * __useGetMyChallengesQuery__
@@ -567,38 +942,178 @@ export const GetMyChallengesDocument = gql`
  *   },
  * });
  */
-export function useGetMyChallengesQuery(baseOptions?: Apollo.QueryHookOptions<GetMyChallengesQuery, GetMyChallengesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetMyChallengesQuery, GetMyChallengesQueryVariables>(GetMyChallengesDocument, options);
-      }
-export function useGetMyChallengesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyChallengesQuery, GetMyChallengesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetMyChallengesQuery, GetMyChallengesQueryVariables>(GetMyChallengesDocument, options);
-        }
-export function useGetMyChallengesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMyChallengesQuery, GetMyChallengesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetMyChallengesQuery, GetMyChallengesQueryVariables>(GetMyChallengesDocument, options);
-        }
-export type GetMyChallengesQueryHookResult = ReturnType<typeof useGetMyChallengesQuery>;
-export type GetMyChallengesLazyQueryHookResult = ReturnType<typeof useGetMyChallengesLazyQuery>;
-export type GetMyChallengesSuspenseQueryHookResult = ReturnType<typeof useGetMyChallengesSuspenseQuery>;
-export type GetMyChallengesQueryResult = Apollo.QueryResult<GetMyChallengesQuery, GetMyChallengesQueryVariables>;
-export const GetEcogesturesDocument = gql`
-    query GetEcogestures($input: GetEcogesturesInput) {
-  getEcogestures(input: $input) {
-    totalCount
-    ecogestures {
+export function useGetMyChallengesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetMyChallengesQuery,
+    GetMyChallengesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetMyChallengesQuery, GetMyChallengesQueryVariables>(
+    GetMyChallengesDocument,
+    options,
+  );
+}
+export function useGetMyChallengesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMyChallengesQuery,
+    GetMyChallengesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetMyChallengesQuery,
+    GetMyChallengesQueryVariables
+  >(GetMyChallengesDocument, options);
+}
+export function useGetMyChallengesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetMyChallengesQuery,
+        GetMyChallengesQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetMyChallengesQuery,
+    GetMyChallengesQueryVariables
+  >(GetMyChallengesDocument, options);
+}
+export type GetMyChallengesQueryHookResult = ReturnType<
+  typeof useGetMyChallengesQuery
+>;
+export type GetMyChallengesLazyQueryHookResult = ReturnType<
+  typeof useGetMyChallengesLazyQuery
+>;
+export type GetMyChallengesSuspenseQueryHookResult = ReturnType<
+  typeof useGetMyChallengesSuspenseQuery
+>;
+export type GetMyChallengesQueryResult = Apollo.QueryResult<
+  GetMyChallengesQuery,
+  GetMyChallengesQueryVariables
+>;
+export const GetChallengeByIdDocument = gql`
+  query getChallengeById($getChallengeById: Float!) {
+    getChallengeById(id: $getChallengeById) {
       id
       label
       description
       pictureUrl
-      level1Expectation
-      level2Expectation
-      level3Expectation
+      startingDate
+      endingDate
+      ecogestures {
+        id
+        label
+        description
+        pictureUrl
+        level1Expectation
+        level2Expectation
+        level3Expectation
+      }
+      participants {
+        id
+      }
+      createdBy {
+        id
+      }
     }
   }
+`;
+
+/**
+ * __useGetChallengeByIdQuery__
+ *
+ * To run a query within a React component, call `useGetChallengeByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChallengeByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChallengeByIdQuery({
+ *   variables: {
+ *      getChallengeById: // value for 'getChallengeById'
+ *   },
+ * });
+ */
+export function useGetChallengeByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetChallengeByIdQuery,
+    GetChallengeByIdQueryVariables
+  > &
+    (
+      | { variables: GetChallengeByIdQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetChallengeByIdQuery, GetChallengeByIdQueryVariables>(
+    GetChallengeByIdDocument,
+    options,
+  );
 }
-    `;
+export function useGetChallengeByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetChallengeByIdQuery,
+    GetChallengeByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetChallengeByIdQuery,
+    GetChallengeByIdQueryVariables
+  >(GetChallengeByIdDocument, options);
+}
+export function useGetChallengeByIdSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetChallengeByIdQuery,
+        GetChallengeByIdQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetChallengeByIdQuery,
+    GetChallengeByIdQueryVariables
+  >(GetChallengeByIdDocument, options);
+}
+export type GetChallengeByIdQueryHookResult = ReturnType<
+  typeof useGetChallengeByIdQuery
+>;
+export type GetChallengeByIdLazyQueryHookResult = ReturnType<
+  typeof useGetChallengeByIdLazyQuery
+>;
+export type GetChallengeByIdSuspenseQueryHookResult = ReturnType<
+  typeof useGetChallengeByIdSuspenseQuery
+>;
+export type GetChallengeByIdQueryResult = Apollo.QueryResult<
+  GetChallengeByIdQuery,
+  GetChallengeByIdQueryVariables
+>;
+export const GetEcogesturesDocument = gql`
+  query GetEcogestures($input: GetEcogesturesInput) {
+    getEcogestures(input: $input) {
+      totalCount
+      ecogestures {
+        id
+        label
+        description
+        pictureUrl
+        level1Expectation
+        level2Expectation
+        level3Expectation
+      }
+    }
+  }
+`;
 
 /**
  * __useGetEcogesturesQuery__
@@ -616,33 +1131,159 @@ export const GetEcogesturesDocument = gql`
  *   },
  * });
  */
-export function useGetEcogesturesQuery(baseOptions?: Apollo.QueryHookOptions<GetEcogesturesQuery, GetEcogesturesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetEcogesturesQuery, GetEcogesturesQueryVariables>(GetEcogesturesDocument, options);
-      }
-export function useGetEcogesturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEcogesturesQuery, GetEcogesturesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetEcogesturesQuery, GetEcogesturesQueryVariables>(GetEcogesturesDocument, options);
-        }
-export function useGetEcogesturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetEcogesturesQuery, GetEcogesturesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetEcogesturesQuery, GetEcogesturesQueryVariables>(GetEcogesturesDocument, options);
-        }
-export type GetEcogesturesQueryHookResult = ReturnType<typeof useGetEcogesturesQuery>;
-export type GetEcogesturesLazyQueryHookResult = ReturnType<typeof useGetEcogesturesLazyQuery>;
-export type GetEcogesturesSuspenseQueryHookResult = ReturnType<typeof useGetEcogesturesSuspenseQuery>;
-export type GetEcogesturesQueryResult = Apollo.QueryResult<GetEcogesturesQuery, GetEcogesturesQueryVariables>;
-export const GetCurrentUserDocument = gql`
-    query GetCurrentUser {
-  getCurrentUser {
-    id
-    email
-    username
-    roles
-    pictureUrl
-  }
+export function useGetEcogesturesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetEcogesturesQuery,
+    GetEcogesturesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetEcogesturesQuery, GetEcogesturesQueryVariables>(
+    GetEcogesturesDocument,
+    options,
+  );
 }
-    `;
+export function useGetEcogesturesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetEcogesturesQuery,
+    GetEcogesturesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetEcogesturesQuery, GetEcogesturesQueryVariables>(
+    GetEcogesturesDocument,
+    options,
+  );
+}
+export function useGetEcogesturesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetEcogesturesQuery,
+        GetEcogesturesQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetEcogesturesQuery,
+    GetEcogesturesQueryVariables
+  >(GetEcogesturesDocument, options);
+}
+export type GetEcogesturesQueryHookResult = ReturnType<
+  typeof useGetEcogesturesQuery
+>;
+export type GetEcogesturesLazyQueryHookResult = ReturnType<
+  typeof useGetEcogesturesLazyQuery
+>;
+export type GetEcogesturesSuspenseQueryHookResult = ReturnType<
+  typeof useGetEcogesturesSuspenseQuery
+>;
+export type GetEcogesturesQueryResult = Apollo.QueryResult<
+  GetEcogesturesQuery,
+  GetEcogesturesQueryVariables
+>;
+export const SearchUsersDocument = gql`
+  query SearchUsers($search: String!, $page: Int, $limit: Int) {
+    searchUsers(search: $search, page: $page, limit: $limit) {
+      totalCount
+      users {
+        id
+        username
+        email
+        pictureUrl
+      }
+    }
+  }
+`;
+
+/**
+ * __useSearchUsersQuery__
+ *
+ * To run a query within a React component, call `useSearchUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchUsersQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useSearchUsersQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    SearchUsersQuery,
+    SearchUsersQueryVariables
+  > &
+    (
+      | { variables: SearchUsersQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SearchUsersQuery, SearchUsersQueryVariables>(
+    SearchUsersDocument,
+    options,
+  );
+}
+export function useSearchUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SearchUsersQuery,
+    SearchUsersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SearchUsersQuery, SearchUsersQueryVariables>(
+    SearchUsersDocument,
+    options,
+  );
+}
+export function useSearchUsersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        SearchUsersQuery,
+        SearchUsersQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<SearchUsersQuery, SearchUsersQueryVariables>(
+    SearchUsersDocument,
+    options,
+  );
+}
+export type SearchUsersQueryHookResult = ReturnType<typeof useSearchUsersQuery>;
+export type SearchUsersLazyQueryHookResult = ReturnType<
+  typeof useSearchUsersLazyQuery
+>;
+export type SearchUsersSuspenseQueryHookResult = ReturnType<
+  typeof useSearchUsersSuspenseQuery
+>;
+export type SearchUsersQueryResult = Apollo.QueryResult<
+  SearchUsersQuery,
+  SearchUsersQueryVariables
+>;
+export const GetCurrentUserDocument = gql`
+  query GetCurrentUser {
+    getCurrentUser {
+      id
+      email
+      username
+      roles
+      pictureUrl
+    }
+  }
+`;
 
 /**
  * __useGetCurrentUserQuery__
@@ -659,42 +1300,83 @@ export const GetCurrentUserDocument = gql`
  *   },
  * });
  */
-export function useGetCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
-      }
-export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
-        }
-export function useGetCurrentUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
-        }
-export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
-export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
-export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
-export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
-export const GetValidatedEcogesturesDocument = gql`
-    query GetValidatedEcogestures($input: PaginationInput!) {
-  getValidatedEcogestures(input: $input) {
-    userEcogestures {
-      id
-      validated_at
-      level_validated
-      ecogesture {
-        id
-        label
-        pictureUrl
-      }
-      user {
-        id
-      }
-    }
-    totalCount
-  }
+export function useGetCurrentUserQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetCurrentUserQuery,
+    GetCurrentUserQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(
+    GetCurrentUserDocument,
+    options,
+  );
 }
-    `;
+export function useGetCurrentUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCurrentUserQuery,
+    GetCurrentUserQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(
+    GetCurrentUserDocument,
+    options,
+  );
+}
+export function useGetCurrentUserSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCurrentUserQuery,
+        GetCurrentUserQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetCurrentUserQuery,
+    GetCurrentUserQueryVariables
+  >(GetCurrentUserDocument, options);
+}
+export type GetCurrentUserQueryHookResult = ReturnType<
+  typeof useGetCurrentUserQuery
+>;
+export type GetCurrentUserLazyQueryHookResult = ReturnType<
+  typeof useGetCurrentUserLazyQuery
+>;
+export type GetCurrentUserSuspenseQueryHookResult = ReturnType<
+  typeof useGetCurrentUserSuspenseQuery
+>;
+export type GetCurrentUserQueryResult = Apollo.QueryResult<
+  GetCurrentUserQuery,
+  GetCurrentUserQueryVariables
+>;
+export const GetValidatedEcogesturesDocument = gql`
+  query GetValidatedEcogestures($input: PaginationInput!) {
+    getValidatedEcogestures(input: $input) {
+      userEcogestures {
+        id
+        validated_at
+        level_validated
+        ecogesture {
+          id
+          label
+          pictureUrl
+        }
+        user {
+          id
+        }
+        challenge {
+          id
+        }
+      }
+      totalCount
+    }
+  }
+`;
 
 /**
  * __useGetValidatedEcogesturesQuery__
@@ -712,43 +1394,96 @@ export const GetValidatedEcogesturesDocument = gql`
  *   },
  * });
  */
-export function useGetValidatedEcogesturesQuery(baseOptions: Apollo.QueryHookOptions<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables> & ({ variables: GetValidatedEcogesturesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>(GetValidatedEcogesturesDocument, options);
-      }
-export function useGetValidatedEcogesturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>(GetValidatedEcogesturesDocument, options);
-        }
-export function useGetValidatedEcogesturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>(GetValidatedEcogesturesDocument, options);
-        }
-export type GetValidatedEcogesturesQueryHookResult = ReturnType<typeof useGetValidatedEcogesturesQuery>;
-export type GetValidatedEcogesturesLazyQueryHookResult = ReturnType<typeof useGetValidatedEcogesturesLazyQuery>;
-export type GetValidatedEcogesturesSuspenseQueryHookResult = ReturnType<typeof useGetValidatedEcogesturesSuspenseQuery>;
-export type GetValidatedEcogesturesQueryResult = Apollo.QueryResult<GetValidatedEcogesturesQuery, GetValidatedEcogesturesQueryVariables>;
+export function useGetValidatedEcogesturesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetValidatedEcogesturesQuery,
+    GetValidatedEcogesturesQueryVariables
+  > &
+    (
+      | { variables: GetValidatedEcogesturesQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetValidatedEcogesturesQuery,
+    GetValidatedEcogesturesQueryVariables
+  >(GetValidatedEcogesturesDocument, options);
+}
+export function useGetValidatedEcogesturesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetValidatedEcogesturesQuery,
+    GetValidatedEcogesturesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetValidatedEcogesturesQuery,
+    GetValidatedEcogesturesQueryVariables
+  >(GetValidatedEcogesturesDocument, options);
+}
+export function useGetValidatedEcogesturesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetValidatedEcogesturesQuery,
+        GetValidatedEcogesturesQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetValidatedEcogesturesQuery,
+    GetValidatedEcogesturesQueryVariables
+  >(GetValidatedEcogesturesDocument, options);
+}
+export type GetValidatedEcogesturesQueryHookResult = ReturnType<
+  typeof useGetValidatedEcogesturesQuery
+>;
+export type GetValidatedEcogesturesLazyQueryHookResult = ReturnType<
+  typeof useGetValidatedEcogesturesLazyQuery
+>;
+export type GetValidatedEcogesturesSuspenseQueryHookResult = ReturnType<
+  typeof useGetValidatedEcogesturesSuspenseQuery
+>;
+export type GetValidatedEcogesturesQueryResult = Apollo.QueryResult<
+  GetValidatedEcogesturesQuery,
+  GetValidatedEcogesturesQueryVariables
+>;
 export const ValidateEcogestureDocument = gql`
-    mutation ValidateEcogesture($ecogestureId: Int!, $level_validated: Int!) {
-  validateEcogesture(
-    ecogestureId: $ecogestureId
-    level_validated: $level_validated
+  mutation ValidateEcogesture(
+    $ecogestureId: Int!
+    $level_validated: Int!
+    $challengeId: Int
   ) {
-    id
-    validated_at
-    level_validated
-    ecogesture {
+    validateEcogesture(
+      ecogestureId: $ecogestureId
+      level_validated: $level_validated
+      challengeId: $challengeId
+    ) {
       id
-      label
-      pictureUrl
-    }
-    user {
-      id
+      validated_at
+      level_validated
+      ecogesture {
+        id
+        label
+        pictureUrl
+      }
+      user {
+        id
+      }
+      challenge {
+        id
+      }
     }
   }
-}
-    `;
-export type ValidateEcogestureMutationFn = Apollo.MutationFunction<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>;
+`;
+export type ValidateEcogestureMutationFn = Apollo.MutationFunction<
+  ValidateEcogestureMutation,
+  ValidateEcogestureMutationVariables
+>;
 
 /**
  * __useValidateEcogestureMutation__
@@ -765,13 +1500,28 @@ export type ValidateEcogestureMutationFn = Apollo.MutationFunction<ValidateEcoge
  *   variables: {
  *      ecogestureId: // value for 'ecogestureId'
  *      level_validated: // value for 'level_validated'
+ *      challengeId: // value for 'challengeId'
  *   },
  * });
  */
-export function useValidateEcogestureMutation(baseOptions?: Apollo.MutationHookOptions<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>(ValidateEcogestureDocument, options);
-      }
-export type ValidateEcogestureMutationHookResult = ReturnType<typeof useValidateEcogestureMutation>;
-export type ValidateEcogestureMutationResult = Apollo.MutationResult<ValidateEcogestureMutation>;
-export type ValidateEcogestureMutationOptions = Apollo.BaseMutationOptions<ValidateEcogestureMutation, ValidateEcogestureMutationVariables>;
+export function useValidateEcogestureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ValidateEcogestureMutation,
+    ValidateEcogestureMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ValidateEcogestureMutation,
+    ValidateEcogestureMutationVariables
+  >(ValidateEcogestureDocument, options);
+}
+export type ValidateEcogestureMutationHookResult = ReturnType<
+  typeof useValidateEcogestureMutation
+>;
+export type ValidateEcogestureMutationResult =
+  Apollo.MutationResult<ValidateEcogestureMutation>;
+export type ValidateEcogestureMutationOptions = Apollo.BaseMutationOptions<
+  ValidateEcogestureMutation,
+  ValidateEcogestureMutationVariables
+>;

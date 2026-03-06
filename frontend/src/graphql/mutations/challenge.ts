@@ -1,4 +1,4 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const CREATE_CHALLENGE = gql`
   mutation CreateChallenge($data: NewChallengeInput!) {
@@ -8,7 +8,8 @@ export const CREATE_CHALLENGE = gql`
       description
       startingDate
       endingDate
-      picture
+      pictureUrl
+      progressPercentage
       createdBy {
         id
         username
@@ -18,6 +19,16 @@ export const CREATE_CHALLENGE = gql`
         label
         pictureUrl
       }
+    }
+  }
+`;
+
+export const UPDATE_CHALLENGE_PICTURE = gql`
+  mutation UpdateChallengePicture($data: UpdateChallengePictureInput!) {
+    updateChallengePicture(data: $data) {
+      id
+      label
+      pictureUrl
     }
   }
 `;

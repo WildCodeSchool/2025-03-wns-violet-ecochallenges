@@ -49,6 +49,8 @@ function ProfilePage() {
   const { openWidget } = useCloudinaryWidget({
     cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
     uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+    folder: "profile_pictures",
+    croppingAspectRatio: 1,
     onSuccess: handleUploadSuccess,
     onError: (error) => {
       console.error("Erreur du widget Cloudinary :", error);

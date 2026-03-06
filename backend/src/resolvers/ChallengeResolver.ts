@@ -10,13 +10,23 @@ import {
   registerEnumType,
   Resolver,
 } from "type-graphql";
-import { In } from "typeorm"; 
-import { IsDate, IsNotEmpty, MinLength, validate } from "class-validator";
+import { In } from "typeorm";
+import {
+  IsDate,
+  IsNotEmpty,
+  Matches,
+  MinLength,
+  validate,
+} from "class-validator";
 import { plainToClass, Type } from "class-transformer";
 import { Challenge } from "../entities/Challenge";
 import { Context } from "../types/Context";
 import { Ecogesture } from "../entities/Ecogesture";
 import { User } from "../entities/User";
+import { tryDeleteCloudinaryImage } from "../lib/cloudinary";
+import { UserChallenge } from "../entities/UserChallenge";
+import dataSource from "../config/db";
+import { UserEcogesture } from "../entities/UserEcogesture";
 
 @InputType()
 export class NewChallengeInput {
@@ -39,10 +49,13 @@ export class NewChallengeInput {
   endingDate: Date;
 
   @Field()
-  picture: string;
+  pictureUrl: string;
 
   @Field(() => [Number], { nullable: true })
   ecogestureIds?: number[];
+
+  @Field(() => [Number], { nullable: true })
+  participantIds?: number[];
 }
 
 @ObjectType()
@@ -66,6 +79,19 @@ class GetMyChallengesInput {
   filter?: ChallengeFilter;
 }
 
+@InputType()
+class UpdateChallengePictureInput {
+  @Field()
+  id: number;
+
+  @Field()
+  @IsNotEmpty({ message: "L'URL de l'image ne peut pas être vide" })
+  @Matches(/^https?:\/\/.+/, {
+    message: "L'URL de l'image doit commencer par http:// ou https://",
+  })
+  pictureUrl: string;
+}
+
 // Filter for getMyChallenges (user point of view)
 export enum ChallengeFilter {
   CREATED_BY_ME = "CREATED_BY_ME",
@@ -80,6 +106,42 @@ registerEnumType(ChallengeFilter, {
 
 @Resolver(Challenge)
 export default class ChallengeResolver {
+  private async calculateProgressPercentage(
+    challenge: Challenge,
+  ): Promise<number> {
+    if (!challenge.participants || !challenge.ecogestures) {
+      return 0;
+    }
+
+    const totalEcogestures = challenge.ecogestures?.length || 0;
+    const totalParticipants = challenge.participants?.length || 0;
+
+    if (totalEcogestures === 0 || totalParticipants === 0) {
+      return 0;
+    }
+
+    const ecogestureIds = challenge.ecogestures?.map((e) => e.id) || [];
+    const participantIds =
+      challenge.participants?.filter((p) => p.user)?.map((p) => p.user.id) ||
+      [];
+
+    if (participantIds.length === 0) {
+      return 0;
+    }
+
+    const totalValidations = await UserEcogesture.count({
+      where: {
+        user: { id: In(participantIds) },
+        ecogesture: { id: In(ecogestureIds) },
+        challenge: { id: challenge.id },
+      },
+    });
+
+    const maxPossibleValidations = totalEcogestures * totalParticipants;
+
+    return Math.round((totalValidations / maxPossibleValidations) * 100);
+  }
+
   @Query(() => [Challenge])
   async getAllChallenges() {
     const challenges = await Challenge.find();
@@ -91,7 +153,7 @@ export default class ChallengeResolver {
   async getMyChallenges(
     @Ctx() ctx: Context,
     @Arg("input", () => GetMyChallengesInput, { nullable: true })
-    input?: GetMyChallengesInput
+    input?: GetMyChallengesInput,
   ): Promise<ChallengeListResponse> {
     if (!ctx.user) {
       throw new Error("Utilisateur non authentifié");
@@ -105,6 +167,8 @@ export default class ChallengeResolver {
     const queryBuilder = Challenge.createQueryBuilder("challenge")
       .leftJoinAndSelect("challenge.createdBy", "createdBy")
       .leftJoinAndSelect("challenge.participants", "participants")
+      .leftJoinAndSelect("challenge.ecogestures", "ecogestures")
+      .leftJoinAndSelect("participants.user", "user")
       .skip(skip)
       .take(limit);
 
@@ -116,12 +180,26 @@ export default class ChallengeResolver {
       });
     } else if (filter === ChallengeFilter.IN_PROGRESS) {
       queryBuilder
+        .innerJoin("challenge.participants", "participantFilter")
         .where("challenge.startingDate <= :now", { now })
-        .andWhere("challenge.endingDate >= :now", { now });
+        .andWhere("challenge.endingDate >= :now", { now })
+        .andWhere("participantFilter.userId = :userId", {
+          userId: ctx.user.id,
+        });
     } else if (filter === ChallengeFilter.FINISHED) {
-      queryBuilder.where("challenge.endingDate < :now", { now });
+      queryBuilder
+        .innerJoin("challenge.participants", "participantFilter")
+        .where("challenge.endingDate < :now", { now })
+        .andWhere("participantFilter.userId = :userId", {
+          userId: ctx.user.id,
+        });
     }
     const [challenges, totalCount] = await queryBuilder.getManyAndCount();
+
+    for (const challenge of challenges) {
+      challenge.progressPercentage =
+        await this.calculateProgressPercentage(challenge);
+    }
 
     return { totalCount, challenges };
   }
@@ -130,7 +208,7 @@ export default class ChallengeResolver {
   @Mutation(() => Challenge)
   async createChallenge(
     @Arg("data") data: NewChallengeInput,
-    @Ctx() ctx: Context
+    @Ctx() ctx: Context,
   ) {
     if (!ctx.user) {
       throw new Error("Utilisateur non authentifié");
@@ -152,7 +230,7 @@ export default class ChallengeResolver {
     let ecogestures: Ecogesture[] = [];
     if (data.ecogestureIds && data.ecogestureIds.length > 0) {
       ecogestures = await Ecogesture.findBy({ id: In(data.ecogestureIds) });
-      
+
       const uniqueEcogestureIds = Array.from(new Set(data.ecogestureIds));
       ecogestures = await Ecogesture.findByIds(uniqueEcogestureIds);
       // Vérifie que tous les IDs existent
@@ -165,15 +243,98 @@ export default class ChallengeResolver {
       label: data.label,
       startingDate: data.startingDate,
       endingDate: data.endingDate,
-      picture: data.picture,
-      description : data.description,
+      pictureUrl: data.pictureUrl,
+      description: data.description,
       createdBy: user,
       ecogestures: ecogestures,
-      //TODO add participants
     });
 
     await challenge.save();
-    
+
+    const userChallengeRepo = dataSource.getRepository(UserChallenge);
+
+    // Associate challenge creator to the challenge (accepted by default)
+    await userChallengeRepo.insert({
+      user: { id: user.id },
+      challenge: { id: challenge.id },
+      hasAccepted: true,
+    });
+
+    // Associate invited participants to the challenge (pending acceptance)
+    // We exclude the creator: they are already associated with hasAccepted: true
+    const invitedIds = (data.participantIds ?? []).filter(
+      (id) => id !== user.id,
+    );
+    if (invitedIds.length > 0) {
+      const participants = await User.findBy({ id: In(invitedIds) });
+      await Promise.all(
+        participants.map((participant: User) =>
+          userChallengeRepo.insert({
+            user: { id: participant.id },
+            challenge: { id: challenge.id },
+            hasAccepted: true,
+          }),
+        ),
+      );
+    }
+
+    return challenge;
+  }
+
+  @Authorized()
+  @Mutation(() => Challenge)
+  async updateChallengePicture(
+    @Arg("data") data: UpdateChallengePictureInput,
+    @Ctx() ctx: Context,
+  ) {
+    if (!ctx.user) {
+      throw new Error("Utilisateur non authentifié");
+    }
+
+    const challenge = await Challenge.findOne({
+      where: { id: data.id },
+      relations: ["createdBy"],
+    });
+
+    if (!challenge) {
+      throw new Error("Challenge non trouvé");
+    }
+
+    // Only the creator of the challenge can update its picture
+    if (challenge.createdBy.id !== ctx.user.id) {
+      throw new Error("Vous n'êtes pas autorisé à modifier ce challenge");
+    }
+
+    const oldPictureUrl = challenge.pictureUrl;
+
+    // If the old picture is stocked on Cloudinary, delete it from Cloudinary
+    await tryDeleteCloudinaryImage(oldPictureUrl);
+
+    challenge.pictureUrl = data.pictureUrl;
+    await challenge.save();
+
+    return challenge;
+  }
+
+  @Query(() => Challenge)
+  async getChallengeById(@Arg("id") id: number): Promise<Challenge> {
+    const challenge = await Challenge.findOne({
+      where: { id },
+      relations: [
+        "ecogestures",
+        "participants",
+        "participants.user",
+        "createdBy",
+      ],
+    });
+
+    if (!challenge) {
+      throw new Error("Challenge non trouvé");
+    }
+
+    challenge.progressPercentage =
+      await this.calculateProgressPercentage(challenge);
+
     return challenge;
   }
 }
